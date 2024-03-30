@@ -1,0 +1,109 @@
+[
+    {
+        "id": 200000001,
+        "title": "test1",
+        "content": "안녕하세요",
+        "heartCnt":3,
+        "commentCnt":3,
+        "postDate":"2024-01-11"
+        
+    },
+    {
+        "id": 200000002,
+        "title": "테스트2",
+        "content": "안녕하세요, 테스트2",
+        "heartCnt":1,
+        "commentCnt":3,
+        "postDate":"2024-01-10"
+    },
+    {
+        "id": 200000003,
+        "title": "테스트 제목 3",
+        "content": "test content3-id3",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 200000004,
+        "title": "동묘 파란 아저씨말이야",
+        "content": "테스트4 포스트 본문, id-4",
+        "heartCnt":0,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 200000005,
+        "title": "test5",
+        "content": "test",
+        "heartCnt":1,
+        "commentCnt":1,
+        "postDate":"2023-12-23"
+        
+    },
+    {
+        "id": 200000006,
+        "title": "testtesttest",
+        "content": "testtesttesttesttesttest",
+        "heartCnt":0,
+        "commentCnt":0,
+        "postDate":"2023-12-11"
+       
+    },
+    {
+        "id": 200000007,
+        "title": "사당역 빈티지 가게 추천",
+        "content": "사당역 빈티지 가게 추천해줄 사람",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-05"
+       
+    },
+    {
+        "id": 200000008,
+        "title": "옷 샀는데 사기당한 것 같아ㅜㅜ",
+        "content": "옷 샀는데 주머니에 구멍 뚤려 있었어..ㅠㅠㅜ",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-09"
+       
+    },
+    {
+        "id": 200000009,
+        "title": "이번주부터 코트 입어도 되나?",
+        "content": "코트 입기에 아직 너무 따듯한가? 안에 얇게 입으면?",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-09"
+       
+    },
+    {
+        "id": 200000010,
+        "title": "일본 빈티지샵 후기",
+        "content": "어쩌구 저쩌구... 여기저기가 넓고 좋더라",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-03"
+       
+    },
+    {
+        "id": 200000011,
+        "title": "이번에 현아 의상 빈티지 맞지?",
+        "content": "예쁘더라",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-09"
+       
+    },
+    {
+        "id": 200000012,
+        "title": "2024 트렌드 빈티지 아이템",
+        "content": "2024 트렌드는 y2k머시기.... /n상의는 어쩌구 저쩌구.../n하의는...",
+        "heartCnt":5,
+        "commentCnt":5,
+        "postDate":"2024-01-03"
+       
+    }
+]
