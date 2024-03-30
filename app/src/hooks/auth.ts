@@ -14,12 +14,9 @@ interface ApiTokenResponse {
   };
 }
 
-
-
-export const useGoogleLogin = () =>{
+export const useGoogleLogin = () => {
   const navigate = useNavigate();
-  return useMutation<ApiTokenResponse, Error>(() => googleLogin(),
-  {
+  return useMutation<ApiTokenResponse, Error>(() => googleLogin(), {
     onSuccess: (data) => {
       if (data.inSuccess && data.result) {
         Cookies.set("accessToken", data.result.accessToken, {
@@ -34,13 +31,16 @@ export const useGoogleLogin = () =>{
         navigate("/main");
       }
     },
-  }
-  );
+  });
 };
 
 export const useLogin = () => {
   const navigate = useNavigate();
-  return useMutation<ApiTokenResponse, Error, {loginId: string; password: string}>(
+  return useMutation<
+    ApiTokenResponse,
+    Error,
+    { loginId: string; password: string }
+  >(
     ({ loginId, password }: { loginId: string; password: string }) =>
       login({ loginId, password }),
     {
@@ -80,8 +80,13 @@ export const useReissueTokens = () => {
 };
 
 export const useSignup = () => {
-  return useMutation<ApiTokenResponse, Error, {username: string; loginId: string; password: string}>(
-    ({ username, loginId, password }: { username: string; loginId: string; password: string }) => signup({ username, loginId, password }),
+  return useMutation<
+    ApiTokenResponse,
+    Error,
+    { username: string; password: string }
+  >(
+    ({ username, password }: { username: string; password: string }) =>
+      signup({ username, password }),
     {
       onSuccess: (data) => {
         console.log("Signup successful", data);
