@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Profile from "./pages/Profile";
+import Search from "./pages/Search";
 
 function App() {
   function setScreenSize() {
@@ -24,6 +25,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Search />} />
             </Routes>
           </Router>
         </Container>

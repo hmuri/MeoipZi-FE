@@ -19,9 +19,7 @@ export default function LoginForm() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    loginMutate(
-      { loginId: id, password },
-    );
+    loginMutate({ username: id, password });
   };
 
   return (

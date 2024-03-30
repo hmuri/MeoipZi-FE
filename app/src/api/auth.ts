@@ -2,16 +2,16 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const login = async ({
-  loginId,
+  username,
   password,
 }: {
-  loginId: string;
+  username: string;
   password: string;
 }) => {
   const response = await axios.post(
     `${process.env.REACT_APP_API_BASE_URL}/api/authenticate`,
     {
-      loginId,
+      username,
       password,
     }
   );
