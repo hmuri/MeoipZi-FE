@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import { useEffect } from "react";
+import { RecoilRoot } from "recoil";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
   function setScreenSize() {
@@ -11,17 +13,22 @@ function App() {
   useEffect(() => {
     setScreenSize();
   }, []);
+  const queryClient = new QueryClient();
 
   return (
-    <Container>
-      <InsideContainer>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Login />} />
-          </Routes>
-        </Router>
-      </InsideContainer>
-    </Container>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <Container>
+          <InsideContainer>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Login />} />
+              </Routes>
+            </Router>
+          </InsideContainer>
+        </Container>
+      </QueryClientProvider>
+    </RecoilRoot>
   );
 }
 
