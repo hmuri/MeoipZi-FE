@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from "styled-components";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import { useEffect } from "react";
 
 function App() {
+  function setScreenSize() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }
+  useEffect(() => {
+    setScreenSize();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <InsideContainer>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </Router>
+      </InsideContainer>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  height: calc(var(--vh, 1vh) * 100);
+  max-width: 800px;
+  justify-content: center;
+  margin: auto;
+`;
+
+const InsideContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+`;
 
 export default App;
