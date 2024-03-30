@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import { useEffect } from "react";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Profile from "./pages/Profile";
 
 function App() {
   function setScreenSize() {
@@ -19,13 +20,12 @@ function App() {
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <Container>
-          <InsideContainer>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Login />} />
-              </Routes>
-            </Router>
-          </InsideContainer>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Router>
         </Container>
       </QueryClientProvider>
     </RecoilRoot>
@@ -38,11 +38,7 @@ const Container = styled.div`
   max-width: 800px;
   justify-content: center;
   margin: auto;
-`;
-
-const InsideContainer = styled.div`
-  width: 100%;
-  height: 100vh;
+  align-items: center;
   background-color: white;
 `;
 
