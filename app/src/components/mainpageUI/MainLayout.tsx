@@ -14,26 +14,21 @@ interface LayoutProps {
 }
 
 const StyleWrap = styled.div`
-  margin-top: 600px;
-  margin-bottom: 1vh;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+margin-left: 20px;
+margin-top:20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 400px;
+min-height: 50vh; /* Adjust this as needed */
 
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  /* Adjust the width to ensure it accommodates the contents without cropping */
-  /* width: 56vh; */
-  justify-content: space-between;
-  min-height: 100%;
-  overflow: hidden;
-
-  background-color: white;
 `;
 
 const ContentWrapper = styled.div`
+width: 100%;
+margin-left: 5px;
+max-width: 1200px;
   flex: 1;
 `;
 

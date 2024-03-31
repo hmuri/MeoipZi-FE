@@ -16,18 +16,18 @@ const Video = styled.video`
 
 // Component definition
 const LikeShort: React.FC = () => {
-  const [videos, setVideos] = useState<any[]>([]);
+  const [images, setImages] = useState<any[]>([]);
 
   useEffect(() => {
     // Simulated fetch call to API endpoint (replace with your actual fetch call)
     const fetchData = async () => {
       try {
         // Simulated response data (replace with your actual API response)
-        const response = await fetch("your_api_endpoint");
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
         const data = await response.json();
-        setVideos(data.likedOutfitList); // Assuming "likedOutfitList" contains the video data
+        setImages(data.likedSFs); // Update state with fetched image data
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching images:", error);
       }
     };
 
@@ -37,13 +37,10 @@ const LikeShort: React.FC = () => {
   return (
     <VideoGrid>
       {/* Render only the first two videos */}
-      {videos.slice(0, 2).map((video: any) => (
-        <Video key={video.id} controls poster={video.imgUrl}>
-          <source src={video.videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </Video>
-      ))}
-    </VideoGrid>
+      {images.slice(0, 2).map((image: any, index: number) => (
+        <Video key={index} src={image.imgUrl} />
+        ))}
+      </VideoGrid>
   );
 };
 

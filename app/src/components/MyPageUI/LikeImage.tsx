@@ -1,14 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-import TestImg1 from "../../images/test.png";
-import TestImg2 from "../../images/test2.png";
-import TestImg3 from "../../images/test3.png";
-import DefaultImg from "../../images/image-file.png";
-
-// Array of example images
-const images = [TestImg1, TestImg2, TestImg3, DefaultImg, DefaultImg, DefaultImg]; // Added DefaultImg multiple times to fill the grid
+import { fetchLikedOutfits } from "../../api/like";
 
 // Styled components for the image grid and individual images
 const ImageGrid = styled.div`
@@ -29,10 +22,27 @@ const Container = styled.div`
   float: left; /* Float left to align side by side */
 `;
 
-// Component definition
 const LikeImage: React.FC = () => {
+  const [images, setImages] = useState<string[]>([]); // State to hold the fetched image URLs
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Simulated fetch call to API endpoint (replace with your actual fetch call)
+    const fetchData = async () => {
+      try {
+        // Simulated response data (replace with your actual API response)
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+        const data = await response.json();
+        setImages(data.likedOutfits); // Update state with fetched image data
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Function to handle image click event
   const handleClick = (index: number) => {
     // Navigate to LikeImageList when the sixth image is clicked
     if (index === 5) {
@@ -43,16 +53,16 @@ const LikeImage: React.FC = () => {
   return (
     <Container>
       <ImageGrid>
-        {images.slice(0, 6).map((image, index) => (
+        {/* Render the fetched images */}
+        {images.map((imageUrl, index) => (
           <Image
             key={index}
-            src={image}
+            src={imageUrl}
             alt={`Image ${index}`}
-            onClick={() => handleClick(index)} // Corrected the condition for handling click event
+            onClick={() => handleClick(index)}
           />
         ))}
       </ImageGrid>
-      
     </Container>
   );
 };

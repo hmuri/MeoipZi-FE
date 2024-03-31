@@ -130,7 +130,7 @@ const getItems = (): Item[] => {
 };
 
 const ScrollContainer = styled.div`
-  width: 57vh; /* Set the desired height */
+  width: 400px; /* Set the desired height */
   overflow-x: auto; /* or scroll */
 `;
 
