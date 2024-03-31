@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { fetchLikedOutfits } from "../../api/like";
+import axiosInstance from "../../api/axios";
 
 // Styled components for the image grid and individual images
 const ImageGrid = styled.div`
@@ -30,10 +31,8 @@ const LikeImage: React.FC = () => {
     // Simulated fetch call to API endpoint (replace with your actual fetch call)
     const fetchData = async () => {
       try {
-        // Simulated response data (replace with your actual API response)
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
-        const data = await response.json();
-        setImages(data.likedOutfits); // Update state with fetched image data
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+        setImages(response.data.likedOutfits); // Update state with fetched image data
       } catch (error) {
         console.error("Error fetching images:", error);
       }

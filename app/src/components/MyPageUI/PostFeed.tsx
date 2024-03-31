@@ -7,6 +7,21 @@ import PostList from "../../components/list/PostList";
 import Button from "../ui/Button_clicked";
 
 import CommunityTab from "../../components/CommunityTab";
+import axiosInstance from "../../api/axios";
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: string;
+  likesCount: number;
+  cmtCount: number;
+  heartCnt: number; // Example additional property
+  commentCnt: number; // Example additional property
+  postDate: string; // Example additional property
+}
+
 
 interface MainPageProps {}
 
@@ -36,11 +51,11 @@ const Container = styled.div`
 
 const PostFeed: FC<MainPageProps> = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]); // State to store posts
+  const [posts, setPosts] = useState<Post[]>([]); // State to store posts
 
   useEffect(() => {
     // Fetch data when the component mounts
-    axios.get("your_api_endpoint_here")
+    axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/communities`) // Use axiosInstance to fetch data
       .then(response => {
         setPosts(response.data); // Set fetched posts into state
       })

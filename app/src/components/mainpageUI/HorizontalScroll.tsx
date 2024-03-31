@@ -92,47 +92,25 @@ function HorizontalScroll() {
 export default HorizontalScroll;
 */
 
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../api/axios";
 import {
   ScrollMenu,
   VisibilityContext,
 } from "react-horizontal-scrolling-menu";
 import { useNavigate } from "react-router-dom";
 import "react-horizontal-scrolling-menu/dist/styles.css";
-import TestImg1 from "../../images/test.png";
-import TestImg2 from "../../images/test2.png";
-import TestImg3 from "../../images/test3.png";
-import DefaultImg from "../../images/image-file.png";
-import Partners from "../../images/PartnersList.png";
-
-interface Item {
-  id: string;
-  imageUrl: string; // Add imageUrl to the Item interface
-}
-
-const getItems = (): Item[] => {
-  const items: Item[] = [];
-  for (let i = 0; i < 7; i++) {
-    if (i === 0) {
-      items.push({ id: `element-${i}`, imageUrl: Partners });
-    } else if (i === 1) {
-      items.push({ id: `element-${i}`, imageUrl: TestImg1 });
-    } else if (i === 2) {
-      items.push({ id: `element-${i}`, imageUrl: TestImg2 });
-    } else if (i === 3) {
-      items.push({ id: `element-${i}`, imageUrl: TestImg3 });
-    }else {
-      items.push({ id: `element-${i}`, imageUrl: DefaultImg });
-    }
-  }
-  return items;
-};
 
 const ScrollContainer = styled.div`
   width: 400px; /* Set the desired height */
   overflow-x: auto; /* or scroll */
 `;
+
+interface Item {
+  id: string;
+  imageUrl: string; // Add imageUrl to the Item interface
+}
 
 interface CardProps {
   onClick: (id: string) => void;
@@ -173,8 +151,9 @@ function Card({ onClick, selected, itemId, imageUrl }: CardProps) {
 }
 
 function HorizontalScroll() {
-  const [items, setItems] = useState<Item[]>(getItems);
+  const [items, setItems] = useState<Item[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const isItemSelected = (id: string): boolean => selected.includes(id);
 
@@ -185,6 +164,23 @@ function HorizontalScroll() {
         : [...currentSelected, id]
     );
   };
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/partners`);
+        const itemsFromEndpoint: Item[] = response.data.map((item: any) => ({
+          id: item.partnersId.toString(),
+          imageUrl: item.imageUrl,
+        }));
+        setItems(itemsFromEndpoint);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
+    fetchItems();
+  }, []); // Empty dependency array to fetch data only once on component mount
 
   return (
     

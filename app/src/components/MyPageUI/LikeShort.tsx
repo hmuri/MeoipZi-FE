@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../api/axios";
 
 // Styled components for the video grid and individual videos
 const VideoGrid = styled.div`
@@ -19,13 +20,11 @@ const LikeShort: React.FC = () => {
   const [images, setImages] = useState<any[]>([]);
 
   useEffect(() => {
-    // Simulated fetch call to API endpoint (replace with your actual fetch call)
+    // Function to fetch data from API
     const fetchData = async () => {
       try {
-        // Simulated response data (replace with your actual API response)
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
-        const data = await response.json();
-        setImages(data.likedSFs); // Update state with fetched image data
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+        setImages(response.data.likedSFs); // Update state with fetched image data
       } catch (error) {
         console.error("Error fetching images:", error);
       }

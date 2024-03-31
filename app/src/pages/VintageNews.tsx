@@ -1,30 +1,45 @@
 // VintageNews.tsx
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { bannerData } from "../../src/data/Banner_data";
+import axiosInstance from "../api/axios";
+
+interface VintageNewsData {
+  imgUrl: string;
+}
 
 const VintageNews = () => {
   const { id } = useParams<{ id?: string }>(); // Add ? to mark id as optional
-  const imageIndex = id ? parseInt(id, 10) : undefined; // Handle undefined case
+  const [imgUrl, setImgUrl] = useState<string | undefined>();
 
-  if (typeof imageIndex !== 'number' || isNaN(imageIndex)) {
-    return <div>Invalid image index</div>;
+  useEffect(() => {
+    const fetchVintageNews = async () => {
+      try {
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/news/${id}`);
+        const data: VintageNewsData = response.data;
+        setImgUrl(data.imgUrl);
+      } catch (error) {
+        console.error("Error fetching vintage news:", error);
+      }
+    };
+
+    if (id) {
+      fetchVintageNews();
+    }
+  }, [id]); // Dependency array to re-fetch data when id changes
+
+  if (!id) {
+    return <div>No vintage news id provided</div>;
   }
 
-  const image = bannerData.find((img) => img.id === imageIndex);
+  if (!imgUrl) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      {image ? (
-        <div>
-          <h2>Vintage News</h2>
-          <img src={image.url} alt={`Banner ${imageIndex}`} />
-          {/* Add more details about the image if needed */}
-        </div>
-      ) : (
-        <div>Image not found</div>
-      )}
+      <h2>Vintage News</h2>
+      <img src={imgUrl} alt={`Vintage News ${id}`} />
+      {/* Add more details about the vintage news if needed */}
     </div>
   );
 };
