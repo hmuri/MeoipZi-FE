@@ -33,10 +33,19 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
               <Route path="/MainPage" element={<MainPage />} />
-              <Route path ="/mypage/likes" element={<MyPage_like/>} />
-              <Route path="/mypage/posts/feeds" element={<MyPage_post_feed />}/>
-              <Route path="/mypage/posts/scraps" element={<MyPage_post_scrap />}/>
-              <Route path="/mypage/posts/comments" element={<MyPage_post_comment />}/>
+              <Route path="/mypage/likes" element={<MyPage_like />} />
+              <Route
+                path="/mypage/posts/feeds"
+                element={<MyPage_post_feed />}
+              />
+              <Route
+                path="/mypage/posts/scraps"
+                element={<MyPage_post_scrap />}
+              />
+              <Route
+                path="/mypage/posts/comments"
+                element={<MyPage_post_comment />}
+              />
             </Routes>
           </Router>
         </Container>
