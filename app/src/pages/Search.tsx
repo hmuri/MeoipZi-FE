@@ -22,7 +22,7 @@ const Search = () => {
     });
 };
 const handleBrandClick = (category : string) => {
-  queryClient.fetchQuery(['categoryItems', category], () => getBrandItems(category))
+  queryClient.fetchQuery(['brandItems', category], () => getBrandItems(category))
   .then(data => {
     navigate(`/category/${category}`, { state: { items: data } });
   })
@@ -31,7 +31,7 @@ const handleBrandClick = (category : string) => {
   });
 };
 const handleGenreClick = (category : string) => {
-  queryClient.fetchQuery(['categoryItems', category], () => getGenreItems(category))
+  queryClient.fetchQuery(['genreItems', category], () => getGenreItems(category))
   .then(data => {
     navigate(`/category/${category}`, { state: { items: data } });
   })
