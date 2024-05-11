@@ -37,7 +37,7 @@ function App() {
               <Route path="/MainPage" element={<MainPage />} />
               <Route path="/mypage/likes" element={<MyPage_like />} />
               <Route path="/category/:categoryName" element={<Category />} />
-              <Route path="/category/:product" element={<Product />} />
+              <Route path="/product/:product" element={<Product />} />
               <Route
                 path="/mypage/posts/feeds"
                 element={<MyPage_post_feed />}

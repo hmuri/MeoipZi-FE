@@ -1,7 +1,5 @@
-
 import { useLocation, useParams } from "react-router-dom";
-import styled from 'styled-components';
-
+import styled from "styled-components";
 
 // 이미지 객체를 위한 타입 정의
 interface ImageType {
@@ -9,20 +7,69 @@ interface ImageType {
   url: string;
 }
 
-
 const Category = () => {
   const location = useLocation();
+  console.log("location" + JSON.stringify(location));
   const item = location.state?.items;
-  const { categoryName } = useParams();
+
+  const handleClick = (shopUrl: string) => {
+    navigator.clipboard.writeText(shopUrl);
+    alert("copied");
+  };
 
   return (
     <Container>
-      <Title>검색하기</Title>
-      <SearchBox>
-        <Input value={categoryName}/>
-      </SearchBox>
+      <Header></Header>
       <BodyContainer>
-        
+        <MainImage src={item.imgUrl} />
+        <ControlBar>
+          <LeftIcons>
+            <ImgCircle />
+            <ShopText>{item.shopName}</ShopText>
+          </LeftIcons>
+          <RightIcons>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              onClick={() => handleClick(item.shopUrl)}
+              style={{ cursor: "pointer" }}
+            >
+              <path
+                d="M20 13V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18L4 13M16 8L12 4M12 4L8 8M12 4L12 16"
+                stroke="#5C5C5C"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M6 6C6 4.89543 6.89543 4 8 4H16C17.1046 4 18 4.89543 18 6V21L12 15L6 21V6Z"
+                stroke="#5C5C5C"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </RightIcons>
+        </ControlBar>
+        <ProductInfo>
+          {item.title}
+          <br />
+          <span style={{ color: "#5C5C5C", fontWeight: "500" }}>
+            {item.price}원
+          </span>
+        </ProductInfo>
+        <LinkBox href={item.shopUrl}>Go to Webpage</LinkBox>
       </BodyContainer>
     </Container>
   );
@@ -30,60 +77,75 @@ const Category = () => {
 
 export default Category;
 
-
 const Container = styled.div`
   width: 333px;
   height: 812px;
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   margin: 20px;
 `;
-
-const Title = styled.div`
-  position: absolute;
-  top: 46px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  color: #464646;
-
-  text-align: center;
-  font-family: "Noto Sans Arabic";
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 100%; /* 15px */
-  letter-spacing: -0.15px;
-`;
-
-const SearchBox = styled.div`
-  width: 100%;
-  height: 37px;
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid rgba(164, 164, 164, 0.51);
-  position: absolute;
-  top: 90px;
-`;
-const Input = styled.input`
-  width: 100%;
-`
 const BodyContainer = styled.div`
   display: flex;
+  flex-direction: column;
   width: 333px;
-  gap: 15px;
-  position: absolute;
-  top: 140px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
 `;
 
-const Image = styled.img`
-display: flex;
-width: 159px;
-height: 159px;
-`
+const MainImage = styled.img`
+  width: 100%;
+  height: 381px;
+  display: flex;
+`;
+const ControlBar = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+const LeftIcons = styled.div`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+`;
+
+const RightIcons = styled.div`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+`;
+
+const Header = styled.div`
+  width: 100%;
+`;
+
+const ImgCircle = styled.div`
+  width: 32px;
+  height: 32px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+`;
+
+const ShopText = styled.div`
+  font-size: 13px;
+  color: #8d8d8d;
+`;
+
+const ProductInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 600;
+`;
+
+const LinkBox = styled.a`
+  margin-top: 35px;
+  text-decoration: none;
+  background-color: #8b8b8b;
+  border-radius: 4px;
+  color: white;
+  text-align: center;
+  padding: 17px 0;
+  font-size: 13px;
+`;

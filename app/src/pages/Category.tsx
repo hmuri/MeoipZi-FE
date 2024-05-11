@@ -24,7 +24,7 @@ const Category = () => {
     queryClient.fetchQuery(['productItem', id], () => getItem(id))
     .then(data => {
       console.log('data' + data)
-      navigate(`/products/${id}`, { state: { items: data } });
+      navigate(`/product/${id}`, { state: { items: data } });
     })
     .catch(error => {
       console.error('Failed to fetch category items:', error);
