@@ -2,21 +2,42 @@ import styled from "styled-components";
 import searchIcon from '../images/searchIcon.png'
 import { Router, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
-import { getCategoryItems } from "../api/category";
+import { getBrandItems, getCategoryItems, getGenreItems } from "../api/category";
 
 const Search = () => {
   const categories = ['상의', '하의', '모자', '액세서리']; 
+  const brands = ['나이키', '반스', '아디다스', '컨버스']; 
+  const genres = ['락시크', '아메카지', 'Y2K', '캐주얼']; 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const handleCategoryClick = (category : string) => {
     queryClient.fetchQuery(['categoryItems', category], () => getCategoryItems(category))
     .then(data => {
+      console.log('data' + data)
       navigate(`/category/${category}`, { state: { items: data } });
     })
     .catch(error => {
       console.error('Failed to fetch category items:', error);
     });
+};
+const handleBrandClick = (category : string) => {
+  queryClient.fetchQuery(['categoryItems', category], () => getBrandItems(category))
+  .then(data => {
+    navigate(`/category/${category}`, { state: { items: data } });
+  })
+  .catch(error => {
+    console.error('Failed to fetch category items:', error);
+  });
+};
+const handleGenreClick = (category : string) => {
+  queryClient.fetchQuery(['categoryItems', category], () => getGenreItems(category))
+  .then(data => {
+    navigate(`/category/${category}`, { state: { items: data } });
+  })
+  .catch(error => {
+    console.error('Failed to fetch category items:', error);
+  });
 };
   return (
     <Container>
@@ -36,15 +57,21 @@ const Search = () => {
         </Slider>
         <Label>브랜드 검색</Label>
         <Slider>
-          <CategoryBox>
-            <CategoryTitle>상의</CategoryTitle>
-          </CategoryBox>
+        {brands.map((brand) => (
+        <CategoryBox key={brand} onClick={() => handleBrandClick(brand)}>
+          <CategoryTitle>{brand}</CategoryTitle>
+        </CategoryBox>
+      ))}
         </Slider>
         <Label>장르별 검색</Label>
         <Slider>
-          <CategoryBox>
-            <CategoryTitle>상의</CategoryTitle>
-          </CategoryBox>
+        <Slider>
+        {genres.map((genre) => (
+        <CategoryBox key={genre} onClick={() => handleGenreClick(genre)}>
+          <CategoryTitle>{genre}</CategoryTitle>
+        </CategoryBox>
+      ))}
+        </Slider>
         </Slider>
       </BodyContainer>
     </Container>
