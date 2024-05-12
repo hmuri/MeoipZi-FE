@@ -31,7 +31,9 @@ const LikeImage: React.FC = () => {
     // Simulated fetch call to API endpoint (replace with your actual fetch call)
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+        const response = await axiosInstance.get(
+          `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
+        );
         setImages(response.data.likedOutfits); // Update state with fetched image data
       } catch (error) {
         console.error("Error fetching images:", error);
