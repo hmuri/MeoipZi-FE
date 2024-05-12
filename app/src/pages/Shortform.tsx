@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { getItem, getShort } from "../api/product";
 import mainLogo from "../images/mainLogo.png";
 import alarmLogo from "../images/alarm.png";
+import { useEffect, useState } from "react";
+import { fetchLatestShortforms } from "../supabse/apis";
 
 // 이미지 객체를 위한 타입 정의
 interface ImageType {
@@ -11,14 +13,45 @@ interface ImageType {
   url: string;
 }
 
+interface Shortform {
+  id: number;
+  title: string;
+  imgUrl: string;
+  contents: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+interface FetchResponse {
+  data?: Shortform[];
+  error?: any;
+}
+
 // 아이템 배열의 요소 타입
 
-const Shotform = () => {
+const Shortform = () => {
   const location = useLocation();
+  const [shortforms, setShortforms] = useState<Shortform[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const data = getShort();
-  console.log(data);
-  const rawItems = location.state?.items;
+  useEffect(() => {
+    const loadShortforms = async () => {
+      setLoading(true);
+      const response = await fetchLatestShortforms();
+      if (response.error) {
+        console.error("Error fetching latest shortforms:", response.error);
+        setError(response.error);
+        setLoading(false);
+        return;
+      }
+      setShortforms(response.data || []); // data가 undefined일 경우 빈 배열을 사용
+      setLoading(false);
+    };
+
+    loadShortforms();
+  }, []);
+  console.log(shortforms);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -34,20 +67,6 @@ const Shotform = () => {
       });
   };
 
-  const images =
-    rawItems?.flatMap((group: any) => {
-      const result: ImageType[] = [];
-      for (let i = 0; i < group.length; i += 2) {
-        if (typeof group[i] === "number" && typeof group[i + 1] === "string") {
-          result.push({
-            key: group[i] as number,
-            url: group[i + 1] as string,
-          });
-        }
-      }
-      return result;
-    }) ?? [];
-
   return (
     <Container>
       <StyleHeader>
@@ -55,12 +74,12 @@ const Shotform = () => {
         <AlarmImage src={alarmLogo} alt="bell-image" />
       </StyleHeader>
       <BodyContainer>
-        {images.map((image: ImageType) => (
+        {shortforms.map((shortform: Shortform) => (
           <Image
-            key={image.key}
-            src={image.url}
-            alt={`Image ${image.key}`}
-            onClick={() => handleImageClick(image.key)}
+            key={shortform.id}
+            src={shortform.imgUrl}
+            alt={`Image ${shortform.id}`}
+            onClick={() => handleImageClick(shortform.id)}
           />
         ))}
       </BodyContainer>
@@ -68,7 +87,7 @@ const Shotform = () => {
   );
 };
 
-export default Shotform;
+export default Shortform;
 
 const Container = styled.div`
   width: 333px;
@@ -93,7 +112,7 @@ const BodyContainer = styled.div`
 const Image = styled.img`
   display: flex;
   width: 159px;
-  height: 159px;
+  height: 267px;
 `;
 
 const StyleHeader = styled.div`
