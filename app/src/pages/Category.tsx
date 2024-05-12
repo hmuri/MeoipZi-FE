@@ -1,6 +1,6 @@
 import { useQueryClient } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { getItem } from "../api/product";
 
 // 이미지 객체를 위한 타입 정의
@@ -11,8 +11,6 @@ interface ImageType {
 
 // 아이템 배열의 요소 타입
 
-
-
 const Category = () => {
   const location = useLocation();
   const rawItems = location.state?.items;
@@ -20,40 +18,46 @@ const Category = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleImageClick = (id : number) => {
-    queryClient.fetchQuery(['productItem', id], () => getItem(id))
-    .then(data => {
-      console.log('data' + data)
-      navigate(`/product/${id}`, { state: { items: data } });
-    })
-    .catch(error => {
-      console.error('Failed to fetch category items:', error);
-    });
-};
+  const handleImageClick = (id: number) => {
+    queryClient
+      .fetchQuery(["productItem", id], () => getItem(id))
+      .then((data) => {
+        console.log("data" + data);
+        navigate(`/outfit/${id}`, { state: { items: data } });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch category items:", error);
+      });
+  };
 
-
-  const images = rawItems?.flatMap((group: any) => {
-    const result: ImageType[] = [];
-    for (let i = 0; i < group.length; i += 2) {
-      if (typeof group[i] === 'number' && typeof group[i + 1] === 'string') {
-        result.push({
-          key: group[i] as number,
-          url: group[i + 1] as string
-        });
+  const images =
+    rawItems?.flatMap((group: any) => {
+      const result: ImageType[] = [];
+      for (let i = 0; i < group.length; i += 2) {
+        if (typeof group[i] === "number" && typeof group[i + 1] === "string") {
+          result.push({
+            key: group[i] as number,
+            url: group[i + 1] as string,
+          });
+        }
       }
-    }
-    return result;
-  }) ?? [];
+      return result;
+    }) ?? [];
 
   return (
     <Container>
       <Title>검색하기</Title>
       <SearchBox>
-        <Input value={categoryName}/>
+        <Input value={categoryName} />
       </SearchBox>
       <BodyContainer>
         {images.map((image: ImageType) => (
-        <Image key={image.key} src={image.url} alt={`Image ${image.key}`} onClick={() => handleImageClick(image.key)}/>
+          <Image
+            key={image.key}
+            src={image.url}
+            alt={`Image ${image.key}`}
+            onClick={() => handleImageClick(image.key)}
+          />
         ))}
       </BodyContainer>
     </Container>
@@ -61,7 +65,6 @@ const Category = () => {
 };
 
 export default Category;
-
 
 const Container = styled.div`
   width: 333px;
@@ -102,7 +105,7 @@ const SearchBox = styled.div`
 `;
 const Input = styled.input`
   width: 100%;
-`
+`;
 const BodyContainer = styled.div`
   display: flex;
   width: 333px;
@@ -115,7 +118,7 @@ const BodyContainer = styled.div`
 `;
 
 const Image = styled.img`
-display: flex;
-width: 159px;
-height: 159px;
-`
+  display: flex;
+  width: 159px;
+  height: 159px;
+`;

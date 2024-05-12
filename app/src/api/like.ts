@@ -2,7 +2,9 @@ import axiosInstance from "./axios";
 
 export const fetchLikedOutfits = async (userId: string) => {
   try {
-    const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+    const response = await axiosInstance.get(
+      `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching liked images:", error);
@@ -12,7 +14,9 @@ export const fetchLikedOutfits = async (userId: string) => {
 
 export const fetchLikedSFs = async (userId: string) => {
   try {
-    const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+    const response = await axiosInstance.get(
+      `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching liked SFs:", error);
@@ -22,7 +26,9 @@ export const fetchLikedSFs = async (userId: string) => {
 
 export const fetchLikedComms = async (userId: string) => {
   try {
-    const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+    const response = await axiosInstance.get(
+      `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching liked comments:", error);

@@ -15,6 +15,7 @@ import MyPage_post_scrap from "./pages/MyPage_post_scrap";
 import Category from "./pages/Category";
 import Product from "./pages/Product";
 import Shotform from "./pages/Shotform";
+import Outfit from "./pages/Outfit";
 
 function App() {
   function setScreenSize() {
@@ -40,6 +41,7 @@ function App() {
               <Route path="/shotform" element={<Shotform />} />
               <Route path="/category/:categoryName" element={<Category />} />
               <Route path="/product/:product" element={<Product />} />
+              <Route path="/outfit/:outfit" element={<Outfit />} />
               <Route
                 path="/mypage/posts/feeds"
                 element={<MyPage_post_feed />}
