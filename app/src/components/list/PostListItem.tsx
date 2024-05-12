@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface Post {
   id: number;
   title: string;
-  // Additional properties such as heartCount, commentCount, postDate
+  imgUrl: string;
   heartCnt: number;
   commentCnt: number;
   postDate: string;
@@ -55,11 +55,17 @@ line-height: 100%; /* 12px */
 margin: 0px 1vh 1vh;
 `;
 
+const Image = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
 function PostListItem(props: PostListItemProps) {
   const { post, onClick } = props;
 
   return (
     <Wrapper onClick={onClick}>
+      <Image src={post.imgUrl} alt={post.title} />
       <TitleText>{post.title}</TitleText>
       <CountText>{`${post.postDate}`}</CountText>
       <CountText>{`Hearts: ${post.heartCnt} | Comments: ${post.commentCnt}`}</CountText>

@@ -1,12 +1,14 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../components/list/PostList";
 import Button from "../components/ui/Button";
-import data_Brand from '../data/data_Brand.json';
 import ComLayout from "../components/CommunityLayout";
+import axiosInstance from "../api/axios";
 
-interface MainPageProps {}
+interface MainPageProps {
+  currentPath: string; // Add currentPath prop
+}
 
 const BWrapper = styled.div`
   padding: 16px;
@@ -38,32 +40,71 @@ const ButtonContainer = styled.div`
   z-index: 100;
 `;
 
-const BrandCom: FC<MainPageProps> = () => {
-  const navigate = useNavigate();
+interface MainPageProps {
+  currentPath: string;
+}
 
-  console.log("Data in BrandCom:", data_Brand);
+interface PostData {
+  id: number;
+  title: string;
+  imgUrl: string;
+  nickname: string;
+  likesCount: string;
+  commentsCount: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  imgUrl: string;
+  heartCnt: number;
+  commentCnt: number;
+  postDate: string;
+}
+
+const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`);
+      const transformedPosts = response.data.map(transformPostData);
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const transformPostData = (postData: PostData): Post => {
+    return {
+      id: postData.id,
+      title: postData.title,
+      imgUrl: postData.imgUrl,
+      heartCnt: parseInt(postData.likesCount),
+      commentCnt: parseInt(postData.commentsCount),
+      postDate: new Date(postData.createdAt).toISOString(),
+    };
+  };
+
+  const handleItemClick = (post: Post) => {
+    navigate(`/post/${post.id}`);
+  };
 
   return (
-    <>
-    <BWrapper>
-      <Container>
-        <PostList
-          posts={data_Brand}
-          onClickItem={(item) => {
-            navigate(`/post/${item.id}`);
-          }}
-        />
+    <ComLayout currentPath={currentPath}>
+      <BWrapper>
+        <Container>
+          <PostList posts={posts} onClickItem={handleItemClick} />
         </Container>
-    </BWrapper> 
-    <Button
-          title="write"
-          onClick={() => {
-            navigate("/post-write"); // Update the destination route
-          }}
-        />
-    </>
-    
-    
+      </BWrapper>
+    </ComLayout>
   );
 };
 

@@ -1,12 +1,34 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../components/list/PostList";
 import Button from "../components/ui/Button_clicked";
-import data_F from '../data/data_Free.json';
-import CommunityTab from "../components/CommunityTab";
+import ComLayout from "../components/CommunityLayout";
+import axiosInstance from "../api/axios";
 
-interface MainPageProps {}
+interface MainPageProps {
+  currentPath: string; // Add currentPath prop
+}
+
+interface PostData {
+  id: number;
+  title: string;
+  imgUrl: string;
+  nickname: string;
+  likesCount: string;
+  commentsCount: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  imgUrl: string;
+  heartCnt: number;
+  commentCnt: number;
+  postDate: string;
+}
 
 const FWrapper = styled.div`
   padding: 16px;
@@ -32,23 +54,47 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const FreeCom: FC<MainPageProps> = () => {
+const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`);
+      const transformedPosts = response.data.map(transformPostData);
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const transformPostData = (postData: PostData): Post => {
+    return {
+      id: postData.id,
+      title: postData.title,
+      imgUrl: postData.imgUrl,
+      heartCnt: parseInt(postData.likesCount),
+      commentCnt: parseInt(postData.commentsCount),
+      postDate: new Date(postData.createdAt).toISOString(),
+    };
+  };
+
+  const handleItemClick = (post: Post) => {
+    navigate(`/post/${post.id}`);
+  };
 
   return (
-    <>
-    <FWrapper>
-      <Container>
-        <PostList
-          posts={data_F}
-          onClickItem={(item) => {
-            navigate(`/post/${item.id}`);
-          }}
-        />
-      </Container>
-    </FWrapper>
-    </>
-    
+    <ComLayout currentPath={currentPath}>
+      <FWrapper>
+        <Container>
+          <PostList posts={posts} onClickItem={handleItemClick} />
+        </Container>
+      </FWrapper>
+    </ComLayout>
   );
 };
 

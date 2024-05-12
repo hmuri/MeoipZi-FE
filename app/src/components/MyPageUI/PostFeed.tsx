@@ -12,6 +12,7 @@ import axiosInstance from "../../api/axios";
 interface Post {
   id: number;
   title: string;
+  imgUrl: string;
   content: string;
   category: string;
   createdAt: string;

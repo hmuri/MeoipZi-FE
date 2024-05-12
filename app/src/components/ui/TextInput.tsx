@@ -16,6 +16,8 @@ const StyledTextarea = styled.textarea<{ height?: number }>`
     padding: 16px;
     font-size: 16px;
     line-height: 20px;
+    border: 2px solid #ccc;
+
 `;
 
 function TextInput(props: TextInputProps){

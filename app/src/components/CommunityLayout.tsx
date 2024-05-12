@@ -11,6 +11,7 @@ import WritePost from "../pages/WritePost";
 
 //add button to writePost
 import writeButton from "../images/WritePostB.png";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //import CommunityTab from "./CommunityTab";
 
@@ -68,12 +69,15 @@ function ComLayout(props: LayoutProps): JSX.Element {
         </ContentWrapper>
       </StyleWrap>
       {location.pathname === "/WritePost" ? (
-            <WritePost />
+            <WritePost currentPath={currentPath} />
           ) : (
             <Link to={`${currentPath}/WritePost`}>
               <WriteButton src={writeButton} alt="Write Post" />
             </Link>
           )}
+          <Routes>
+          <Route path={`${currentPath}/WritePost`} element={<WritePost currentPath={currentPath} />} />
+          </Routes>
       <Footer />
     </div>
   );

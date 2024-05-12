@@ -76,6 +76,8 @@ const MyPage_like: FC = (props) => {
         <LikeImage/>
         <h3>숏폼</h3>
         <LikeShort/>
+        <h3>Comments</h3>
+        
       </Style>
     
     </ProfileLayout>

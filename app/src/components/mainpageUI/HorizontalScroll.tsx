@@ -92,31 +92,19 @@ function HorizontalScroll() {
 export default HorizontalScroll;
 */
 
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import styled from "styled-components";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import axiosInstance from "../../api/axios";
-import {
-  ScrollMenu,
-  VisibilityContext,
-} from "react-horizontal-scrolling-menu";
-import { useNavigate } from "react-router-dom";
-import "react-horizontal-scrolling-menu/dist/styles.css";
 
 const ScrollContainer = styled.div`
-  width: 400px; /* Set the desired height */
+  width: 400px; /* Set the desired width */
   overflow-x: auto; /* or scroll */
 `;
 
-interface Item {
-  id: string;
-  imageUrl: string; // Add imageUrl to the Item interface
-}
-
 interface CardProps {
-  onClick: (id: string) => void;
-  selected: boolean;
-  itemId: string;
-  imageUrl: string; // Add imageUrl to the CardProps interface
+  imageUrl: string;
+  onClick: () => void;
 }
 
 const CardImage = styled.img`
@@ -125,77 +113,47 @@ const CardImage = styled.img`
   margin-top: 8px;
 `;
 
-function Card({ onClick, selected, itemId, imageUrl }: CardProps) {
-  const visibility = useContext(VisibilityContext);
+function Card({ imageUrl, onClick  }: CardProps) {
+  const handleClick = () => {
+    // Call the onClick handler when the card is clicked
+    onClick();
+  };
 
   return (
-    
-    <div
-      onClick={() => onClick(itemId)}
-      style={{
-        width: "70px",
-      }}
-      tabIndex={0}
-    >
-      <div className="card">
-        <CardImage src={imageUrl} alt={`Banner ${itemId}`} />
-        
+    <div style={{ width: "70px" }}>
+      <div className="card" onClick={handleClick}> {/* Attach onClick handler to the card */}
+        <CardImage src={imageUrl} alt={`Banner`} />
       </div>
-      <div
-        style={{
-          height: "20px",
-        }}
-      />
+      <div style={{ height: "20px" }} />
     </div>
   );
 }
 
-function HorizontalScroll() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const navigate = useNavigate();
+interface HorizontalScrollProps {
+  imageUrls: string[]; // Array of image URLs
+}
 
-  const isItemSelected = (id: string): boolean => selected.includes(id);
-
-  const handleClick = (id: string) => () => {
-    setSelected((currentSelected) =>
-      isItemSelected(id)
-        ? currentSelected.filter((el) => el !== id)
-        : [...currentSelected, id]
-    );
+function HorizontalScroll({ imageUrls }: HorizontalScrollProps) {
+  const handleImageClick = async (imageUrl: string) => {
+    try {
+      // Fetch data using GET request with the imageUrl
+      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/news/${imageUrl}`);
+      // Process the response data as needed
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/partners`);
-        const itemsFromEndpoint: Item[] = response.data.map((item: any) => ({
-          id: item.partnersId.toString(),
-          imageUrl: item.imageUrl,
-        }));
-        setItems(itemsFromEndpoint);
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      }
-    };
-
-    fetchItems();
-  }, []); // Empty dependency array to fetch data only once on component mount
-
+  
   return (
-    
     <ScrollContainer>
-    <ScrollMenu>
-      {items.map(({ id, imageUrl }) => (
-        <Card
-          itemId={id}
-          key={id}
-          onClick={handleClick(id)}
-          selected={isItemSelected(id)}
-          imageUrl={imageUrl} // Pass imageUrl to the Card component
-        />
-      ))}
-    </ScrollMenu>
+      <ScrollMenu>
+        {imageUrls.map((imageUrl, index) => (
+          <Card key={index} imageUrl={imageUrl} onClick={function (): void {
+            throw new Error("Function not implemented.");
+          } } />
+        ))}
+      </ScrollMenu>
     </ScrollContainer>
   );
 }

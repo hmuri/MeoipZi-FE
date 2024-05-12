@@ -5,23 +5,9 @@ import axios from "axios"; // Import Axios
 
 import PostList from "../../components/list/PostList";
 import Button from "../ui/Button_clicked";
-
+import { Post } from "../list/types";
 import CommunityTab from "../../components/CommunityTab";
 import axiosInstance from "../../api/axios";
-
-interface Post {
-  id: number;
-  outfitId?: number;
-  commId?: number;
-  userId: string;
-  nickname: string;
-  createdAt: string;
-  contents: string;
-  title: string;      // Add missing properties
-  heartCnt: number;   // Add missing properties
-  commentCnt: number; // Add missing properties
-  postDate: string;   // Add missing properties
-}
 
 
 interface MainPageProps {}
