@@ -12,6 +12,7 @@ import WritePost from "../pages/WritePost";
 //add button to writePost
 import writeButton from "../images/WritePostB.png";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import NavBar from "./NavBar";
 
 //import CommunityTab from "./CommunityTab";
 
@@ -78,7 +79,7 @@ function ComLayout(props: LayoutProps): JSX.Element {
           <Routes>
           <Route path={`${currentPath}/WritePost`} element={<WritePost currentPath={currentPath} />} />
           </Routes>
-      <Footer />
+        <NavBar />
     </div>
   );
 }

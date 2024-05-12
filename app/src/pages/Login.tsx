@@ -38,7 +38,6 @@ export default Login;
 
 const Container = styled.div`
   display: flex;
-
   height: 100%;
   color: #fff;
   flex-direction: column;

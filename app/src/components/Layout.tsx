@@ -5,6 +5,7 @@ import Header from "./Header";
 
 import MainHeader from "../components/mainpageUI/MainHeader";
 import CommunityTab from "./CommunityTab";
+import NavBar from "./NavBar";
 //import CommunityTab from "./CommunityTab";
 
 interface LayoutProps {
@@ -47,7 +48,7 @@ function Layout(props: LayoutProps): JSX.Element {
             <main>{props.children}</main>
           </ContentWrapper>
         </StyleWrap>
-        <Footer />
+        <NavBar />
       </div>
     );
   }

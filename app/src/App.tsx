@@ -13,6 +13,10 @@ import MyPage_like from "./pages/MyPage_like";
 import MyPage_post_comment from "./pages/MyPage_post_comment";
 import MyPage_post_feed from "./pages/MyPage_post_feed";
 import MyPage_post_scrap from "./pages/MyPage_post_scrap";
+import Category from "./pages/Category";
+import Product from "./pages/Product";
+import Shotform from "./pages/Shotform";
+import Outfit from "./pages/Outfit";
 import BrandCom from "./pages/BrandCom";
 import ShopCom from "./pages/ShopCom";
 import FreeCom from "./pages/FreeCom";
@@ -42,7 +46,12 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
               <Route path="/MainPage" element={<MainPage />} />
-              <Route path ="/mypage/likes" element={<MyPage_like/>} />
+              <Route path="/mypage/likes" element={<MyPage_like />} />
+              <Route path="/shotform" element={<Shotform />} />
+              <Route path="/category/:categoryName" element={<Category />} />
+              <Route path="/product/:product" element={<Product />} />
+              <Route path="/outfit/:outfit" element={<Outfit />} />
+              
               <Route path="/mypage/posts/feeds" element={<MyPage_post_feed />}/>
               <Route path="/mypage/posts/scraps" element={<MyPage_post_scrap />}/>
               <Route path="/mypage/posts/comments" element={<MyPage_post_comment />}/>
