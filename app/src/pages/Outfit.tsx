@@ -5,6 +5,7 @@ import { getItem, getProductItem } from "../api/product";
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axios";
 import EditIcon from "../images/edit-1.png";
+import NavBar from "../components/NavBar";
 
 interface Comment {
   nickname: string;
@@ -31,11 +32,26 @@ const Outfit = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
+    console.log();
+    const formData = new FormData(form);
+    formData.append("content", content);
+
+    const entries = Array.from(formData.entries());
+    entries.forEach(([key, value]) => {
+      console.log(`here${key}: ${value}`);
+    });
+
     try {
-      // POST 요청을 보냅니다.
-      const response = await axiosInstance.post(`/outfits/${outfit}/comments`, {
-        content,
-      });
+      const response = await axiosInstance.post(
+        `/outfits/${outfit}/comments`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       if (response.status === 200) {
         console.log("Comment added successfully:", response.data);
         setContent(""); // 입력 필드 초기화
@@ -238,6 +254,7 @@ const Outfit = () => {
           )
         )}
       </BodyContainer>
+      <NavBar />
     </Container>
   );
 };
@@ -245,18 +262,19 @@ const Outfit = () => {
 export default Outfit;
 
 const Container = styled.div`
-  width: 333px;
+  width: 100%;
   height: 812px;
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  align-items: center;
 `;
 const BodyContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 333px;
   padding-bottom: 50px;
+  margin: 0 20px;
 `;
 
 const MainImage = styled.img`

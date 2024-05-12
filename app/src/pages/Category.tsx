@@ -2,6 +2,7 @@ import { useQueryClient } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getItem } from "../api/product";
+import NavBar from "../components/NavBar";
 
 // 이미지 객체를 위한 타입 정의
 interface ImageType {
@@ -60,6 +61,7 @@ const Category = () => {
           />
         ))}
       </BodyContainer>
+      <NavBar />
     </Container>
   );
 };

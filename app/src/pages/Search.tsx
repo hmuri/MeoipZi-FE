@@ -1,79 +1,91 @@
 import styled from "styled-components";
-import searchIcon from '../images/searchIcon.png'
+import searchIcon from "../images/searchIcon.png";
 import { Router, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
-import { getBrandItems, getCategoryItems, getGenreItems } from "../api/category";
+import {
+  getBrandItems,
+  getCategoryItems,
+  getGenreItems,
+} from "../api/category";
+import NavBar from "../components/NavBar";
 
 const Search = () => {
-  const categories = ['상의', '하의', '모자', '액세서리']; 
-  const brands = ['나이키', '반스', '아디다스', '컨버스']; 
-  const genres = ['락시크', '아메카지', 'Y2K', '캐주얼']; 
+  const categories = ["상의", "하의", "모자", "액세서리"];
+  const brands = ["나이키", "반스", "아디다스", "컨버스"];
+  const genres = ["락시크", "아메카지", "Y2K", "캐주얼"];
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const handleCategoryClick = (category : string) => {
-    queryClient.fetchQuery(['categoryItems', category], () => getCategoryItems(category))
-    .then(data => {
-      console.log('data' + data)
-      navigate(`/category/${category}`, { state: { items: data } });
-    })
-    .catch(error => {
-      console.error('Failed to fetch category items:', error);
-    });
-};
-const handleBrandClick = (category : string) => {
-  queryClient.fetchQuery(['brandItems', category], () => getBrandItems(category))
-  .then(data => {
-    navigate(`/category/${category}`, { state: { items: data } });
-  })
-  .catch(error => {
-    console.error('Failed to fetch category items:', error);
-  });
-};
-const handleGenreClick = (category : string) => {
-  queryClient.fetchQuery(['genreItems', category], () => getGenreItems(category))
-  .then(data => {
-    navigate(`/category/${category}`, { state: { items: data } });
-  })
-  .catch(error => {
-    console.error('Failed to fetch category items:', error);
-  });
-};
+  const handleCategoryClick = (category: string) => {
+    queryClient
+      .fetchQuery(["categoryItems", category], () => getCategoryItems(category))
+      .then((data) => {
+        console.log("data" + data);
+        navigate(`/category/${category}`, { state: { items: data } });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch category items:", error);
+      });
+  };
+  const handleBrandClick = (category: string) => {
+    queryClient
+      .fetchQuery(["brandItems", category], () => getBrandItems(category))
+      .then((data) => {
+        navigate(`/category/${category}`, { state: { items: data } });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch category items:", error);
+      });
+  };
+  const handleGenreClick = (category: string) => {
+    queryClient
+      .fetchQuery(["genreItems", category], () => getGenreItems(category))
+      .then((data) => {
+        navigate(`/category/${category}`, { state: { items: data } });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch category items:", error);
+      });
+  };
   return (
     <Container>
       <Title>검색하기</Title>
       <SearchBox>
-        <img src={searchIcon}/>
+        <img src={searchIcon} />
         <Input placeholder="스타일, 아이템, 브랜드 등" />
       </SearchBox>
       <BodyContainer>
         <Label>카테고리 검색</Label>
         <Slider>
-        {categories.map((category) => (
-        <CategoryBox key={category} onClick={() => handleCategoryClick(category)}>
-          <CategoryTitle>{category}</CategoryTitle>
-        </CategoryBox>
-      ))}
+          {categories.map((category) => (
+            <CategoryBox
+              key={category}
+              onClick={() => handleCategoryClick(category)}
+            >
+              <CategoryTitle>{category}</CategoryTitle>
+            </CategoryBox>
+          ))}
         </Slider>
         <Label>브랜드 검색</Label>
         <Slider>
-        {brands.map((brand) => (
-        <CategoryBox key={brand} onClick={() => handleBrandClick(brand)}>
-          <CategoryTitle>{brand}</CategoryTitle>
-        </CategoryBox>
-      ))}
+          {brands.map((brand) => (
+            <CategoryBox key={brand} onClick={() => handleBrandClick(brand)}>
+              <CategoryTitle>{brand}</CategoryTitle>
+            </CategoryBox>
+          ))}
         </Slider>
         <Label>장르별 검색</Label>
         <Slider>
-        <Slider>
-        {genres.map((genre) => (
-        <CategoryBox key={genre} onClick={() => handleGenreClick(genre)}>
-          <CategoryTitle>{genre}</CategoryTitle>
-        </CategoryBox>
-      ))}
-        </Slider>
+          <Slider>
+            {genres.map((genre) => (
+              <CategoryBox key={genre} onClick={() => handleGenreClick(genre)}>
+                <CategoryTitle>{genre}</CategoryTitle>
+              </CategoryBox>
+            ))}
+          </Slider>
         </Slider>
       </BodyContainer>
+      <NavBar />
     </Container>
   );
 };
@@ -138,16 +150,17 @@ const Label = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  margin-bottom: 27px;
+  margin-bottom: 15px;
+  margin-top: 30px;
 `;
 const Slider = styled.div`
   overflow-x: auto;
   display: flex;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;  // Hide scrollbar for Firefox
+  scrollbar-width: none; // Hide scrollbar for Firefox
   &::-webkit-scrollbar {
-    display: none;  // Hide scrollbar for Chrome, Safari, Opera
+    display: none; // Hide scrollbar for Chrome, Safari, Opera
   }
 `;
 
@@ -168,11 +181,11 @@ const CategoryTitle = styled.div`
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 500;
 `;
 
 const Input = styled.input`
   width: 100%;
-`
+`;
