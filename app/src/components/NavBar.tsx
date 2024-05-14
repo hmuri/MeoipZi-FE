@@ -25,11 +25,10 @@ const NavBar = () => {
         viewBox="0 0 20 16"
         fill="none"
         onClick={() => navigate("/shortform")}
-        style={{ stroke: getStrokeColor("/shotform") }}
       >
         <path
           d="M14 5L19 3V13L14 11M2 1.5H13C13.5523 1.5 14 1.94772 14 2.5V13.5C14 14.0523 13.5523 14.5 13 14.5H2C1.44772 14.5 1 14.0523 1 13.5V2.5C1 1.94772 1.44772 1.5 2 1.5Z"
-          stroke="#9E9E9E"
+          stroke={getStrokeColor("/shotform")}
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
