@@ -16,6 +16,7 @@ import Category from "./pages/Category";
 import Product from "./pages/Product";
 import Shortform from "./pages/Shortform";
 import Outfit from "./pages/Outfit";
+import PostShortForm from "./pages/PostShortForm";
 
 function App() {
   function setScreenSize() {
@@ -37,6 +38,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
               <Route path="/MainPage" element={<MainPage />} />
+              <Route path="/shortform/post" element={<PostShortForm />} />
               <Route path="/mypage/likes" element={<MyPage_like />} />
               <Route path="/shortform" element={<Shortform />} />
               <Route path="/category/:categoryName" element={<Category />} />

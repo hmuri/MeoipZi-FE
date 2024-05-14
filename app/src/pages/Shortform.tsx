@@ -101,6 +101,27 @@ const Category = () => {
           setIsModal={setIsModal}
         />
       )}
+      <Circle
+        onClick={() => {
+          navigate("shortform/post");
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="29"
+          height="29"
+          viewBox="0 0 29 29"
+          fill="none"
+        >
+          <path
+            d="M19.3333 10.875L25.375 8.45831V20.5416L19.3333 18.125M4.83333 6.64581H18.125C18.7923 6.64581 19.3333 7.1868 19.3333 7.85415V21.1458C19.3333 21.8132 18.7923 22.3541 18.125 22.3541H4.83333C4.16599 22.3541 3.625 21.8132 3.625 21.1458V7.85415C3.625 7.1868 4.16599 6.64581 4.83333 6.64581Z"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </Circle>
     </>
   );
 };
@@ -449,4 +470,17 @@ const CommentContainer = styled.div`
   bottom: 0px;
   padding-top: 20px;
   padding-bottom: 95px;
+`;
+
+const Circle = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #9e9e9e;
+  position: fixed;
+  right: 30px;
+  bottom: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
