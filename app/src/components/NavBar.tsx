@@ -24,7 +24,7 @@ const NavBar = () => {
         height="16"
         viewBox="0 0 20 16"
         fill="none"
-        onClick={() => navigate("/shotform")}
+        onClick={() => navigate("/shortform")}
         style={{ stroke: getStrokeColor("/shotform") }}
       >
         <path
