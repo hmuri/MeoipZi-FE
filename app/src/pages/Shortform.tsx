@@ -274,6 +274,7 @@ const Modal = ({ video, videoInfo, setIsModal }: ModalType) => {
             />
           </svg>
         </RightNavBar>
+        <ContentBox>{videoInfo?.contents}</ContentBox>
         {!isShowProduct && comments !== undefined && (
           <CommentContainer>
             <CommentBox>
@@ -426,6 +427,19 @@ const CommentBox = styled.div`
   color: white;
   height: 140px;
   overflow: auto;
+`;
+
+const ContentBox = styled.div`
+  display: flex;
+  position: absolute;
+  text-align: left;
+  width: 200px;
+  left: 50px;
+  justify-content: start;
+  bottom: 250px;
+  color: white;
+  font-weight: 400;
+  font-size: 15px;
 `;
 
 const CommentContainer = styled.div`
