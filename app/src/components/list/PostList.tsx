@@ -8,56 +8,49 @@ interface Post {
   imgUrl: string;
   heartCnt: number;
   commentCnt: number;
-  postDate: string;
+  createdAt: string;
 }
 
 interface PostListProps {
   posts: Post[];
   onClickItem: (post: Post) => void;
-  loading?: boolean; // Added loading state
 }
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  & > * {
-    :not(:last-child) {
-      margin-bottom: 16px;
-    }
-  }
 `;
 
-const Message = styled.p`
-  margin: 16px 0;
-  font-size: 16px;
-  color: #777;
+const PostItem = styled.div`
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 16px;
 `;
 
-function PostList(props: PostListProps) {
-  const { posts, onClickItem, loading } = props;
+const PostTitle = styled.h2`
+  margin-bottom: 8px;
+`;
 
+const PostImage = styled.img`
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+`;
+
+const PostList: React.FC<PostListProps> = ({ posts, onClickItem }) => {
   return (
     <Wrapper>
-      {loading ? (
-        <Message>Loading...</Message>
-      ) : posts.length === 0 ? (
-        <Message>No posts available</Message>
-      ) : (
-        posts.map((post) => (
-          <PostListItem
-            key={post.id} // Assigning the unique key prop
-            post={post}
-            onClick={() => {
-              onClickItem(post);
-            }}
-          />
-        ))
-      )}
+      {posts.map((post) => (
+        <PostItem key={post.id} onClick={() => onClickItem(post)}>
+          <PostTitle>{post.title}</PostTitle>
+          <PostImage src={post.imgUrl} alt={post.title} /> {/* Render the image */}
+          <p>Heart Count: {post.heartCnt}</p>
+          <p>Comment Count: {post.commentCnt}</p>
+          <p>Created At: {post.createdAt}</p>
+        </PostItem>
+      ))}
     </Wrapper>
   );
-}
+};
 
 export default PostList;

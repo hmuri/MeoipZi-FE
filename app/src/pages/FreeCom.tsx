@@ -27,7 +27,7 @@ interface Post {
   imgUrl: string;
   heartCnt: number;
   commentCnt: number;
-  postDate: string;
+  createdAt: string;
 }
 
 const FWrapper = styled.div`
@@ -65,6 +65,7 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`);
+      console.log(response.data);
       const transformedPosts = response.data.map(transformPostData);
       setPosts(transformedPosts);
     } catch (error) {
@@ -79,7 +80,7 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
       imgUrl: postData.imgUrl,
       heartCnt: parseInt(postData.likesCount),
       commentCnt: parseInt(postData.commentsCount),
-      postDate: new Date(postData.createdAt).toISOString(),
+      createdAt: new Date(postData.createdAt).toISOString(),
     };
   };
 

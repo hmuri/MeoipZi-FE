@@ -2,7 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 interface Comment {
-    content: string;
+    id: number;
+    imgUrl: string;
+    createdAt: string;
+    content: string; // Add the content property
 }
 
 interface CommentListItemProps {
@@ -38,3 +41,4 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
 }
 
 export default CommentListItem;
+

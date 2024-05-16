@@ -27,7 +27,7 @@ interface Post {
   imgUrl: string;
   heartCnt: number;
   commentCnt: number;
-  postDate: string;
+  createdAt: string;
 }
 
 const SWrapper = styled.div`
@@ -57,24 +57,29 @@ const Container = styled.div`
 const ShopCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [imageURL, setImageURL] = useState("");
+  const [imageURL, setImageURL] = useState<string | undefined>(undefined); // Initialize imageURL state
+
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-  try {
-    const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=shop&page=0&size=20`);
-    const transformedPosts = response.data.map(transformPostData);
-    setPosts(transformedPosts);
-    // Extract the image URL from the first post in the response
-    const firstPostImgUrl = response.data[0]?.imgUrl;
-      setImageURL(firstPostImgUrl);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+    try {
+      // Fetch image URLs
+      const imageResponse = await axiosInstance.get<string[][]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=shop&page=0&size=20`);
+      const firstImageUrl = imageResponse.data[0]?.[0]; // Access the first element of the outer array and then the first element of the inner array
+      setImageURL(firstImageUrl);
+
+      // Fetch post data
+      const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=shop&page=0&size=20`);
+      const transformedPosts = response.data.map(transformPostData);
+      setPosts(transformedPosts);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
 const transformPostData = (postData: PostData): Post => {
   let postDateISOString = '';
@@ -87,7 +92,7 @@ const transformPostData = (postData: PostData): Post => {
     imgUrl: postData.imgUrl, // Add imgUrl property
     heartCnt: parseInt(postData.likesCount),
     commentCnt: parseInt(postData.commentsCount),
-    postDate: postDateISOString,
+    createdAt: postDateISOString,
   };
 };
   
@@ -99,9 +104,11 @@ const transformPostData = (postData: PostData): Post => {
   return (
     <ComLayout currentPath={currentPath}>
       <SWrapper>
-        <Container>
-          <PostList posts={posts} onClickItem={handleItemClick} />
-        </Container>
+        {imageURL ? ( // Check if imageURL is available
+          <img src={imageURL} alt="Shop" /> // Render the image if imageURL is available
+        ) : (
+          <p>Loading...</p> // Render loading message if imageURL is not available yet
+        )}
       </SWrapper>
     </ComLayout>
   );

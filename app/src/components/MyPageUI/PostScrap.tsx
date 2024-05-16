@@ -1,15 +1,7 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../api/axios";
 import { useNavigate } from "react-router-dom";
-
-import TestImg1 from "../../images/test.png";
-import TestImg2 from "../../images/test2.png";
-import TestImg3 from "../../images/test3.png";
-import DefaultImg from "../../images/image-file.png";
-
-// Array of example images
-const images = [TestImg1, TestImg2, TestImg3, DefaultImg, DefaultImg];
 
 // Styled components for the image grid and individual images
 const ImageGrid = styled.div`
@@ -36,22 +28,34 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
+interface PostScrapProps {
+  scrapData: any[]; // Define the scrapData prop
+}
+
 // Component definition
-const PostScrap: React.FC = () => {
-    const navigate = useNavigate();
+const PostScrap: React.FC<PostScrapProps> = ({ scrapData }) => {
+  const navigate = useNavigate();
+  const [scrapedOutfits, setScrapedOutfits] = useState<any[]>([]);
+  const [scrapedProducts, setScrapedProducts] = useState<any[]>([]);
+
   return (
     <Container>
       <ImageGrid>
-        {images.slice(0, 5).map((image, index) => (
-          <Image key={index} src={image} alt={`Image ${index}`} />
+        {/* Render scrapedOutfits */}
+        {scrapedOutfits.map((outfit: any, index: number) => (
+          <Image key={index} src={outfit.imgUrl} alt={`Outfit ${index}`} />
+        ))}
+        {/* Render scrapedProducts */}
+        {scrapedProducts.map((product: any, index: number) => (
+          <Image key={index} src={product.imgUrl} alt={`Product ${index}`} />
         ))}
       </ImageGrid>
       <Button
         title="See More"
-        onClick ={() => {
-            navigate("/products");
+        onClick={() => {
+          navigate("/products");
         }}
-        />
+      />
     </Container>
   );
 };

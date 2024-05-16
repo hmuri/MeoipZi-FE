@@ -10,6 +10,26 @@ interface MainPageProps {
   currentPath: string; // Add currentPath prop
 }
 
+interface PostData {
+  id: number;
+  title: string;
+  imgUrl: string;
+  nickname: string;
+  likesCount: string;
+  commentsCount: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  imgUrl: string;
+  heartCnt: number;
+  commentCnt: number;
+  createdAt: string;
+}
+
 const BWrapper = styled.div`
   padding: 16px;
   width: 50vh;
@@ -34,39 +54,10 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const ButtonContainer = styled.div`
-  position: fixed;
-  margin-left: 250px;
-  z-index: 100;
-`;
-
-interface MainPageProps {
-  currentPath: string;
-}
-
-interface PostData {
-  id: number;
-  title: string;
-  imgUrl: string;
-  nickname: string;
-  likesCount: string;
-  commentsCount: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-  imgUrl: string;
-  heartCnt: number;
-  commentCnt: number;
-  postDate: string;
-}
-
 const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [imageURL, setImageURL] = useState<string | undefined>(undefined); // Initialize imageURL state
 
   useEffect(() => {
     fetchData();
@@ -74,22 +65,33 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const fetchData = async () => {
     try {
+      // Fetch image URLs
+      const imageResponse = await axiosInstance.get<string[][]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`);
+      const firstImageUrl = imageResponse.data[0]?.[0]; // Access the first element of the outer array and then the first element of the inner array
+      setImageURL(firstImageUrl);
+
+      // Fetch post data
       const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`);
       const transformedPosts = response.data.map(transformPostData);
       setPosts(transformedPosts);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const transformPostData = (postData: PostData): Post => {
+    let postDateISOString = '';
+    if (Date.parse(postData.createdAt)) {
+      postDateISOString = new Date(postData.createdAt).toISOString();
+    }
     return {
       id: postData.id,
       title: postData.title,
-      imgUrl: postData.imgUrl,
+      imgUrl: postData.imgUrl, // Add imgUrl property
       heartCnt: parseInt(postData.likesCount),
       commentCnt: parseInt(postData.commentsCount),
-      postDate: new Date(postData.createdAt).toISOString(),
+      createdAt: postDateISOString,
     };
   };
 
@@ -100,9 +102,12 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   return (
     <ComLayout currentPath={currentPath}>
       <BWrapper>
-        <Container>
-          <PostList posts={posts} onClickItem={handleItemClick} />
-        </Container>
+        {imageURL ? (
+          <img src={imageURL} alt="Brand" />
+        ) : (
+          <p>Loading...</p>
+        )}
+        <PostList posts={posts} onClickItem={handleItemClick} />
       </BWrapper>
     </ComLayout>
   );

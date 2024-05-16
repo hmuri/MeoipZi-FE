@@ -1,12 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios"; // Import Axios
-
-import PostList from "../../components/list/PostList";
-import Button from "../ui/Button_clicked";
-
-import CommunityTab from "../../components/CommunityTab";
 import axiosInstance from "../../api/axios";
 
 interface Post {
@@ -23,17 +17,18 @@ interface Post {
   postDate: string; // Example additional property
 }
 
-
-interface MainPageProps {}
+interface MainPageProps {
+  uploadedCommList: { id: number; title: string; imgUrl: string; createdAt: string; likesCount: number; cmtCount: number }[];
+  uploadedSFList: { id: number; imgUrl: string; createdAt: string }[];
+}
 
 const SWrapper = styled.div`
   padding: 16px;
   width: 50vh;
   display: flex;
   flex-direction: column;
-  align-items: center; // Fixed typo in 'align-items'
+  align-items: center;
   justify-content: center;
-
   margin-bottom: 3vh;
 `;
 
@@ -41,7 +36,6 @@ const Container = styled.div`
   width: 100%;
   max-width: 355px;
   height: 100%;
-
   & > * {
     :not(:last-child) {
       margin-bottom: 16px;
@@ -50,31 +44,44 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const PostFeed: FC<MainPageProps> = () => {
+interface PostFeedProps {
+  uploadedCommList: any[]; // Define uploadedCommList prop
+}
+
+const PostFeed: FC<PostFeedProps> = ({ uploadedCommList }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]); // State to store posts
 
   useEffect(() => {
-    // Fetch data when the component mounts
-    axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/communities`) // Use axiosInstance to fetch data
-      .then(response => {
-        setPosts(response.data); // Set fetched posts into state
-      })
-      .catch(error => {
-        console.error("Error fetching posts:", error);
-      });
-  }, []); // Empty dependency array to fetch data only once on component mount
+    // Map uploadedCommList to posts
+    const mappedPosts: Post[] = uploadedCommList.map((comm) => ({
+      id: comm.id,
+      title: comm.title,
+      imgUrl: comm.imgUrl,
+      content: "", // Add content if available
+      category: "", // Add category if available
+      createdAt: comm.createdAt,
+      likesCount: comm.likesCount,
+      cmtCount: comm.cmtCount,
+      heartCnt: 0, // Example additional property
+      commentCnt: 0, // Example additional property
+      postDate: "", // Example additional property
+    }));
+    setPosts(mappedPosts);
+  }, [uploadedCommList]);
 
   return (
     <>
       <SWrapper>
         <Container>
-          <PostList
-            posts={posts} // Pass fetched posts to PostList component
-            onClickItem={(item) => {
-              navigate(`/post/${item.id}`);
-            }}
-          />
+          {/* Render posts */}
+          {posts.map((post: Post) => (
+            <div key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
+              <img src={post.imgUrl} alt={post.title} />
+              <h3>{post.title}</h3>
+              <p>{post.content}</p>
+            </div>
+          ))}
         </Container>
       </SWrapper>
     </>

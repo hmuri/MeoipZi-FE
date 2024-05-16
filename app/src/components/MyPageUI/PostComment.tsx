@@ -4,11 +4,17 @@ import styled from "styled-components";
 import axios from "axios"; // Import Axios
 
 import PostList from "../../components/list/PostList";
+import CommentList from "../list/CommentList";
 import Button from "../ui/Button_clicked";
-import { Post } from "../list/types";
 import CommunityTab from "../../components/CommunityTab";
 import axiosInstance from "../../api/axios";
 
+interface Comment {
+  id: number;
+  imgUrl: string;
+  createdAt: string;
+  content: string; // Add the content property
+}
 
 interface MainPageProps {}
 
@@ -38,23 +44,24 @@ const Container = styled.div`
 
 const PostComment: FC<MainPageProps> = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Comment[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const [shortFormResponse, outfitResponse, communityResponse] = await Promise.all([
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-shortform`),
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-outfit`),
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-community`)
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/shortforms`),
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/outfits`),
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/communities`),
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments`)
         ]);
 
-        const shortFormPosts: Post[] = shortFormResponse.data.cmtsCommList;
-        const outfitPosts: Post[] = outfitResponse.data.cmtsCommList;
-        const communityPosts: Post[] = communityResponse.data.cmtsCommList;
+        const shortFormPosts: Comment[] = shortFormResponse.data.cmtsCommList;
+        const outfitPosts: Comment[] = outfitResponse.data.cmtsCommList;
+        const communityPosts: Comment[] = communityResponse.data.cmtsCommList;
 
         // Concatenate posts from all responses
-        const allPosts: Post[] = [...shortFormPosts, ...outfitPosts, ...communityPosts];
+        const allPosts: Comment[] = [...shortFormPosts, ...outfitPosts, ...communityPosts];
         setPosts(allPosts);
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -64,16 +71,12 @@ const PostComment: FC<MainPageProps> = () => {
     fetchPosts();
   }, []);// Empty dependency array to fetch data only once on component mount
 
+
   return (
     <>
       <SWrapper>
         <Container>
-          <PostList
-            posts={posts} // Pass fetched posts to PostList component
-            onClickItem={(item) => {
-              navigate(`/post/${item.id}`);
-            }}
-          />
+        <CommentList comments={posts} />
         </Container>
       </SWrapper>
     </>

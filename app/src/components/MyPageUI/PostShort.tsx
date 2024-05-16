@@ -16,26 +16,11 @@ const Video = styled.video`
 `;
 
 // Component definition
-const PostShort: React.FC = () => {
-  const [videos, setVideos] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/shortforms`);
-        setVideos(response.data); // Assuming response.data contains the video data
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const PostShort = ({ uploadedSFList }: { uploadedSFList: any[] }) => {
   return (
     <VideoGrid>
       {/* Render only the first two videos */}
-      {videos.slice(0, 2).map((video: any) => (
+      {uploadedSFList.slice(0, 2).map((video: any) => (
         <Video key={video.id} controls poster={video.imgUrl}>
           <source src={video.videoUrl} type="video/mp4" />
           Your browser does not support the video tag.

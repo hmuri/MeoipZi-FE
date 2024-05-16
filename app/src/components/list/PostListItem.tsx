@@ -3,11 +3,11 @@ import styled from "styled-components";
 
 interface Post {
   id: number;
-  title: string;
+  title?: string;
   imgUrl: string;
-  heartCnt: number;
-  commentCnt: number;
-  postDate: string;
+  heartCnt?: number;
+  commentCnt?: number;
+  createdAt: string;
 }
 
 interface PostListItemProps {
@@ -67,7 +67,7 @@ function PostListItem(props: PostListItemProps) {
     <Wrapper onClick={onClick}>
       <Image src={post.imgUrl} alt={post.title} />
       <TitleText>{post.title}</TitleText>
-      <CountText>{`${post.postDate}`}</CountText>
+      <CountText>{`${post.createdAt}`}</CountText>
       <CountText>{`Hearts: ${post.heartCnt} | Comments: ${post.commentCnt}`}</CountText>
       
     </Wrapper>

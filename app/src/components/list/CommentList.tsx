@@ -5,7 +5,9 @@ import CommentListItem from "./CommentListItem";
 // Define the Comment type
 interface Comment {
     id: number;
-    content: string;
+    imgUrl: string;
+    createdAt: string;
+    content: string; // Add the content property
 }
 
 // Define the props interface for CommentList component
