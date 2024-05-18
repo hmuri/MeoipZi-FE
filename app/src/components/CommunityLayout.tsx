@@ -79,7 +79,7 @@ function ComLayout(props: LayoutProps): JSX.Element {
           <Routes>
           <Route path={`${currentPath}/WritePost`} element={<WritePost currentPath={currentPath} />} />
           </Routes>
-        <NavBar />
+        <Footer />
     </div>
   );
 }
