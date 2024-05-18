@@ -35,7 +35,9 @@ const ContentText = styled.p`
 const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
     return (
         <Wrapper>
-            <ContentText>{comment.content}</ContentText>
+            <img src={comment.imgUrl} alt={`Comment ${comment.id}`} />
+            <ContentText>{comment.createdAt}</ContentText>
+            <ContentText>{comment.id}</ContentText>
         </Wrapper>
     );
 }

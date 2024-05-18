@@ -30,13 +30,13 @@ const Wrapper = styled.div`
 
 const CommentList: React.FC<CommentListProps> = ({ comments }) => {
     return (
-        <Wrapper>
-            {comments.map((comment) => (
-                <CommentListItem key={comment.id} comment={comment} /> // Pass comment as prop
-            ))}
-        </Wrapper>
+      <Wrapper>
+        {comments.map((comment) => (
+          <CommentListItem key={comment.id} comment={comment} />
+        ))}
+      </Wrapper>
     );
-}
-
-export default CommentList;
+  };
+  
+  export default CommentList;
 

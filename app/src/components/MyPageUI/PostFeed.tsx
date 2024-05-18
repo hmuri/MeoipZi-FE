@@ -53,21 +53,23 @@ const PostFeed: FC<PostFeedProps> = ({ uploadedCommList }) => {
   const [posts, setPosts] = useState<Post[]>([]); // State to store posts
 
   useEffect(() => {
-    // Map uploadedCommList to posts
-    const mappedPosts: Post[] = uploadedCommList.map((comm) => ({
-      id: comm.id,
-      title: comm.title,
-      imgUrl: comm.imgUrl,
-      content: "", // Add content if available
-      category: "", // Add category if available
-      createdAt: comm.createdAt,
-      likesCount: comm.likesCount,
-      cmtCount: comm.cmtCount,
-      heartCnt: 0, // Example additional property
-      commentCnt: 0, // Example additional property
-      postDate: "", // Example additional property
-    }));
-    setPosts(mappedPosts);
+    if (uploadedCommList && uploadedCommList.length > 0) {
+      // Map uploadedCommList to posts
+      const mappedPosts: Post[] = uploadedCommList.map((comm) => ({
+        id: comm.id,
+        title: comm.title,
+        imgUrl: comm.imgUrl,
+        content: "", // Add content if available
+        category: "", // Add category if available
+        createdAt: comm.createdAt,
+        likesCount: comm.likesCount,
+        cmtCount: comm.cmtCount,
+        heartCnt: 0, // Example additional property
+        commentCnt: 0, // Example additional property
+        postDate: "", // Example additional property
+      }));
+      setPosts(mappedPosts);
+    }
   }, [uploadedCommList]);
 
   return (

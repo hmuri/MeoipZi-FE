@@ -101,7 +101,7 @@ const MyPage_post_comment: FC<{ component?: React.ReactNode }> = ({ component })
           <div style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>
             내가 업로드한 숏폼
           </div>
-          <PostShort uploadedSFList={uploadedSFList} />
+          <PostShort />
         </Style>
       </ScrollableContainer>
         

@@ -67,17 +67,15 @@ const Box = styled.div`
 // Define the MyPage_post_feed functional component
 const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) => {
   const navigate = useNavigate();
-  const [uploadedCommList, setUploadedCommList] = useState([]); // State for uploaded community list
-  const [uploadedSFList, setUploadedSFList] = useState([]); // State for uploaded short form list
+  const [uploadedComms, setUploadedComms] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds`);
         const data = response.data;
+        setUploadedComms(data.uploadedComms);
 
-        setUploadedCommList(data.uploadedCommList);
-        setUploadedSFList(data.uploadedSFList);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -93,15 +91,13 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
           <Style>
             <Box>
               <MyPageTab />
-              {/* Pass uploadedCommList to PostFeed */}
-              <PostFeed uploadedCommList={uploadedCommList} />
+              <PostFeed uploadedCommList={uploadedComms} />
               <BottomRectangle />
             </Box>
             <div style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>
               내가 업로드한 숏폼
             </div>
-            {/* Pass uploadedSFList to PostShort */}
-            <PostShort uploadedSFList={uploadedSFList} />
+            <PostShort/>
           </Style>
         </ScrollableContainer>
       </ProfileLayout>
@@ -110,4 +106,3 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
 };
 
 export default MyPage_post_feed;
-
