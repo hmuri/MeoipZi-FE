@@ -96,7 +96,7 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   };
 
   const handleItemClick = (post: Post) => {
-    navigate(`/post/${post.id}`);
+    navigate(`BrandCommunity/post/${post.id}`);
   };
 
   return (

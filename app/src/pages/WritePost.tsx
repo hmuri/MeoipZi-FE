@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   width: calc(100% - 32px);
   display: flex;
   flex-direction: column;
-  align-items: center; // Fixed typo in 'align-items'
+  align-items: center;
   justify-content: center;
   margin-top: 126px;
   margin-bottom: 56px;
@@ -35,10 +35,6 @@ const Container = styled.div`
       margin-bottom: 16px;
     }
   }
-`;
-
-const FileInput = styled.input`
-  display: none;
 `;
 
 const ImagePreview = styled.img`
@@ -62,15 +58,18 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [category, setCategory] = useState<Category>(Category.Brand); // Default category is brand
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState<boolean>(false);
+  const [category, setCategory] = useState<Category>(Category.Brand);
 
-  const handleTitleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setTitle(event.target.value);
+  const handleTitleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (event.target instanceof HTMLInputElement) {
+      setTitle(event.target.value);
+    }
   };
 
-  const handleContentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(event.target.value);
+  const handleContentChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (event.target instanceof HTMLTextAreaElement) {
+      setContent(event.target.value);
+    }
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +101,6 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       }
       const response = await axiosInstance.post(`${process.env.REACT_APP_API_BASE_URL}/communities`, formData);
       console.log("Post submitted successfully:", response.data);
-      // After submitting the post, navigate back to the previous route
       navigate(currentPath);
     } catch (error) {
       console.error("Error submitting post:", error);
@@ -112,7 +110,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   return (
     <Wrapper>
       <Container>
-      <div>카테고리</div>
+        <div>카테고리</div>
         <Dropdown value={category} onChange={handleCategoryChange}>
           <option value={Category.Brand}>Brand</option>
           <option value={Category.Shop}>Shop</option>
@@ -129,8 +127,8 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
           height={480}
           value={content}
           onChange={handleContentChange}
+          multiline
         />
-        
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {imagePreview && <ImagePreview src={imagePreview} alt="Image Preview" />}
         <Button

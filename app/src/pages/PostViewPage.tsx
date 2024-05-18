@@ -1,108 +1,148 @@
-{/*
-import React, { useState, ChangeEvent } from "react";
+import React, { FC, useEffect, useState, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import axiosInstance from "../api/axios";
 import CommentList from "../components/list/CommentList";
 import TextInput from "../components/ui/TextInput";
-import Button from "../components/ui/Button"
-import data from '../data/Commentdata.json";
+import Button from "../components/ui/Button";
 
-interface Post {
-    id: string;
-    title: string;
-    content: string;
-    comments: string[];
+interface Comment {
+  id: number;
+  userName: string;
+  imgUrl: string;
+  createdAt: string;
+  content: string;
 }
 
-interface PostViewPageProps {}
+interface PostDetails {
+  communityId: number;
+  userName: string | null;
+  profileImg: string;
+  createdAt: string;
+  title: string;
+  contents: string;
+  imgUrl: string;
+  likesCount: number;
+  commentsCount: number;
+  comments: Comment[];
+}
 
 const Wrapper = styled.div`
-    padding: 16px;
-    width: calc(100% - 32px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  padding: 16px;
+  width: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Container = styled.div`
-    width: 100%;
-    max-width: 720px;
+  width: 100%;
+  max-width: 720px;
 
-    & > * {
-        :not(:last-child) {
-            margin-bottom: 16px;
-        }
+  & > * {
+    :not(:last-child) {
+      margin-bottom: 16px;
     }
+  }
 `;
 
 const PostContainer = styled.div`
-    padding: 8px 16px;
-    border: 1px solid grey;
-    border-radius: 8px;
+  padding: 8px 16px;
+  border: 1px solid grey;
+  border-radius: 8px;
 `;
 
 const TitleText = styled.p`
-    font-size: 28px;
-    font-weight: 500;
+  font-size: 28px;
+  font-weight: 500;
 `;
 
 const ContentText = styled.p`
-    font-size: 20px;
-    line-height: 32px;
-    white-space: pre-wrap;
+  font-size: 20px;
+  line-height: 32px;
+  white-space: pre-wrap;
 `;
 
 const CommentLabel = styled.p`
-    font-size: 16px;
-    font-weight: 500;
+  font-size: 16px;
+  font-weight: 500;
 `;
 
-const PostViewPage: React.FC<PostViewPageProps> = () => {
-    const navigate = useNavigate();
-    const { postId } = useParams();
+const PostViewPage: FC = () => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [postDetails, setPostDetails] = useState<PostDetails | null>(null);
+  const [comment, setComment] = useState<string>("");
 
-    const post: Post | undefined = data.find((item: Post) => item.id === postId);
+  useEffect(() => {
+    fetchPostDetails();
+  }, [id]);
 
-    const [comment, setComment] = useState<string>("");
+  const fetchPostDetails = async () => {
+    try {
+      const response = await axiosInstance.get<PostDetails>(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${id}`
+      );
+      setPostDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
 
-    const handleCommentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setComment(event.target.value);
-    };
+  const handleCommentChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setComment(event.target.value);
+  };
 
-    return (
-        <Wrapper>
-            <Container>
-                <Button 
-                    title="뒤로 가기"
-                    onClick={() => {
-                        navigate("/");
-                    }}
-                />
-                <PostContainer>
-                    <TitleText>{post?.title}</TitleText>
-                    <ContentText>{post?.content}</ContentText>
-                </PostContainer>
+  const handleCommentSubmit = async () => {
+    if (!comment.trim()) return;
 
-                <CommentLabel>댓글</CommentLabel>
-                <CommentList comments={post?.comments || []} />
+    try {
+      await axiosInstance.post(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments`,
+        { content: comment }
+      );
+      setComment(""); // Clear the input after successful submission
+      fetchPostDetails(); // Re-fetch post details to update comments
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  };
 
-                <TextInput
-                    height={40}
-                    value={comment}
-                    onChange={handleCommentChange}
-                />
-                <Button
-                    title="댓글 작성하기"
-                    onClick={() => {
-                        // Implement logic to save comment
-                    }}
-                />
-            </Container>
-        </Wrapper>
-    );
-}
+  return (
+    <Wrapper>
+      <Container>
+        <Button
+          title="뒤로 가기"
+          onClick={() => {
+            navigate("/");
+          }}
+        />
+        <PostContainer>
+          <TitleText>{postDetails?.title}</TitleText>
+          <ContentText>{postDetails?.contents}</ContentText>
+          {postDetails?.imgUrl && <img src={postDetails.imgUrl} alt="Post Image" />}
+          <p>Posted by: {postDetails?.userName || "Anonymous"}</p>
+          <p>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</p>
+          <p>Likes: {postDetails?.likesCount}</p>
+          <p>Comments: {postDetails?.commentsCount}</p>
+        </PostContainer>
+
+        <CommentLabel>댓글</CommentLabel>
+        <CommentList comments={postDetails?.comments || []} />
+
+        <TextInput
+          height={40}
+          value={comment}
+          onChange={handleCommentChange}
+        />
+        <Button
+          title="댓글 작성하기"
+          onClick={handleCommentSubmit}
+        />
+      </Container>
+    </Wrapper>
+  );
+};
 
 export default PostViewPage;
-*/}
-export {}

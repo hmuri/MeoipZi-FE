@@ -1,32 +1,37 @@
-import React, {ChangeEvent} from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 
 interface TextInputProps {
     height?: number;
     value: string;
-    onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-}
+    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    multiline?: boolean;
+  }
 
-const StyledTextarea = styled.textarea<{ height?: number }>`
-    width: calc(100% - 32px);
-    ${(props) => props.height &&
-    `
-    height: ${props.height}px;
-    `}
-    padding: 16px;
-    font-size: 16px;
-    line-height: 20px;
-    border: 2px solid #ccc;
-
+const Input = styled.input<{ height: number }>`
+  width: 100%;
+  height: ${({ height }) => height}px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 `;
 
-function TextInput(props: TextInputProps){
-    const {height, value, onChange } = props;
+const TextArea = styled.textarea<{ height: number }>`
+  width: 100%;
+  height: ${({ height }) => height}px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+`;
 
-    return <StyledTextarea 
-        height ={height}
-        value = {value} 
-        onChange={onChange} />
-}
-
-export default TextInput;
+const TextInput: React.FC<TextInputProps> = ({ height = 40, value, onChange, multiline = false }) => {
+    if (multiline) {
+      return <TextArea height={height} value={value} onChange={onChange} />;
+    }
+    return <Input height={height} value={value} onChange={onChange} />;
+  };
+  
+  export default TextInput;
