@@ -1,7 +1,7 @@
 import { useQueryClient } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { getItem } from "../api/product";
+import { getItem, getProductItem } from "../api/product";
 import NavBar from "../components/NavBar";
 
 // 이미지 객체를 위한 타입 정의
@@ -15,20 +15,33 @@ interface ImageType {
 const Category = () => {
   const location = useLocation();
   const rawItems = location.state?.items;
+  const category = location.state?.category;
   const { categoryName } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const handleImageClick = (id: number) => {
-    queryClient
-      .fetchQuery(["productItem", id], () => getItem(id))
-      .then((data) => {
-        console.log("data" + data);
-        navigate(`/outfit/${id}`, { state: { items: data } });
-      })
-      .catch((error) => {
-        console.error("Failed to fetch category items:", error);
-      });
+    if (category === "genre") {
+      queryClient
+        .fetchQuery(["productItem", id], () => getItem(id))
+        .then((data) => {
+          console.log("data" + data);
+          navigate(`/outfit/${id}`, { state: { items: data } });
+        })
+        .catch((error) => {
+          console.error("Failed to fetch category items:", error);
+        });
+    } else {
+      queryClient
+        .fetchQuery(["productItem", id], () => getProductItem(id))
+        .then((data) => {
+          console.log("data" + data);
+          navigate(`/product/${id}`, { state: { items: data } });
+        })
+        .catch((error) => {
+          console.error("Failed to fetch category items:", error);
+        });
+    }
   };
 
   const images =
