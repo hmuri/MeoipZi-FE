@@ -5,22 +5,15 @@ import axiosInstance from "../../api/axios";
 
 interface Post {
   id: number;
-  title: string;
+  title?: string;
   imgUrl: string;
-  content: string;
-  category: string;
-  createdAt: string;
-  likesCount: number;
-  cmtCount: number;
-  heartCnt: number; // Example additional property
-  commentCnt: number; // Example additional property
-  postDate: string; // Example additional property
+  content?: string;
+  category?: string;
+  createdAt?: string;
+  likesCount?: number;
+  cmtCount?: number;
 }
 
-interface MainPageProps {
-  uploadedCommList: { id: number; title: string; imgUrl: string; createdAt: string; likesCount: number; cmtCount: number }[];
-  uploadedSFList: { id: number; imgUrl: string; createdAt: string }[];
-}
 
 const SWrapper = styled.div`
   padding: 16px;
@@ -42,51 +35,65 @@ const Container = styled.div`
     }
   }
   flex: 1;
+  margin-right:25vh;
+`;
+
+const VideoContainer = styled.video`
+  width: 100%;
+  height: auto;
+`;
+
+const ImageGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 columns with equal width */
+  gap: 15px; /* Gap between grid items */
+  margin: 8px; /* Margin on top and bottom */
 `;
 
 interface PostFeedProps {
-  uploadedCommList: any[]; // Define uploadedCommList prop
+  uploadedCommList: Post[];
+  uploadedSFList: Post[];
 }
 
-const PostFeed: FC<PostFeedProps> = ({ uploadedCommList }) => {
+const PostFeed: FC<PostFeedProps> = ({ uploadedCommList, uploadedSFList }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]); // State to store posts
 
   useEffect(() => {
-    if (uploadedCommList && uploadedCommList.length > 0) {
-      // Map uploadedCommList to posts
-      const mappedPosts: Post[] = uploadedCommList.map((comm) => ({
-        id: comm.id,
-        title: comm.title,
-        imgUrl: comm.imgUrl,
-        content: "", // Add content if available
-        category: "", // Add category if available
-        createdAt: comm.createdAt,
-        likesCount: comm.likesCount,
-        cmtCount: comm.cmtCount,
-        heartCnt: 0, // Example additional property
-        commentCnt: 0, // Example additional property
-        postDate: "", // Example additional property
-      }));
-      setPosts(mappedPosts);
+    if (uploadedSFList && uploadedSFList.length > 0) {
+      setPosts(uploadedSFList);
     }
-  }, [uploadedCommList]);
+  }, [uploadedSFList]);
+
+  const handleClick = (postId: number) => {
+    // Handle click event, e.g., navigate to post details page
+    navigate(`/post/${postId}`);
+  };
 
   return (
-    <>
-      <SWrapper>
-        <Container>
-          {/* Render posts */}
-          {posts.map((post: Post) => (
-            <div key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
-              <img src={post.imgUrl} alt={post.title} />
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
+    <SWrapper>
+      <Container>
+        <ImageGrid>
+          {posts.map((post) => (
+            <div key={post.id} onClick={() => handleClick(post.id)}>
+              {post.imgUrl.endsWith(".mp4") ? (
+                // Render video content if URL ends with .mp4
+                <VideoContainer controls>
+                  <source src={post.imgUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </VideoContainer>
+              ) : (
+                // Render text content if URL does not end with .mp4
+                <>
+                  <h3>{post.title}</h3>
+                  <p>{post.content}</p>
+                </>
+              )}
             </div>
           ))}
-        </Container>
-      </SWrapper>
-    </>
+        </ImageGrid>
+      </Container>
+    </SWrapper>
   );
 };
 

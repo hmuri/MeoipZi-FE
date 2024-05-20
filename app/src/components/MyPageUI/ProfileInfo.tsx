@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useHistory from react-
 import axiosInstance from '../../api/axios';// Import your axiosInstance
 
 import profileEdit from '../../images/profileEdit.png';
-import test from '../../images/test.png';
+import userimg from '../../images/user.png';
 
 interface User {
   name: string;
@@ -16,7 +16,7 @@ const ProfileInfo: React.FC = () => {
   // Manage user state
   const [user, setUser] = useState<User>({
     name: '', // Initially empty
-    image: test // You can replace this with the actual path to the user's image
+    image: userimg // You can replace this with the actual path to the user's image
   });
 
   // Access history object
@@ -108,6 +108,7 @@ const Back = styled.div`
              style={{ height: '17px', marginLeft: '80px', marginTop: '60px' }}
              onClick={goToProfilePage} />
         {/* Button to simulate user login */}
+        <ProfileButton> </ProfileButton>
         {/*<ProfileButton onClick={handleLogin}>Login</ProfileButton>*/}
       </InfoStyle>
       <BottomRectangle />

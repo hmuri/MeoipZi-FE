@@ -71,12 +71,14 @@ const MyPage_post_scrap: FC<{ component?: React.ReactNode }> = ({ component }) =
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/scraps`);
-        setScrapData(response.data); // Assuming response.data contains the scrap data
+        if (response.data) {
+          setScrapData(response.data);
+        }
       } catch (error) {
         console.error("Error fetching scrap data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
 

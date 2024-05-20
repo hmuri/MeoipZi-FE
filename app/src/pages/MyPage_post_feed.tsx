@@ -68,6 +68,7 @@ const Box = styled.div`
 const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) => {
   const navigate = useNavigate();
   const [uploadedComms, setUploadedComms] = useState([]);
+  const [uploadedSFs, setUploadedSFs] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,7 +76,7 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
         const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds`);
         const data = response.data;
         setUploadedComms(data.uploadedComms);
-
+        setUploadedSFs(data.uploadedSFs);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -91,13 +92,14 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
           <Style>
             <Box>
               <MyPageTab />
-              <PostFeed uploadedCommList={uploadedComms} />
+              {/* Pass uploadedComms and uploadedSFs as props to PostFeed */}
+              <PostFeed uploadedCommList={uploadedComms} uploadedSFList={uploadedSFs} />
               <BottomRectangle />
             </Box>
             <div style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>
               내가 업로드한 숏폼
             </div>
-            <PostShort/>
+            <PostShort />
           </Style>
         </ScrollableContainer>
       </ProfileLayout>

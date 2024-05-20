@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../api/axios";
 
-const ShortFormList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+const ShortFormGrid = styled.div`
+display: grid;
+grid-template-columns: repeat(2, 1fr); /* 3 columns with equal width */
+gap: 15px; /* Gap between grid items */
+margin: 10px; /* Margin on top and bottom */
 `;
 
 const ShortFormItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 18px;
 `;
 
 const Video = styled.video`
@@ -84,7 +86,7 @@ const PostShort: React.FC = () => {
 
   return (
     <>
-      <ShortFormList>
+      <ShortFormGrid>
         {displayedShortForms.map((shortForm) => (
           <ShortFormItem key={shortForm.id}>
             <Video controls>
@@ -94,7 +96,7 @@ const PostShort: React.FC = () => {
             <p>{new Date(shortForm.createAt).toLocaleDateString()}</p>
           </ShortFormItem>
         ))}
-      </ShortFormList>
+      </ShortFormGrid>
       {!showAll && (
         <SeeAllButton onClick={handleSeeAllClick}>See All</SeeAllButton>
       )}
