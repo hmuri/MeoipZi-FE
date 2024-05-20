@@ -1,14 +1,31 @@
-import axios from "axios";
 import axiosInstance from "./axios";
 
-// 검색 결과를 가져오는 함수
-export const getCategoryItems = async (categoryId: number) => {
+export const getCategoryItems = async (category: string) => {
   try {
-    const response = await axiosInstance.get(`/outfits/${categoryId}`);
-    console.log(response.data);
-    return response.data;
+    const response = await axiosInstance.get(`/products/search/category/latest?category=${category}&page=0&size=20`);
+    console.log('Data:', response.data);
+    return response.data
   } catch (error) {
-    console.error("검색 결과를 가져오는데 실패했습니다.", error);
-    throw error;
+    console.error('Failed to fetch category items:', error);
   }
 };
+export const getBrandItems = async (category: string) => {
+  try {
+    const response = await axiosInstance.get(`/products/search/brand/latest?brand=${category}&page=0&size=20`);
+    console.log('Data:', response.data);
+    return response.data
+  } catch (error) {
+    console.error('Failed to fetch category items:', error);
+  }
+};
+export const getGenreItems = async (category: string) => {
+  try {
+    const response = await axiosInstance.get(`/products/search/genre/latest?genre=${category}&page=0&size=20`);
+    console.log('Data:', response.data);
+    return response.data
+  } catch (error) {
+    console.error('Failed to fetch category items:', error);
+  }
+};
+
+export {};

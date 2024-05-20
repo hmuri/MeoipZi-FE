@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "title": "요 브랜드가 좋더라",
+        "content": "안녕하세요",
+        "heartCnt":3,
+        "commentCnt":3,
+        "postDate":"2024-01-11"
+        
+    },
+    {
+        "id": 2,
+        "title": "어디어디 몇월몇일 부터 세일한다고함",
+        "content": "안녕하세요, 테스트2",
+        "heartCnt":1,
+        "commentCnt":3,
+        "postDate":"2024-01-10"
+    },
+    {
+        "id": 3,
+        "title": "이 브랜드에서 옷 사지 마",
+        "content": "test content3-id3",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    }
+]

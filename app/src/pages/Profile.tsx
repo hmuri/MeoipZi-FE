@@ -1,37 +1,119 @@
+import { useRef, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../api/axios";
 
 const Profile = () => {
+  const [nickname, setNickname] = useState("");
+  const [height, setHeight] = useState("");
+  const [heightSecret, setHeightSecret] = useState(false);
+  const [weight, setWeight] = useState("");
+  const [weightSecret, setWeightSecret] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    // 기타 폼 데이터를 JSON 객체로 준비
+    const profileData = {
+      nickname,
+      height,
+      heightSecret,
+      weight,
+      weightSecret,
+    };
+
+    const formData = new FormData();
+    // 폼 데이터를 JSON 문자열로 변환하여 Blob 형태로 'profileData' 필드에 추가
+    formData.append(
+      "profileData",
+      new Blob([JSON.stringify(profileData)], { type: "application/json" })
+    );
+
+    // 이미지 파일 추가
+    if (fileInputRef.current?.files && fileInputRef.current.files[0]) {
+      formData.append("image", fileInputRef.current.files[0]);
+    }
+
+    try {
+      // formData를 서버로 전송
+      const response = await axiosInstance.post(
+        "/profiles/settings",
+        formData,
+        {
+          headers: {
+            // 'Content-Type': 'multipart/form-data'는 Axios에서 자동으로 설정됩니다.
+            // 따라서 여기서 명시적으로 설정할 필요가 없습니다.
+          },
+        }
+      );
+      console.log(response.data); // 성공 응답 처리
+    } catch (error) {
+      console.error("There was an error submitting the form:", error);
+    }
+  };
+
   return (
-    <Container>
+    <Container onSubmit={handleSubmit}>
       <Title>프로필 설정</Title>
-      <ChooseImg></ChooseImg>
+      <ChooseImg>
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          style={{ display: "none" }}
+        />
+        <Button onClick={() => fileInputRef.current?.click()}>
+          이미지 선택
+        </Button>
+      </ChooseImg>
       <InfoBox>
         <LabelBox>
           <Label>닉네임</Label>
           <InfoInputBox>
-            <InfoInput></InfoInput>
+            <InfoInput
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+            ></InfoInput>
           </InfoInputBox>
         </LabelBox>
         <LabelBox>
           <Label>신장</Label>
           <InfoInputBox>
-            <InfoInput></InfoInput>
+            <InfoInput
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            ></InfoInput>
+            <input
+              type="checkbox"
+              checked={heightSecret}
+              onChange={() => setHeightSecret(!heightSecret)}
+            />{" "}
+            비공개
           </InfoInputBox>
         </LabelBox>
         <LabelBox>
           <Label>몸무게</Label>
           <InfoInputBox>
-            <InfoInput></InfoInput>
+            <InfoInput
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            ></InfoInput>
+            <input
+              type="checkbox"
+              checked={weightSecret}
+              onChange={() => setWeightSecret(!weightSecret)}
+            />{" "}
+            비공개
           </InfoInputBox>
         </LabelBox>
       </InfoBox>
-      <Button>완료</Button>
+      <Button type="submit">완료</Button>
     </Container>
   );
 };
-export default Profile;
 
-const Container = styled.div`
+export default Profile;
+const Container = styled.form`
   width: 100%;
   height: 812px;
   position: relative;

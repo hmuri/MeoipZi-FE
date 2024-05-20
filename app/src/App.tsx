@@ -7,6 +7,17 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 
+import MainPage from "./pages/MainPage";
+import MyPage_like from "./pages/MyPage_like";
+import MyPage_post_comment from "./pages/MyPage_post_comment";
+import MyPage_post_feed from "./pages/MyPage_post_feed";
+import MyPage_post_scrap from "./pages/MyPage_post_scrap";
+import Category from "./pages/Category";
+import Product from "./pages/Product";
+import Shortform from "./pages/Shortform";
+import Outfit from "./pages/Outfit";
+import PostShortForm from "./pages/PostShortForm";
+
 function App() {
   function setScreenSize() {
     let vh = window.innerHeight * 0.01;
@@ -26,6 +37,25 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/MainPage" element={<MainPage />} />
+              <Route path="/shortform/post" element={<PostShortForm />} />
+              <Route path="/mypage/likes" element={<MyPage_like />} />
+              <Route path="/shortform" element={<Shortform />} />
+              <Route path="/category/:categoryName" element={<Category />} />
+              <Route path="/product/:product" element={<Product />} />
+              <Route path="/outfit/:outfit" element={<Outfit />} />
+              <Route
+                path="/mypage/posts/feeds"
+                element={<MyPage_post_feed />}
+              />
+              <Route
+                path="/mypage/posts/scraps"
+                element={<MyPage_post_scrap />}
+              />
+              <Route
+                path="/mypage/posts/comments"
+                element={<MyPage_post_comment />}
+              />
             </Routes>
           </Router>
         </Container>

@@ -1,0 +1,108 @@
+[
+    {
+        "id": 100000001,
+        "title": "shoptest1",
+        "content": "안녕하세요",
+        "heartCnt":3,
+        "commentCnt":3,
+        "postDate":"2024-01-11"
+        
+    },
+    {
+        "id": 100000002,
+        "title": "브랜드 xxx입니다",
+        "content": "안녕하세요, 테스트2",
+        "heartCnt":1,
+        "commentCnt":3,
+        "postDate":"2024-01-10"
+    },
+    {
+        "id": 100000003,
+        "title": "테스트 제목 3 옷가게",
+        "content": "test content3-id3",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000004,
+        "title": "테스트 제목 4 옷가게",
+        "content": "test content4-id4",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-05"
+        
+    },
+    {
+        "id": 100000005,
+        "title": "테스트 제목 5 옷가게",
+        "content": "test content5-id5",
+        "heartCnt":3,
+        "commentCnt":1,
+        "postDate":"2024-01-05"
+        
+    },
+    {
+        "id": 100000006,
+        "title": "테스트 제목 6 옷가게",
+        "content": "test content6-id6",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000007,
+        "title": "테스트 제목 7 옷가게",
+        "content": "test content7-id7",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000008,
+        "title": "테스트 제목 8 옷가게",
+        "content": "test content8-id8",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000009,
+        "title": "테스트 제목 9 옷가게",
+        "content": "test content9-id9",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },{
+        "id": 100000010,
+        "title": "테스트 제목 10 옷가게",
+        "content": "test content10-id10",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000011,
+        "title": "테스트 제목 11 옷가게",
+        "content": "test content11-id11",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    },
+    {
+        "id": 100000012,
+        "title": "테스트 제목 12 옷가게",
+        "content": "test content12-id12",
+        "heartCnt":2,
+        "commentCnt":0,
+        "postDate":"2024-01-01"
+        
+    }
+]
