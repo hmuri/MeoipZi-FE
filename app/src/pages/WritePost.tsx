@@ -15,6 +15,17 @@ interface WritePostProps {
   currentPath: string;
 }
 
+interface PostData {
+  id: number;
+  title: string;
+  imgUrl: string;
+  nickname: string;
+  likesCount: string;
+  commentsCount: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Wrapper = styled.div`
   padding: 16px;
   width: calc(100% - 32px);
@@ -99,9 +110,17 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       if (image) {
         formData.append("image", image);
       }
-      const response = await axiosInstance.post(`${process.env.REACT_APP_API_BASE_URL}/communities`, formData);
-      console.log("Post submitted successfully:", response.data);
+      await axiosInstance.post(`${process.env.REACT_APP_API_BASE_URL}/communities`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      console.log("Post submitted successfully");
       navigate(currentPath);
+  
+      // Fetch latest posts after submitting a new post
+      const latestPostsResponse = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=${category}&page=0&size=20`);
+      console.log("Latest posts:", latestPostsResponse.data);
     } catch (error) {
       console.error("Error submitting post:", error);
     }

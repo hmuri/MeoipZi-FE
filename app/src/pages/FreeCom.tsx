@@ -41,18 +41,6 @@ const FWrapper = styled.div`
   margin-bottom: 3vh;
 `;
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 355px;
-  height: 100%;
-
-  & > * {
-    :not(:last-child) {
-      margin-bottom: 16px;
-    }
-  }
-  flex: 1;
-`;
 
 const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
@@ -65,7 +53,6 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`);
-      console.log(response.data);
       const transformedPosts = response.data.map(transformPostData);
       setPosts(transformedPosts);
     } catch (error) {
@@ -85,15 +72,13 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   };
 
   const handleItemClick = (post: Post) => {
-    navigate(`/post/${post.id}`);
+    navigate(`FreeCommunity/post/${post.id}`);
   };
 
   return (
     <ComLayout currentPath={currentPath}>
       <FWrapper>
-        <Container>
           <PostList posts={posts} onClickItem={handleItemClick} />
-        </Container>
       </FWrapper>
     </ComLayout>
   );
