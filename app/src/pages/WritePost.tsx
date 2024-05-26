@@ -91,10 +91,9 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("contents", content);
-      const targetCategory = category === Category.Play ? "free" : category;
-      formData.append("category", targetCategory);
+      formData.append("category", category);
       if (image) {
-        formData.append("imgUrl", image); // Use "imgUrl" as the key
+        formData.append("image", image); // Ensure the key here matches what your backend expects
       }
   
       const response = await axiosInstance.post(
@@ -109,7 +108,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       console.log("Post submitted successfully", response.data);
   
       const { communityId } = response.data;
-      navigate(`${currentPath}/post/${communityId}`);
+      navigate(`/post/${communityId}`);
     } catch (error) {
       console.error("Error submitting post:", error);
     }

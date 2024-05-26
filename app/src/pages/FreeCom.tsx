@@ -49,7 +49,7 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
-        `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=free&page=0&size=20`
+        `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`
       );
       const postData = response.data.content;
       const transformedPosts = postData.map(transformPostData);
