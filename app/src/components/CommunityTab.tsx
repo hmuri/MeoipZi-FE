@@ -43,7 +43,7 @@ const StyledButton = styled.button`
 `;
 
 const BottomRectangle = styled.div`
-  width: 375px;
+  width: 100%;
   height: 2px;
   background-color: #ECECEC;
   margin-top: auto; /* Push the rectangle to the bottom */

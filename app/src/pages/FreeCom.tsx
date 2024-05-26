@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../components/list/PostList";
-import Button from "../components/ui/Button_clicked";
 import ComLayout from "../components/CommunityLayout";
 import axiosInstance from "../api/axios";
 
@@ -11,14 +10,12 @@ interface MainPageProps {
 }
 
 interface PostData {
-  id: number;
+  communityId: number;
   title: string;
   imgUrl: string;
-  nickname: string;
-  likesCount: string;
-  commentsCount: string;
   createdAt: string;
-  updatedAt: string;
+  commentsCount: number;
+  likesCount: number;
 }
 
 interface Post {
@@ -35,16 +32,15 @@ const FWrapper = styled.div`
   width: 50vh;
   display: flex;
   flex-direction: column;
-  align-items: center;  // Fixed typo in 'align-items'
+  align-items: center;
   justify-content: center;
-  
   margin-bottom: 3vh;
 `;
-
 
 const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [totalElements, setTotalElements] = useState<number>(0);
 
   useEffect(() => {
     fetchData();
@@ -52,9 +48,13 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`);
-      const transformedPosts = response.data.map(transformPostData);
+      const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=free&page=0&size=20`
+      );
+      const postData = response.data.content;
+      const transformedPosts = postData.map(transformPostData);
       setPosts(transformedPosts);
+      setTotalElements(response.data.totalElements); // Set totalElements from the response
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -62,23 +62,23 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const transformPostData = (postData: PostData): Post => {
     return {
-      id: postData.id,
+      id: postData.communityId,
       title: postData.title,
       imgUrl: postData.imgUrl,
-      heartCnt: parseInt(postData.likesCount),
-      commentCnt: parseInt(postData.commentsCount),
-      createdAt: new Date(postData.createdAt).toISOString(),
+      heartCnt: postData.likesCount,
+      commentCnt: postData.commentsCount,
+      createdAt: new Date(postData.createdAt).toLocaleString(),
     };
   };
 
   const handleItemClick = (post: Post) => {
-    navigate(`FreeCommunity/post/${post.id}`);
+    navigate(`/post/${post.id}`);
   };
 
   return (
-    <ComLayout currentPath={currentPath}>
+    <ComLayout currentPath={currentPath} totalElements={totalElements}>
       <FWrapper>
-          <PostList posts={posts} onClickItem={handleItemClick} />
+        <PostList posts={posts} onClickItem={handleItemClick} />
       </FWrapper>
     </ComLayout>
   );

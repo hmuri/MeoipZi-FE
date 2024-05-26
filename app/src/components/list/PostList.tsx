@@ -1,4 +1,3 @@
-// PostList.tsx
 import React from "react";
 import styled from "styled-components";
 import PostListItem from "./PostListItem";
@@ -39,3 +38,4 @@ const PostList: React.FC<PostListProps> = ({ posts, onClickItem }) => {
 };
 
 export default PostList;
+

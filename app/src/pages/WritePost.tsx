@@ -15,17 +15,6 @@ interface WritePostProps {
   currentPath: string;
 }
 
-interface PostData {
-  id: number;
-  title: string;
-  imgUrl: string;
-  nickname: string;
-  likesCount: string;
-  commentsCount: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 const Wrapper = styled.div`
   padding: 16px;
   width: calc(100% - 32px);
@@ -72,15 +61,11 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const [category, setCategory] = useState<Category>(Category.Brand);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (event.target instanceof HTMLInputElement) {
-      setTitle(event.target.value);
-    }
+    setTitle(event.target.value);
   };
 
   const handleContentChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (event.target instanceof HTMLTextAreaElement) {
-      setContent(event.target.value);
-    }
+    setContent(event.target.value);
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,21 +91,25 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("contents", content);
-      formData.append("category", category);
+      const targetCategory = category === Category.Play ? "free" : category;
+      formData.append("category", targetCategory);
       if (image) {
-        formData.append("image", image);
+        formData.append("imgUrl", image); // Use "imgUrl" as the key
       }
-      await axiosInstance.post(`${process.env.REACT_APP_API_BASE_URL}/communities`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
-      console.log("Post submitted successfully");
-      navigate(currentPath);
   
-      // Fetch latest posts after submitting a new post
-      const latestPostsResponse = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=${category}&page=0&size=20`);
-      console.log("Latest posts:", latestPostsResponse.data);
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_BASE_URL}/communities`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Post submitted successfully", response.data);
+  
+      const { communityId } = response.data;
+      navigate(`${currentPath}/post/${communityId}`);
     } catch (error) {
       console.error("Error submitting post:", error);
     }
@@ -136,27 +125,15 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
           <option value={Category.Play}>Play</option>
         </Dropdown>
         <h4>제목</h4>
-        <TextInput
-          height={20}
-          value={title}
-          onChange={handleTitleChange}
-        />
+        <TextInput height={20} value={title} onChange={handleTitleChange} />
         <div>글</div>
-        <TextInput
-          height={480}
-          value={content}
-          onChange={handleContentChange}
-          multiline
-        />
+        <TextInput height={480} value={content} onChange={handleContentChange} multiline />
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {imagePreview && <ImagePreview src={imagePreview} alt="Image Preview" />}
-        <Button
-          title="글 작성하기"
-          onClick={handlePostSubmit}
-        />
+        <Button title="글 작성하기" onClick={handlePostSubmit} />
       </Container>
     </Wrapper>
   );
-}
+};
 
 export default WritePost;

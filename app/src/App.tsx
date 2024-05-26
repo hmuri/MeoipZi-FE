@@ -21,6 +21,7 @@ import BrandCom from "./pages/BrandCom";
 import ShopCom from "./pages/ShopCom";
 import FreeCom from "./pages/FreeCom";
 import WritePost from "./pages/WritePost";
+import PostViewPage from "./pages/PostViewPage";
 
 
 function App() {
@@ -62,7 +63,8 @@ function App() {
               <Route path="/ShopCommunity/WritePost" element={<WritePost currentPath="/ShopCommunity" />}/>
               <Route path="/FreeCommunity/WritePost" element={<WritePost currentPath="/FreeCommunity" />}/>
 
-              
+              <Route path="/post/:id" element={<PostViewPage />} />
+
             </Routes>
           </Router>
         </Container>

@@ -6,18 +6,16 @@ import ComLayout from "../components/CommunityLayout";
 import axiosInstance from "../api/axios";
 
 interface MainPageProps {
-  currentPath: string; // Add currentPath prop
+  currentPath: string;
 }
 
 interface PostData {
-  id: number;
+  communityId: number;
   title: string;
   imgUrl: string;
-  nickname: string;
-  likesCount: string;
-  commentsCount: string;
   createdAt: string;
-  updatedAt: string;
+  commentsCount: number;
+  likesCount: number;
 }
 
 interface Post {
@@ -31,18 +29,18 @@ interface Post {
 
 const BWrapper = styled.div`
   padding: 16px;
-  width: 50vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 3vh;
-  margin-top: 10%; // Adjust this value according to your design
+  justify-content: flex-start;
+  margin-top: 15vh;
 `;
 
 const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [totalElements, setTotalElements] = useState<number>(0);
 
   useEffect(() => {
     fetchData();
@@ -50,44 +48,35 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const fetchData = async () => {
     try {
-      // Fetch image URLs
-      const imageResponse = await axiosInstance.get<string[][]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`);
-      const imageUrls = imageResponse.data;
-
-      // Fetch post data
-      const postResponse = await axiosInstance.get<PostData[]>(`${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`);
-      const postData = postResponse.data;
-
-      // Combine post data with image URLs
-      const transformedPosts = postData.map((post, index) => transformPostData(post, imageUrls[index]));
+      const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`
+      );
+      const postData = response.data.content;
+      const transformedPosts = postData.map(transformPostData);
       setPosts(transformedPosts);
-      console.log(transformedPosts);
+      setTotalElements(response.data.totalElements); // Set totalElements from the response
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const transformPostData = (postData: PostData, imgUrls: string[]): Post => {
-    let postDateISOString = '';
-    if (Date.parse(postData.createdAt)) {
-      postDateISOString = new Date(postData.createdAt).toISOString();
-    }
+  const transformPostData = (postData: PostData): Post => {
     return {
-      id: postData.id,
+      id: postData.communityId,
       title: postData.title,
-      imgUrl: imgUrls[0] || '', // Assuming the first image is the primary image
-      heartCnt: parseInt(postData.likesCount),
-      commentCnt: parseInt(postData.commentsCount),
-      createdAt: postDateISOString,
+      imgUrl: postData.imgUrl,
+      heartCnt: postData.likesCount,
+      commentCnt: postData.commentsCount,
+      createdAt: new Date(postData.createdAt).toLocaleString(),
     };
   };
 
   const handleItemClick = (post: Post) => {
-    navigate(`BrandCommunity/post/${post.id}`);
+    navigate(`/post/${post.id}`);
   };
 
   return (
-    <ComLayout currentPath={currentPath}>
+    <ComLayout currentPath={currentPath} totalElements={totalElements}>
       <BWrapper>
         <PostList posts={posts} onClickItem={handleItemClick} />
       </BWrapper>

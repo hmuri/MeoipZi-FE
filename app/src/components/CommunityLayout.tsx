@@ -9,79 +9,85 @@ import MainPgTab from "./mainpageUI/MainPgTab";
 import CommunityTab from "./CommunityTab";
 import WritePost from "../pages/WritePost";
 
-//add button to writePost
+// Add button to writePost
 import writeButton from "../images/WritePostB.png";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NavBar from "./NavBar";
 
-//import CommunityTab from "./CommunityTab";
-
 interface LayoutProps {
   children: ReactNode;
   currentPath: string;
+  totalElements: number; // Add totalElements prop
 }
 
 const StyleWrap = styled.div`
-  margin-top: 95vh;
-  margin-bottom: 1vh;
   position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   display: flex;
-  align-items: center;
   flex-direction: column;
-  /* Adjust the width to ensure it accommodates the contents without cropping */
-  /* width: 56vh; */
-  justify-content: space-between;
-  min-height: 100%;
-  overflow: hidden;
-
-  background-color: white;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding-top: 25vh;
+  padding-bottom: 10vh;
 `;
 
-const ContentWrapper = styled.div`
+const ContentWrapper = styled.div<{ marginTop: number }>`
   flex: 1;
-  padding-top: 20px; /* Add padding-top to create space below the CommunityTab */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: ${(props) => props.marginTop}px; // Dynamically adjust margin-top
+  overflow-y: auto; // Add this to enable vertical scrolling if needed
 `;
 
 const WriteButton = styled.img`
   width: 80px;
   position: fixed;
-  left: 58%;
+  left: 70%;
+  transform: translateX(-50%);
   top: 70%;
-  cursor: pointer; /* Add cursor pointer */
+  cursor: pointer;
 `;
 
 function ComLayout(props: LayoutProps): JSX.Element {
-  const { currentPath } = props;
+  const { currentPath, totalElements } = props;
   const location = useLocation();
+
+  // Calculate the number of posts based on totalElements
+  const numPosts = totalElements > 0 ? totalElements : 10; // Default to 10 if totalElements is not available
+
+  // Calculate the margin-top based on the number of posts
+  const baseMarginTop = 120;
+  const marginTop = baseMarginTop + (numPosts * 80);
 
   return (
     <div>
       <MainHeader />
       <MainPgTab />
-      <CommunityTab/>
+      <CommunityTab />
       <StyleWrap id="wrap">
-        <ContentWrapper>
-          
+        <ContentWrapper marginTop={marginTop}>
           <main>{props.children}</main>
         </ContentWrapper>
       </StyleWrap>
       {location.pathname === "/WritePost" ? (
-            <WritePost currentPath={currentPath} />
-          ) : (
-            <Link to={`${currentPath}/WritePost`}>
-              <WriteButton src={writeButton} alt="Write Post" />
-            </Link>
-          )}
-          <Routes>
-          <Route path={`${currentPath}/WritePost`} element={<WritePost currentPath={currentPath} />} />
-          </Routes>
-        <Footer />
+        <WritePost currentPath={currentPath} />
+      ) : (
+        <Link to={`${currentPath}/WritePost`}>
+          <WriteButton src={writeButton} alt="Write Post" />
+        </Link>
+      )}
+      <Routes>
+        <Route
+          path={`${currentPath}/WritePost`}
+          element={<WritePost currentPath={currentPath} />}
+        />
+      </Routes>
+      <Footer />
     </div>
   );
 }
 
 export default ComLayout;
+

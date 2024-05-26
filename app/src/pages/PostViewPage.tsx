@@ -16,7 +16,7 @@ interface Comment {
 
 interface PostDetails {
   communityId: number;
-  userName: string | null;
+  userName: string;
   profileImg: string;
   createdAt: string;
   title: string;
@@ -25,6 +25,8 @@ interface PostDetails {
   likesCount: number;
   commentsCount: number;
   comments: Comment[];
+  category: string;
+  likedByUser: boolean; // This field indicates if the current user has liked the post
 }
 
 const Wrapper = styled.div`
@@ -42,7 +44,7 @@ const Container = styled.div`
 
   & > * {
     :not(:last-child) {
-      margin-bottom: 16px;
+      margin-bottom: 5px;
     }
   }
 `;
@@ -51,6 +53,7 @@ const PostContainer = styled.div`
   padding: 8px 16px;
   border: 1px solid grey;
   border-radius: 8px;
+  position: relative;
 `;
 
 const TitleText = styled.p`
@@ -62,6 +65,7 @@ const ContentText = styled.p`
   font-size: 20px;
   line-height: 32px;
   white-space: pre-wrap;
+  margin-top: 20px;
 `;
 
 const CommentLabel = styled.p`
@@ -69,11 +73,47 @@ const CommentLabel = styled.p`
   font-weight: 500;
 `;
 
+const MetaInfo = styled.div`
+  color: #a9a9a9;
+  font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px; /* Adjust the margin-bottom */
+`;
+
+const UserInfo = styled.div`
+  color: #a9a9a9;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  top: 3px; /* Adjust the top margin */
+`;
+
+const DataContainer = styled.div`
+  display: flex;
+  color: #a9a9a9;
+  align-items: center;
+  margin-top: 5px; /* Adjust as needed */
+  width: 100%;
+`;
+
+const LikesText = styled.p`
+  margin-right: 20px; /* Adjust as needed */
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const PostViewPage: FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [postDetails, setPostDetails] = useState<PostDetails | null>(null);
   const [comment, setComment] = useState<string>("");
+  const viewerId = "0525닉네임"; // Replace this with the actual viewer ID, e.g., from context or state
 
   useEffect(() => {
     fetchPostDetails();
@@ -109,23 +149,68 @@ const PostViewPage: FC = () => {
     }
   };
 
+  const handlePostDelete = async () => {
+    try {
+      await axiosInstance.delete(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}`
+      );
+      navigate("/BrandCommunity"); // Navigate back to the community page after deletion
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/like`,
+        { contentType: "community" }
+      );
+
+      if (response.status === 200 && postDetails) {
+        setPostDetails({
+          ...postDetails,
+          likesCount: postDetails.likedByUser ? postDetails.likesCount - 1 : postDetails.likesCount + 1,
+          likedByUser: !postDetails.likedByUser,
+        });
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
   return (
     <Wrapper>
       <Container>
-        <Button
-          title="뒤로 가기"
-          onClick={() => {
-            navigate("/");
-          }}
-        />
+        <ButtonContainer>
+          <Button
+            title="뒤로 가기"
+            onClick={() => {
+              navigate("/BrandCommunity");
+            }}
+          />
+          {viewerId === postDetails?.userName && (
+            <Button
+              title="글 삭제하기"
+              onClick={handlePostDelete}
+            />
+          )}
+        </ButtonContainer>
         <PostContainer>
           <TitleText>{postDetails?.title}</TitleText>
+          
+          <UserInfo>Posted by: {postDetails?.userName || "Anonymous"}</UserInfo>
+          <MetaInfo>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</MetaInfo>
+          
           <ContentText>{postDetails?.contents}</ContentText>
           {postDetails?.imgUrl && <img src={postDetails.imgUrl} alt="Post Image" />}
-          <p>Posted by: {postDetails?.userName || "Anonymous"}</p>
-          <p>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</p>
-          <p>Likes: {postDetails?.likesCount}</p>
-          <p>Comments: {postDetails?.commentsCount}</p>
+          
+          <DataContainer>
+            <LikesText>Likes: {postDetails?.likesCount}</LikesText>
+            <Button title={postDetails?.likedByUser ? "Unlike" : "Like"} onClick={handleLike} />
+            Comments: {postDetails?.commentsCount}
+          </DataContainer>
+          
         </PostContainer>
 
         <CommentLabel>댓글</CommentLabel>
