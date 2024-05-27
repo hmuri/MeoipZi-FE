@@ -2,9 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 interface Comment {
-    id: number;
-    imgUrl: string;
-    createdAt: string;
+    //id: string;
     content: string; // Add the content property
 }
 
@@ -35,9 +33,8 @@ const ContentText = styled.p`
 const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
     return (
         <Wrapper>
-            <img src={comment.imgUrl} alt={`Comment ${comment.id}`} />
-            <ContentText>{comment.createdAt}</ContentText>
-            <ContentText>{comment.id}</ContentText>
+            {/*{`Comment ${comment.id}`}*/}
+            <ContentText>{comment.content}</ContentText>
         </Wrapper>
     );
 }

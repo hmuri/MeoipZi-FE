@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, ChangeEvent, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
@@ -13,6 +13,21 @@ enum Category {
 
 interface WritePostProps {
   currentPath: string;
+}
+
+interface PostDetails {
+  communityId: number;
+  userName: string;
+  profileImg: string;
+  createdAt: string;
+  title: string;
+  contents: string;
+  imgUrl: string;
+  likesCount: number;
+  commentsCount: number;
+  comments: Comment[];
+  category: string;
+  likedByUser: boolean; // This field indicates if the current user has liked the post
 }
 
 const Wrapper = styled.div`
@@ -54,11 +69,22 @@ const Dropdown = styled.select`
 
 const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [category, setCategory] = useState<Category>(Category.Brand);
+
+  useEffect(() => {
+    if (location.state) {
+      const { postDetails } = location.state as { postDetails: PostDetails };
+      setTitle(postDetails.title);
+      setContent(postDetails.contents);
+      setCategory(postDetails.category as Category);
+      // You might need to handle image prefilling if required
+    }
+  }, [location.state]);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTitle(event.target.value);
@@ -93,9 +119,14 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       formData.append("contents", content);
       formData.append("category", category);
       if (image) {
-        formData.append("image", image); // Ensure the key here matches what your backend expects
+        formData.append("imgUrl", image); // Ensure the key here matches what your backend expects
       }
-  
+
+      // Alternative method to log formData entries
+      formData.forEach((value, key) => {
+        console.log(key + ': ' + value);
+      });
+
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities`,
         formData,
@@ -106,11 +137,39 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
         }
       );
       console.log("Post submitted successfully", response.data);
-  
+
       const { communityId } = response.data;
       navigate(`/post/${communityId}`);
     } catch (error) {
       console.error("Error submitting post:", error);
+    }
+  };
+
+  const handlePostUpdate = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("contents", content);
+      formData.append("category", category);
+      if (image) {
+        formData.append("imgUrl", image); // Ensure the key here matches what your backend expects
+      }
+
+      const { postDetails } = location.state!;
+      const response = await axiosInstance.patch(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails.communityId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Post updated successfully", response.data);
+      navigate(`/post/${postDetails.communityId}`);
+    } catch (error) {
+      console.error("Error updating post:", error);
     }
   };
 
@@ -130,6 +189,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {imagePreview && <ImagePreview src={imagePreview} alt="Image Preview" />}
         <Button title="글 작성하기" onClick={handlePostSubmit} />
+        <Button title="수정하기" onClick={handlePostUpdate} />
       </Container>
     </Wrapper>
   );

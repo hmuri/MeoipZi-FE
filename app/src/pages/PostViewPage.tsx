@@ -7,10 +7,7 @@ import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
 
 interface Comment {
-  id: number;
-  userName: string;
-  imgUrl: string;
-  createdAt: string;
+  //id: string;
   content: string;
 }
 
@@ -113,10 +110,13 @@ const PostViewPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const [postDetails, setPostDetails] = useState<PostDetails | null>(null);
   const [comment, setComment] = useState<string>("");
-  const viewerId = "0525닉네임"; // Replace this with the actual viewer ID, e.g., from context or state
+  const [viewerId, setViewerId] = useState<string>("");
+  const [replyContent, setReplyContent] = useState<string>("");
+
 
   useEffect(() => {
     fetchPostDetails();
+    fetchViewerId();
   }, [id]);
 
   const fetchPostDetails = async () => {
@@ -130,24 +130,74 @@ const PostViewPage: FC = () => {
     }
   };
 
+  const fetchViewerId = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_BASE_URL}/profiles/info`
+      );
+      setViewerId(response.data.nickname); // Set the viewerId from the response
+    } catch (error) {
+      console.error("Error fetching viewerId:", error);
+    }
+  };
+
   const handleCommentChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setComment(event.target.value);
   };
 
   const handleCommentSubmit = async () => {
     if (!comment.trim()) return;
-
+  
     try {
-      await axiosInstance.post(
+      const formData = new FormData();
+      formData.append("content", comment);
+  
+      const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments`,
-        { content: comment }
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
+  
       setComment(""); // Clear the input after successful submission
       fetchPostDetails(); // Re-fetch post details to update comments
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
   };
+
+  const handleReplyChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setReplyContent(event.target.value);
+  };
+
+  const handleReplySubmit = async (commentId: string) => {
+    if (!replyContent.trim()) return;
+  
+    try {
+      const formData = new FormData();
+      formData.append("parentId", commentId); // Set the parentId
+      formData.append("content", replyContent);
+  
+      const response = await axiosInstance.post(
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments/${commentId}/replies`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      setReplyContent(""); // Clear the reply content after successful submission
+      fetchPostDetails(); // Re-fetch post details to update comments
+    } catch (error) {
+      console.error("Error submitting reply:", error);
+    }
+  };
+  
 
   const handlePostDelete = async () => {
     try {
@@ -158,6 +208,9 @@ const PostViewPage: FC = () => {
     } catch (error) {
       console.error("Error deleting post:", error);
     }
+  };
+  const handlePostUpdate = async () => {
+    navigate(`/WritePost/${id}`, { state: { postDetails } }); // Pass postDetails as state
   };
 
   const handleLike = async () => {
@@ -190,10 +243,12 @@ const PostViewPage: FC = () => {
             }}
           />
           {viewerId === postDetails?.userName && (
-            <Button
+            <><Button
               title="글 삭제하기"
-              onClick={handlePostDelete}
-            />
+              onClick={handlePostDelete} />
+              <Button
+                title="글 수정하기"
+                onClick={handlePostUpdate} /></>
           )}
         </ButtonContainer>
         <PostContainer>

@@ -38,7 +38,7 @@ const PostScrap: React.FC<PostScrapProps> = ({ scrapData }) => {
   return (
     <Container>
       <div>
-        <h3>Scraped Outfits</h3>
+        <h3>Outfits</h3>
         <ImageGrid>
           {scrapedOutfits.map((outfit: any) => (
             <Image key={outfit.id} src={outfit.imgUrl} alt={`Outfit ${outfit.id}`} />
@@ -46,7 +46,7 @@ const PostScrap: React.FC<PostScrapProps> = ({ scrapData }) => {
         </ImageGrid>
       </div>
       <div>
-        <h3>Scraped Products</h3>
+        <h3>Products</h3>
         <ImageGrid>
           {scrapedProducts.map((product: any) => (
             <Image key={product.id} src={product.imgUrl} alt={`Product ${product.id}`} />

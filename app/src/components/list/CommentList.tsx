@@ -4,9 +4,7 @@ import CommentListItem from "./CommentListItem";
 
 // Define the Comment type
 interface Comment {
-    id: number;
-    imgUrl: string;
-    createdAt: string;
+    //id: string;
     content: string; // Add the content property
 }
 
@@ -32,7 +30,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
     return (
       <Wrapper>
         {comments.map((comment) => (
-          <CommentListItem key={comment.id} comment={comment} />
+          <CommentListItem /*key={comment.id}*/ comment={comment} />
         ))}
       </Wrapper>
     );

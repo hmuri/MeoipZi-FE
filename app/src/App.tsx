@@ -64,6 +64,7 @@ function App() {
               <Route path="/FreeCommunity/WritePost" element={<WritePost currentPath="/FreeCommunity" />}/>
 
               <Route path="/post/:id" element={<PostViewPage />} />
+              <Route path = "/WritePost/:id" element={<WritePost currentPath="/post/:id"/>}/>
 
             </Routes>
           </Router>

@@ -35,7 +35,8 @@ const Container = styled.div`
     }
   }
   flex: 1;
-  margin-right:25vh;
+  margin-right:20vh;
+  margin-left: 10vh;
 `;
 
 const VideoContainer = styled.video`
