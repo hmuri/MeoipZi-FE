@@ -1,17 +1,12 @@
 import React, { ReactNode } from "react";
 import styled from "styled-components";
-import Footer from "./Footer";
-import Header from "./Header";
 import { Link, useLocation } from "react-router-dom";
-
 import MainHeader from "./mainpageUI/MainHeader";
 import MainPgTab from "./mainpageUI/MainPgTab";
 import CommunityTab from "./CommunityTab";
 import WritePost from "../pages/WritePost";
-
-// Add button to writePost
 import writeButton from "../images/WritePostB.png";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 
 interface LayoutProps {
@@ -20,19 +15,26 @@ interface LayoutProps {
   totalElements: number; // Add totalElements prop
 }
 
-const StyleWrap = styled.div`
+const Container = styled.div`
+  width: 100%;
+  min-height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 80px; // Add padding bottom for NavBar
+`;
+
+const StyleWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
-  min-height: 100vh;
+  width: 100%;
   padding-top: 25vh;
-  padding-bottom: 10vh;
 `;
 
 const ContentWrapper = styled.div<{ marginTop: number }>`
-  flex: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -48,15 +50,7 @@ const WriteButton = styled.img`
   transform: translateX(-50%);
   top: 70%;
   cursor: pointer;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  height: 812px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin: 20px;
+  z-index: 1000; // Ensure button is on top
 `;
 
 function ComLayout(props: LayoutProps): JSX.Element {
@@ -80,7 +74,7 @@ function ComLayout(props: LayoutProps): JSX.Element {
           <main>{props.children}</main>
         </ContentWrapper>
       </StyleWrap>
-      {location.pathname === "/WritePost" ? (
+      {location.pathname === `${currentPath}/WritePost` ? (
         <WritePost currentPath={currentPath} />
       ) : (
         <Link to={`${currentPath}/WritePost`}>
