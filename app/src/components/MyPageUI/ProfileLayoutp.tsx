@@ -10,6 +10,7 @@ import likeNoClicked from "../../images/likeNoClicked.png";
 import postClicked from "../../images/postClicked.png";
 import postNoClicked from "../../images/postNoClicked.png";
 import LikeComments from "./LikeComment";
+import NavBar from "../NavBar";
 
 interface LayoutProps {
   children?: ReactNode;
@@ -108,7 +109,7 @@ function ProfileLayout({ children }: LayoutProps): JSX.Element {
         <main>{children}</main>
       </ContentWrapper>
      
-      <Footer />
+      <NavBar />
     </StyleWrap>
   );
 }

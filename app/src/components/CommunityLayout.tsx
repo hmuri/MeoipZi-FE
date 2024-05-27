@@ -50,6 +50,15 @@ const WriteButton = styled.img`
   cursor: pointer;
 `;
 
+const Container = styled.div`
+  width: 100%;
+  height: 812px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+`;
+
 function ComLayout(props: LayoutProps): JSX.Element {
   const { currentPath, totalElements } = props;
   const location = useLocation();
@@ -62,7 +71,7 @@ function ComLayout(props: LayoutProps): JSX.Element {
   const marginTop = baseMarginTop + (numPosts * 80);
 
   return (
-    <div>
+    <Container>
       <MainHeader />
       <MainPgTab />
       <CommunityTab />
@@ -84,8 +93,8 @@ function ComLayout(props: LayoutProps): JSX.Element {
           element={<WritePost currentPath={currentPath} />}
         />
       </Routes>
-      <Footer />
-    </div>
+      <NavBar />
+    </Container>
   );
 }
 

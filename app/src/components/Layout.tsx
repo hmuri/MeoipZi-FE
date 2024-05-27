@@ -48,7 +48,7 @@ function Layout(props: LayoutProps): JSX.Element {
             <main>{props.children}</main>
           </ContentWrapper>
         </StyleWrap>
-        <Footer />
+        <NavBar />
       </div>
     );
   }
