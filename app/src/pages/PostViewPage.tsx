@@ -287,19 +287,19 @@ const PostViewPage: FC = () => {
         <Button title="댓글 작성하기" onClick={handleCommentSubmit} />
         
         {postDetails?.comments.map(comment => (
-  <div key={comment.id}>
-    <div>{comment.content}</div>
-    <TextInput
-      height={40}
-      value={replyContents[comment.id] || ""}
-      onChange={(e) => handleReplyChange(e, comment.id)}
-    />
-    <Button
-      title="답글 작성하기"
-      onClick={() => handleReplySubmit(comment.id)}
-    />
-  </div>
-))}
+        <div key={comment.id}>
+        <div>{comment.content}</div>
+        <TextInput
+          height={40}
+          value={replyContents[comment.id] || ""}
+          onChange={(e) => handleReplyChange(e, comment.id)}
+        />
+        <Button
+          title="답글 작성하기"
+          onClick={() => handleReplySubmit(comment.id)}
+        />
+        </div>
+        ))}
       </Container>
     </Wrapper>
   );
