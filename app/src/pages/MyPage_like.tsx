@@ -94,8 +94,10 @@ const MyPage_like: FC = () => {
             <StyledLikeShort>
               <LikeShort sfs={likedShortForms.map(sf => sf.imgUrl)} />
             </StyledLikeShort>
+            {/*
             <h3>Comments</h3>
             <LikeComments comments={likedComms} />
+            */}
           </Style>
         </ScrollableContainer>
       </ProfileLayout>

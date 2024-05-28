@@ -1,20 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import CommentListItem from "./CommentListItem";
+import MyPageComment from "./MyPageComListItem";
 
 // Define the Comment type
 interface Comment {
     id: string;
-    content: string; // Add the content property
-    username: string
+    title: string;
+    likesCount: number;
+    cmtCount: number;
+    imgUrl?: string;
+    createAt: string; // Add the content property
 }
 
 // Define the props interface for CommentList component
 interface CommentListProps {
-  comments: Comment[];
-  currentUser: string; // Add currentUser property
-  onDeleteComment: (commentId: string) => void; // Callback for deleting a comment
+    comments: Comment[]; // Use the Comment type here
+    onClickItem: (comment: Comment) => void;
 }
+
 
 const Wrapper = styled.div`
     display: flex;
@@ -29,15 +32,14 @@ const Wrapper = styled.div`
     }
 `;
 
-const CommentList: React.FC<CommentListProps> = ({ comments, currentUser, onDeleteComment }) => {
+const MyPageCommentList: React.FC<CommentListProps> = ({ comments, onClickItem }) => {
     return (
       <Wrapper>
         {comments.map((comment) => (
-          <CommentListItem key={comment.id} comment={comment} currentUser={currentUser} onDeleteComment={onDeleteComment} />
+          <MyPageComment /*key={comment.id}*/ comment={comment} onClick={() => onClickItem(comment)}/>
         ))}
       </Wrapper>
     );
   };
   
-  export default CommentList;
-
+  export default MyPageCommentList;

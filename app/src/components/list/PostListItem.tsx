@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface Post {
   id: number;
   title: string;
-  imgUrl: string;
+  imgUrl?: string;
   heartCnt: number;
   commentCnt: number;
   createdAt: string;

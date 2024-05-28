@@ -94,7 +94,7 @@ const ProfileInfo: React.FC = () => {
   `;
 
   const goToProfilePage = () => {
-    navigate('/profiles');
+    navigate('/profile');
   };
 
   const UserInfoContainer = styled.div`

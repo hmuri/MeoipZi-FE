@@ -1,47 +1,32 @@
-// VintageNews.tsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../api/axios";
+import styled from "styled-components";
 
-interface VintageNewsData {
-  imgUrl: string;
-}
+const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+`;
 
-const VintageNews = () => {
-  const { id } = useParams<{ id?: string }>(); // Add ? to mark id as optional
-  const [imgUrl, setImgUrl] = useState<string | undefined>();
+const LargeImage = styled.img`
+  max-width: 90%;
+  max-height: 90%;
+`;
 
-  useEffect(() => {
-    const fetchVintageNews = async () => {
-      try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/news/${id}`);
-        const data: VintageNewsData = response.data;
-        setImgUrl(data.imgUrl);
-      } catch (error) {
-        console.error("Error fetching vintage news:", error);
-      }
-    };
+const VintageNewsDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
 
-    if (id) {
-      fetchVintageNews();
-    }
-  }, [id]); // Dependency array to re-fetch data when id changes
-
-  if (!id) {
-    return <div>No vintage news id provided</div>;
-  }
-
-  if (!imgUrl) {
-    return <div>Loading...</div>;
-  }
+  // Assuming you have a way to fetch the image URL based on the ID
+  const imageUrl = `https://meoipzi.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20240514_232536546_${id}.jpg`;
 
   return (
-    <div>
-      <h2>Vintage News</h2>
-      <img src={imgUrl} alt={`Vintage News ${id}`} />
-      {/* Add more details about the vintage news if needed */}
-    </div>
+    <ImageContainer>
+      <LargeImage src={imageUrl} alt={`Vintage News ${id}`} />
+    </ImageContainer>
   );
 };
 
-export default VintageNews;
+export default VintageNewsDetail;
+

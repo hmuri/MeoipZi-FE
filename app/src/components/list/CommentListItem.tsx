@@ -1,14 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import Button from "../ui/Button";
 
 interface Comment {
-    //id: string;
+    id: string;
     content: string; // Add the content property
+    username:string;
 }
 
 interface CommentListItemProps {
     comment: Comment;
-}
+    currentUser: string; // Add currentUser property
+    onDeleteComment: (commentId: string) => void; // Callback for deleting a comment
+  }
 
 const Wrapper = styled.div`
     width: calc(100% - 32px);
@@ -30,11 +34,19 @@ const ContentText = styled.p`
     font-size: 14px;
 `;
 
-const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
+const CommentListItem: React.FC<CommentListItemProps> = ({ comment, currentUser, onDeleteComment }) => {
+    const { id, content, username } = comment;
     return (
         <Wrapper>
             {/*{`Comment ${comment.id}`}*/}
-            <ContentText>{comment.content}</ContentText>
+            <ContentText>{content}</ContentText>
+            {currentUser === username && (
+        <Button
+          title="Delete"
+          onClick={() => onDeleteComment(id)}
+          // Add any styling or icons for the delete button
+        />
+      )}
         </Wrapper>
     );
 }

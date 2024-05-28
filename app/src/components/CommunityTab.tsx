@@ -23,7 +23,7 @@ const Styleul = styled.ul`
     display: flex;
     padding: 2px;
     justify-content: flex-end;
-    margin: 10px 21px 0 0; /* 21px margin on the right, 0 margin on other sides */
+    margin: 10px 26px 0 0; /* 21px margin on the right, 0 margin on other sides */
 `;
 
 const StyledButton = styled.button`

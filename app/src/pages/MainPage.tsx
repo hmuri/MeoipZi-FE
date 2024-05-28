@@ -1,28 +1,24 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axiosInstance from "../api/axios";
 import HorizontalScroll from "../components/mainpageUI/HorizontalScroll";
-import TimerScroll from "../components/mainpageUI/TimerScroll";
 import VerticalImageGrid from "../components/mainpageUI/VerticalImageGrid";
 import MainLayout from "../components/mainpageUI/MainLayout";
+import VintageComp from "../components/mainpageUI/VintageComp";
 
 interface MainPageProps {}
 
-interface StyleListItem {
+interface VintageNewsItem {
   imgUrl: string;
 }
 
 interface Partner {
-  id: string;
-  imageUrl: string;
+  shopUrl: string;
+  imgUrl: string;
 }
 
 const ContentContainer = styled.div`
-  margin-top: 400px; /* Push all content down by 200px */
-`;
-
-const StyledHorizontalScroll1 = styled(HorizontalScroll)`
-  
+  margin-top: 400px; /* Adjust as needed */
 `;
 
 const StyledHorizontalScroll = styled(HorizontalScroll)`
@@ -35,26 +31,29 @@ const StyledContainer = styled.div`
   margin-top: 20px;
 `;
 
-const LetterSyle = styled.div`
+const LetterStyle = styled.div`
   font-weight: 650;
   font-size: 15px;
   font-style: Noto Sans Arabic;
   color: #5c5c5c;
 `;
 
-const MainPage: React.FC = () => {
-  const [vintageNewsList, setVintageNewsList] = useState<any[]>([]);
+const MainPage: React.FC<MainPageProps> = () => {
+  const [vintageNewsList, setVintageNewsList] = useState<VintageNewsItem[]>([]);
   const [partnersList, setPartnersList] = useState<Partner[]>([]);
-  const [styleList, setStyleList] = useState<StyleListItem[]>([]);
+  const [styleList, setStyleList] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi`);
         const data = response.data;
+
+        console.log("Fetched data:", data); // Add this line
+
         setVintageNewsList(data.vintageNewsList);
         setPartnersList(data.partnersList);
-        setStyleList(data.styleList.content);
+        setStyleList(data.styleList.content.map((item: { imgUrl: string }) => item.imgUrl));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -67,16 +66,17 @@ const MainPage: React.FC = () => {
     <MainLayout>
       <ContentContainer>
         <StyledContainer>
-          <LetterSyle>Today 빈티지 소식</LetterSyle>
-          <StyledHorizontalScroll1 imageUrls={vintageNewsList.map(item => item.imageUrl)} />
+          <LetterStyle>Today 빈티지 소식</LetterStyle>
+          <VintageComp imageUrls={vintageNewsList.map(item => item.imgUrl)} />
         </StyledContainer>
         <StyledContainer>
-        <LetterSyle>Partners</LetterSyle>
-          <StyledHorizontalScroll imageUrls={partnersList.map(partner => partner.imageUrl)} />
+          <LetterStyle>Partners</LetterStyle>
+          <StyledHorizontalScroll dataList={partnersList.map(partner => ({ imgUrl: partner.imgUrl, shopUrl: partner.shopUrl }))} />
+
         </StyledContainer>
         <StyledContainer>
-          <LetterSyle>style</LetterSyle>
-          <VerticalImageGrid images={styleList.map(item => item.imgUrl)} />
+          <LetterStyle>Style</LetterStyle>
+          <VerticalImageGrid images={styleList} />
         </StyledContainer>
       </ContentContainer>
     </MainLayout>
@@ -84,4 +84,3 @@ const MainPage: React.FC = () => {
 };
 
 export default MainPage;
-

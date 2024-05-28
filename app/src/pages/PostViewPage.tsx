@@ -7,8 +7,9 @@ import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
 
 interface Comment {
-  //id: string;
+  id: string;
   content: string;
+  username: string;
 }
 
 interface PostDetails {
@@ -23,7 +24,7 @@ interface PostDetails {
   commentsCount: number;
   comments: Comment[];
   category: string;
-  likedByUser: boolean; // This field indicates if the current user has liked the post
+  liked: boolean; // This field indicates if the current user has liked the post
 }
 
 const Wrapper = styled.div`
@@ -111,7 +112,7 @@ const PostViewPage: FC = () => {
   const [postDetails, setPostDetails] = useState<PostDetails | null>(null);
   const [comment, setComment] = useState<string>("");
   const [viewerId, setViewerId] = useState<string>("");
-  const [replyContent, setReplyContent] = useState<string>("");
+  const [replyContents, setReplyContents] = useState<{ [commentId: string]: string }>({});
 
 
   useEffect(() => {
@@ -169,20 +170,34 @@ const PostViewPage: FC = () => {
     }
   };
 
-  const handleReplyChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setReplyContent(event.target.value);
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/comments/${commentId}`);
+      fetchPostDetails(); // Re-fetch post details to update comments
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleReplyChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, commentId: string) => {
+    const { value } = event.target;
+    setReplyContents(prevState => ({
+      ...prevState,
+      [commentId]: value
+    }));
   };
 
   const handleReplySubmit = async (commentId: string) => {
+    const replyContent = replyContents[commentId];
     if (!replyContent.trim()) return;
   
     try {
       const formData = new FormData();
-      formData.append("parentId", commentId); // Set the parentId
+      formData.append("parentId", commentId);
       formData.append("content", replyContent);
   
       const response = await axiosInstance.post(
-        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments/${commentId}/replies`,
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/replies`,
         formData,
         {
           headers: {
@@ -191,8 +206,13 @@ const PostViewPage: FC = () => {
         }
       );
   
-      setReplyContent(""); // Clear the reply content after successful submission
-      fetchPostDetails(); // Re-fetch post details to update comments
+      setReplyContents(prevState => {
+        const newState = { ...prevState };
+        delete newState[commentId]; // Remove the reply content after successful submission
+        return newState;
+      });
+  
+      fetchPostDetails();
     } catch (error) {
       console.error("Error submitting reply:", error);
     }
@@ -223,8 +243,8 @@ const PostViewPage: FC = () => {
       if (response.status === 200 && postDetails) {
         setPostDetails({
           ...postDetails,
-          likesCount: postDetails.likedByUser ? postDetails.likesCount - 1 : postDetails.likesCount + 1,
-          likedByUser: !postDetails.likedByUser,
+          likesCount: postDetails.liked ? postDetails.likesCount - 1 : postDetails.likesCount + 1,
+          liked: !postDetails.liked,
         });
       }
     } catch (error) {
@@ -243,43 +263,43 @@ const PostViewPage: FC = () => {
             }}
           />
           {viewerId === postDetails?.userName && (
-            <><Button
-              title="글 삭제하기"
-              onClick={handlePostDelete} />
-              <Button
-                title="글 수정하기"
-                onClick={handlePostUpdate} /></>
+            <>
+              <Button title="글 삭제하기" onClick={handlePostDelete} />
+              <Button title="글 수정하기" onClick={handlePostUpdate} />
+            </>
           )}
         </ButtonContainer>
         <PostContainer>
           <TitleText>{postDetails?.title}</TitleText>
-          
           <UserInfo>Posted by: {postDetails?.userName || "Anonymous"}</UserInfo>
           <MetaInfo>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</MetaInfo>
-          
           <ContentText>{postDetails?.contents}</ContentText>
           {postDetails?.imgUrl && <img src={postDetails.imgUrl} alt="Post Image" />}
-          
           <DataContainer>
             <LikesText>Likes: {postDetails?.likesCount}</LikesText>
-            <Button title={postDetails?.likedByUser ? "Unlike" : "Like"} onClick={handleLike} />
+            <Button title={postDetails?.liked ? "Unlike" : "Like"} onClick={handleLike} />
             Comments: {postDetails?.commentsCount}
           </DataContainer>
-          
         </PostContainer>
-
         <CommentLabel>댓글</CommentLabel>
-        <CommentList comments={postDetails?.comments || []} />
-
-        <TextInput
-          height={40}
-          value={comment}
-          onChange={handleCommentChange}
-        />
-        <Button
-          title="댓글 작성하기"
-          onClick={handleCommentSubmit}
-        />
+        <CommentList comments={postDetails?.comments || []} currentUser={viewerId} onDeleteComment={handleDeleteComment} />
+        <TextInput height={40} value={comment} onChange={handleCommentChange} />
+        <Button title="댓글 작성하기" onClick={handleCommentSubmit} />
+        
+        {postDetails?.comments.map(comment => (
+  <div key={comment.id}>
+    <div>{comment.content}</div>
+    <TextInput
+      height={40}
+      value={replyContents[comment.id] || ""}
+      onChange={(e) => handleReplyChange(e, comment.id)}
+    />
+    <Button
+      title="답글 작성하기"
+      onClick={() => handleReplySubmit(comment.id)}
+    />
+  </div>
+))}
       </Container>
     </Wrapper>
   );

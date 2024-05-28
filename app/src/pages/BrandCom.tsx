@@ -37,19 +37,37 @@ const BWrapper = styled.div`
   margin-top: 15vh;
 `;
 
+const ToggleButton = styled.button`
+  background: #9e9e9e;
+  border-radius: 2px;
+
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  margin: 3px;
+  position: fixed;
+  top: 140px;
+  left: 20px;
+  z-index: 999; /* Ensure the button is on top of other elements */
+
+`;
+
 const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [totalElements, setTotalElements] = useState<number>(0);
+  const [showLatest, setShowLatest] = useState<boolean>(true); // State to toggle between latest and popular posts
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [showLatest]); // Refetch data when showLatest state changes
 
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
-        `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`
+        showLatest 
+          ? `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`
+          : `${process.env.REACT_APP_API_BASE_URL}/communities/popular?category=brand&page=0&size=20`
       );
       const postData = response.data.content;
       const transformedPosts = postData.map(transformPostData);
@@ -75,9 +93,14 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
     navigate(`/post/${post.id}`);
   };
 
+  const handleToggle = () => {
+    setShowLatest(prevState => !prevState); // Toggle between latest and popular posts
+  };
+
   return (
     <ComLayout currentPath={currentPath} totalElements={totalElements}>
       <BWrapper>
+        <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
         <PostList posts={posts} onClickItem={handleItemClick} />
       </BWrapper>
     </ComLayout>

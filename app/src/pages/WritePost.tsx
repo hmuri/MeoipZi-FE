@@ -75,16 +75,21 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [category, setCategory] = useState<Category>(Category.Brand);
+  const isEditing = location.state && location.state.postDetails;
 
   useEffect(() => {
-    if (location.state) {
+    if (isEditing) {
       const { postDetails } = location.state as { postDetails: PostDetails };
       setTitle(postDetails.title);
       setContent(postDetails.contents);
-      setCategory(postDetails.category as Category);
-      // You might need to handle image prefilling if required
+      if (Object.values(Category).includes(postDetails.category as Category)) {
+        setCategory(postDetails.category as Category);
+      }
+      if (postDetails.imgUrl) {
+        setImagePreview(postDetails.imgUrl);
+      }
     }
-  }, [location.state]);
+  }, [isEditing, location.state]);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTitle(event.target.value);
@@ -173,6 +178,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
     }
   };
 
+
   return (
     <Wrapper>
       <Container>
@@ -188,8 +194,9 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
         <TextInput height={480} value={content} onChange={handleContentChange} multiline />
         <input type="file" accept="image/*" onChange={handleImageChange} />
         {imagePreview && <ImagePreview src={imagePreview} alt="Image Preview" />}
-        <Button title="글 작성하기" onClick={handlePostSubmit} />
-        <Button title="수정하기" onClick={handlePostUpdate} />
+        {!isEditing && <Button title="글 작성하기" onClick={handlePostSubmit} />}
+        {isEditing && <Button title="수정하기" onClick={handlePostUpdate} />}
+        
       </Container>
     </Wrapper>
   );

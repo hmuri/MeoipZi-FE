@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axiosInstance from "../../api/axios";
+import MyPageCommentList from "../list/MyPageComList";
 
 interface Post {
   id: number;
@@ -14,6 +15,14 @@ interface Post {
   cmtCount?: number;
 }
 
+interface Comment {
+  id: string;
+  title: string;
+  likesCount: number;
+  cmtCount: number;
+  imgUrl?: string;
+  createAt: string; // Add the content property
+}
 
 const SWrapper = styled.div`
   padding: 16px;
@@ -52,23 +61,33 @@ const ImageGrid = styled.div`
 `;
 
 interface PostFeedProps {
-  uploadedCommList: Post[];
+  uploadedCommList: Comment[];
   uploadedSFList: Post[];
 }
 
 const PostFeed: FC<PostFeedProps> = ({ uploadedCommList, uploadedSFList }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]); // State to store posts
+  const [uploadedComm, setCommList] = useState<Comment[]>([]);
 
   useEffect(() => {
     if (uploadedSFList && uploadedSFList.length > 0) {
       setPosts(uploadedSFList);
     }
   }, [uploadedSFList]);
+  useEffect(() => {
+    if (uploadedCommList && uploadedCommList.length > 0 ) {
+      setCommList(uploadedCommList);
+    }
+  }, [uploadedCommList]);
 
   const handleClick = (postId: number) => {
     // Handle click event, e.g., navigate to post details page
     navigate(`/post/${postId}`);
+  };
+
+  const handleItemClick = (comments: Comment) => {
+    navigate(`/post/${comments.id}`);
   };
 
   return (
@@ -93,6 +112,8 @@ const PostFeed: FC<PostFeedProps> = ({ uploadedCommList, uploadedSFList }) => {
             </div>
           ))}
         </ImageGrid>
+        {/* Conditionally render MyPageCommentList if uploadedCommList exists */}
+          <MyPageCommentList comments={uploadedComm} onClickItem={handleItemClick}/>
       </Container>
     </SWrapper>
   );

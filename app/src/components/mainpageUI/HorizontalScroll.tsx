@@ -95,34 +95,34 @@ export default HorizontalScroll;
 import React from "react";
 import styled from "styled-components";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
-import axiosInstance from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 const ScrollContainer = styled.div`
-  width: 400px; /* Set the desired width */
-  overflow-x: auto; /* or scroll */
+  width: 400px;
+  overflow-x: auto;
 `;
 
 interface CardProps {
-  imageUrl: string;
-  onClick: () => void;
+  data: { imgUrl: string; shopUrl: string };
+  onClick: (shopUrl: string) => void; // Define onClick as a prop
 }
 
 const CardImage = styled.img`
   width: 54px;
   height: 54px;
   margin-top: 8px;
+  cursor: pointer;
 `;
 
-function Card({ imageUrl, onClick  }: CardProps) {
+function Card({ data, onClick }: CardProps) {
   const handleClick = () => {
-    // Call the onClick handler when the card is clicked
-    onClick();
+    onClick(data.shopUrl);
   };
 
   return (
     <div style={{ width: "70px" }}>
-      <div className="card" onClick={handleClick}> {/* Attach onClick handler to the card */}
-        <CardImage src={imageUrl} alt={`Banner`} />
+      <div className="card" onClick={handleClick}>
+        <CardImage src={data.imgUrl} alt={`Banner`} />
       </div>
       <div style={{ height: "20px" }} />
     </div>
@@ -130,32 +130,25 @@ function Card({ imageUrl, onClick  }: CardProps) {
 }
 
 interface HorizontalScrollProps {
-  imageUrls: string[]; // Array of image URLs
+  dataList: { imgUrl: string; shopUrl: string }[];
 }
 
-function HorizontalScroll({ imageUrls }: HorizontalScrollProps) {
-  const handleImageClick = async (imageUrl: string) => {
-    try {
-      // Fetch data using GET request with the imageUrl
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/news/${imageUrl}`);
-      // Process the response data as needed
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ dataList }) => {
+  const navigate = useNavigate();
+
+  const handleImageClick = (shopUrl: string) => {
+    window.location.href = shopUrl;
   };
   
   return (
     <ScrollContainer>
       <ScrollMenu>
-        {imageUrls.map((imageUrl, index) => (
-          <Card key={index} imageUrl={imageUrl} onClick={function (): void {
-            throw new Error("Function not implemented.");
-          } } />
+        {dataList.map((data, index) => (
+          <Card key={index} data={data} onClick={handleImageClick} />
         ))}
       </ScrollMenu>
     </ScrollContainer>
   );
-}
+};
 
 export default HorizontalScroll;

@@ -1,14 +1,18 @@
 import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
-import CommentList from "../list/CommentList";
+import MyPageCommentList from "../list/MyPageComList";
+import PostList from "../list/PostList";
 
 interface Comment {
-  id: number;
-  imgUrl: string;
-  createdAt: string;
-  content: string; // Add the content property
+  id: string;
+  title: string;
+  likesCount: number;
+  cmtCount: number;
+  imgUrl?: string;
+  createAt: string; // Add the content property
 }
 
 const SWrapper = styled.div`
@@ -88,6 +92,7 @@ export default PostComment;
 */}
 
 const PostComment: FC = () => {
+  const navigate = useNavigate();
   const [cmtOutfits, setCmtOutfits] = useState<Comment[]>([]);
   const [cmtShortforms, setCmtShortforms] = useState<Comment[]>([]);
   const [cmtComms, setCmtComms] = useState<Comment[]>([]);
@@ -110,21 +115,25 @@ const PostComment: FC = () => {
     fetchComments();
   }, []);
 
+  const handleItemClick = (comments: Comment) => {
+    navigate(`/post/${comments.id}`);
+  };
+
   return (
     <>
       <SWrapper>
         <Container>
           <div>
             <h2>Outfits Comments</h2>
-            <CommentList comments={cmtOutfits} />
+            <MyPageCommentList comments={cmtOutfits} onClickItem={handleItemClick}/>
           </div>
           <div>
             <h2>Short Forms Comments</h2>
-            <CommentList comments={cmtShortforms} />
+            <MyPageCommentList comments={cmtShortforms} onClickItem={handleItemClick}/>
           </div>
           <div>
             <h2>Community Comments</h2>
-            <CommentList comments={cmtComms} />
+            <MyPageCommentList comments={cmtComms} onClickItem={handleItemClick}/>
           </div>
         </Container>
       </SWrapper>
