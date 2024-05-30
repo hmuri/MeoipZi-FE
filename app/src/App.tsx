@@ -22,6 +22,7 @@ import ShopCom from "./pages/ShopCom";
 import FreeCom from "./pages/FreeCom";
 import WritePost from "./pages/WritePost";
 import PostViewPage from "./pages/PostViewPage";
+import VintageNewsDetail from "./pages/VintageNews";
 
 
 function App() {
@@ -52,7 +53,7 @@ function App() {
               <Route path="/category/:categoryName" element={<Category />} />
               <Route path="/product/:product" element={<Product />} />
               <Route path="/outfit/:outfit" element={<Outfit />} />
-              
+              <Route path="/VintageNews/:id" element={<VintageNewsDetail />} />
               <Route path="/mypage/posts/feeds" element={<MyPage_post_feed />}/>
               <Route path="/mypage/posts/scraps" element={<MyPage_post_scrap />}/>
               <Route path="/mypage/posts/comments" element={<MyPage_post_comment />}/>

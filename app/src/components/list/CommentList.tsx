@@ -6,7 +6,8 @@ import CommentListItem from "./CommentListItem";
 interface Comment {
     id: string;
     content: string; // Add the content property
-    username: string
+    username: string;
+    parentId: string | null;
 }
 
 // Define the props interface for CommentList component

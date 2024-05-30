@@ -6,6 +6,7 @@ interface Comment {
     id: string;
     content: string; // Add the content property
     username:string;
+    parentId: string | null;
 }
 
 interface CommentListItemProps {

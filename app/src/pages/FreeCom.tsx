@@ -29,12 +29,22 @@ interface Post {
 
 const FWrapper = styled.div`
   padding: 16px;
-  width: 50vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 3vh;
+  overflow-y: auto; /* Allow scrolling */
+  min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
+`;
+
+const PostListContainer = styled.div`
+  flex-grow: 1;
+  width: 100%;
+  min-height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const ToggleButton = styled.button`
@@ -46,37 +56,34 @@ const ToggleButton = styled.button`
   margin: 3px;
   position: fixed;
   top: 140px;
-  left: 20px;
+  left: 100px;
   z-index: 999; /* Ensure the button is on top of other elements */
-
 `;
 
 const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [totalElements, setTotalElements] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1); // State to track current page
+  const [totalPages, setTotalPages] = useState<number>(1); // State to track total pages
   const [showLatest, setShowLatest] = useState<boolean>(true); // State to toggle between latest and popular posts
 
   useEffect(() => {
     fetchData();
-  }, [showLatest]); // Refetch data when showLatest state changes
+  }, [currentPage, showLatest]); // Refetch data when currentPage or showLatest state changes
 
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
-        showLatest 
-          ? `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=play&page=0&size=20`
-          : `${process.env.REACT_APP_API_BASE_URL}/communities/popular?category=play&page=0&size=20`
+        `${process.env.REACT_APP_API_BASE_URL}/communities/${showLatest ? "latest" : "popular"}?category=play&page=${currentPage - 1}&size=20`
       );
       const postData = response.data.content;
       const transformedPosts = postData.map(transformPostData);
       setPosts(transformedPosts);
-      setTotalElements(response.data.totalElements); // Set totalElements from the response
+      setTotalPages(Math.ceil(response.data.totalElements / 20)); // Calculate total pages
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
 
   const transformPostData = (postData: PostData): Post => {
     return {
@@ -95,13 +102,33 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const handleToggle = () => {
     setShowLatest(prevState => !prevState); // Toggle between latest and popular posts
+    setCurrentPage(1); // Reset current page when toggling between latest and popular
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
   };
 
   return (
-    <ComLayout currentPath={currentPath} totalElements={totalElements}>
+    <ComLayout currentPath={currentPath} totalElements={totalPages}>
       <FWrapper>
-      <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
-        <PostList posts={posts} onClickItem={handleItemClick} />
+        <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
+        <PostListContainer>
+          <PostList posts={posts} onClickItem={handleItemClick} />
+        </PostListContainer>
+        <div>
+          <button onClick={handlePrevPage}>Previous</button>
+          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <button onClick={handleNextPage}>Next</button>
+        </div>
       </FWrapper>
     </ComLayout>
   );

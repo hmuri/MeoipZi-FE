@@ -2,14 +2,24 @@ import React, { FC, useEffect, useState, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axiosInstance from "../api/axios";
-import CommentList from "../components/list/CommentList";
 import TextInput from "../components/ui/TextInput";
 import Button from "../components/ui/Button";
+import CommentList from "../components/list/CommentList";
+import ReplyList from "../components/list/ReplyList";
 
 interface Comment {
   id: string;
   content: string;
   username: string;
+  parentId: string | null; // Add parentId to Comment interface
+  replies?: Reply[];
+}
+
+interface Reply {
+  id: string;
+  content: string;
+  username: string;
+  parentId: string;
 }
 
 interface PostDetails {
@@ -19,26 +29,36 @@ interface PostDetails {
   createdAt: string;
   title: string;
   contents: string;
-  imgUrl: string;
+  imgUrl: string[];
   likesCount: number;
   commentsCount: number;
   comments: Comment[];
   category: string;
-  liked: boolean; // This field indicates if the current user has liked the post
+  liked: boolean;
 }
 
 const Wrapper = styled.div`
   padding: 16px;
-  width: calc(100% - 32px);
+  width: 100%;
+  max-width: 720px; /* 최대 너비 설정 */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* 페이지를 화면의 상단에 맞추기 위해 flex-start로 설정 */
+  overflow-y: auto; /* 세로 스크롤 가능하도록 설정 */
+
+  /* 페이지가 화면의 윗쪽을 넘어가지 않도록 스크롤이 되면 숨김 */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 1;
 `;
+
 
 const Container = styled.div`
   width: 100%;
   max-width: 720px;
+  padding-bottom: 100vh;
 
   & > * {
     :not(:last-child) {
@@ -77,7 +97,7 @@ const MetaInfo = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 2px; /* Adjust the margin-bottom */
+  margin-bottom: 2px;
 `;
 
 const UserInfo = styled.div`
@@ -85,25 +105,39 @@ const UserInfo = styled.div`
   font-size: 10px;
   display: flex;
   align-items: center;
-  top: 3px; /* Adjust the top margin */
+  top: 3px;
 `;
 
 const DataContainer = styled.div`
   display: flex;
   color: #a9a9a9;
   align-items: center;
-  margin-top: 5px; /* Adjust as needed */
+  margin-top: 5px;
   width: 100%;
 `;
 
 const LikesText = styled.p`
-  margin-right: 20px; /* Adjust as needed */
+  margin-right: 20px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const ImagePreview = styled.img`
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
 `;
 
 const PostViewPage: FC = () => {
@@ -113,7 +147,7 @@ const PostViewPage: FC = () => {
   const [comment, setComment] = useState<string>("");
   const [viewerId, setViewerId] = useState<string>("");
   const [replyContents, setReplyContents] = useState<{ [commentId: string]: string }>({});
-
+  const [showReplies, setShowReplies] = useState<{ [commentId: string]: boolean }>({});
 
   useEffect(() => {
     fetchPostDetails();
@@ -136,7 +170,7 @@ const PostViewPage: FC = () => {
       const response = await axiosInstance.get(
         `${process.env.REACT_APP_API_BASE_URL}/profiles/info`
       );
-      setViewerId(response.data.nickname); // Set the viewerId from the response
+      setViewerId(response.data.nickname);
     } catch (error) {
       console.error("Error fetching viewerId:", error);
     }
@@ -148,11 +182,11 @@ const PostViewPage: FC = () => {
 
   const handleCommentSubmit = async () => {
     if (!comment.trim()) return;
-  
+
     try {
       const formData = new FormData();
       formData.append("content", comment);
-  
+
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments`,
         formData,
@@ -162,17 +196,17 @@ const PostViewPage: FC = () => {
           },
         }
       );
-  
-      setComment(""); // Clear the input after successful submission
-      fetchPostDetails(); // Re-fetch post details to update comments
+
+      setComment("");
+      fetchPostDetails();
     } catch (error) {
       console.error("Error submitting comment:", error);
     }
   };
 
-  const handleDeleteComment = async (commentId: string) => {
+  const handleDeleteComment = async (parentId: string) => {
     try {
-      await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/comments/${commentId}`);
+      await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments/${parentId}`);
       fetchPostDetails(); // Re-fetch post details to update comments
     } catch (error) {
       console.error("Error deleting comment:", error);
@@ -190,12 +224,12 @@ const PostViewPage: FC = () => {
   const handleReplySubmit = async (commentId: string) => {
     const replyContent = replyContents[commentId];
     if (!replyContent.trim()) return;
-  
+
     try {
       const formData = new FormData();
       formData.append("parentId", commentId);
       formData.append("content", replyContent);
-  
+
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/replies`,
         formData,
@@ -205,19 +239,27 @@ const PostViewPage: FC = () => {
           },
         }
       );
-  
+
       setReplyContents(prevState => {
         const newState = { ...prevState };
-        delete newState[commentId]; // Remove the reply content after successful submission
+        delete newState[commentId];
         return newState;
       });
-  
+
       fetchPostDetails();
     } catch (error) {
       console.error("Error submitting reply:", error);
     }
   };
-  
+
+  const handleDeleteReply = async (id: string) => {
+    try {
+      await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/replies/${id}`);
+      fetchPostDetails(); // Re-fetch post details to update comments
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
 
   const handlePostDelete = async () => {
     try {
@@ -252,57 +294,121 @@ const PostViewPage: FC = () => {
     }
   };
 
-  return (
-    <Wrapper>
-      <Container>
-        <ButtonContainer>
-          <Button
-            title="뒤로 가기"
-            onClick={() => {
-              navigate("/BrandCommunity");
-            }}
-          />
-          {viewerId === postDetails?.userName && (
-            <>
-              <Button title="글 삭제하기" onClick={handlePostDelete} />
-              <Button title="글 수정하기" onClick={handlePostUpdate} />
-            </>
-          )}
-        </ButtonContainer>
-        <PostContainer>
-          <TitleText>{postDetails?.title}</TitleText>
-          <UserInfo>Posted by: {postDetails?.userName || "Anonymous"}</UserInfo>
-          <MetaInfo>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</MetaInfo>
-          <ContentText>{postDetails?.contents}</ContentText>
-          {postDetails?.imgUrl && <img src={postDetails.imgUrl} alt="Post Image" />}
-          <DataContainer>
-            <LikesText>Likes: {postDetails?.likesCount}</LikesText>
-            <Button title={postDetails?.liked ? "Unlike" : "Like"} onClick={handleLike} />
-            Comments: {postDetails?.commentsCount}
-          </DataContainer>
-        </PostContainer>
-        <CommentLabel>댓글</CommentLabel>
-        <CommentList comments={postDetails?.comments || []} currentUser={viewerId} onDeleteComment={handleDeleteComment} />
-        <TextInput height={40} value={comment} onChange={handleCommentChange} />
-        <Button title="댓글 작성하기" onClick={handleCommentSubmit} />
-        
-        {postDetails?.comments.map(comment => (
-        <div key={comment.id}>
-        <div>{comment.content}</div>
-        <TextInput
-          height={40}
-          value={replyContents[comment.id] || ""}
-          onChange={(e) => handleReplyChange(e, comment.id)}
-        />
+  const handleToggleReplies = (commentId: string) => {
+    setShowReplies(prevState => ({
+      ...prevState,
+      [commentId]: !prevState[commentId]
+    }));
+  };
+
+  const separateCommentsAndReplies = (comments: Comment[]): (Comment & { replies: Reply[] })[] => {
+    const commentsMap: { [id: string]: Comment & { replies: Reply[] } } = {};
+  
+    // Iterate through all comments and initialize each entry in the commentsMap
+    comments.forEach(comment => {
+      // Check if the comment is a reply (i.e., it has a parent)
+      if (comment.parentId) {
+        // Find the parent comment using the parentId of the reply
+        const parentComment = commentsMap[comment.parentId];
+        // If the parent comment is found, add the reply to its 'replies' array
+        if (parentComment) {
+          parentComment.replies.push(comment as Reply); // Type assertion here
+        }
+      } else {
+        // If the comment does not have a parent, it's a top-level comment
+        commentsMap[comment.id] = { ...comment, replies: [] };
+      }
+    });
+  
+    // Filter out the top-level comments
+    const topLevelComments = Object.values(commentsMap).filter(comment => !comment.parentId);
+    
+    return topLevelComments;
+  };
+  
+  const processedComments = postDetails ? separateCommentsAndReplies(postDetails.comments) : [];
+
+ return (
+  <Wrapper>
+    <Container>
+      <ButtonContainer>
         <Button
-          title="답글 작성하기"
-          onClick={() => handleReplySubmit(comment.id)}
+          title="뒤로 가기"
+          onClick={() => {
+            navigate("/BrandCommunity");
+          }}
         />
+        {viewerId === postDetails?.userName && (
+          <>
+            <Button title="글 삭제하기" onClick={handlePostDelete} />
+            <Button title="글 수정하기" onClick={handlePostUpdate} />
+          </>
+        )}
+      </ButtonContainer>
+      <PostContainer>
+        <TitleText>{postDetails?.title}</TitleText>
+        <UserInfo>Posted by: {postDetails?.userName || "Anonymous"}</UserInfo>
+        <MetaInfo>Created at: {new Date(postDetails?.createdAt || "").toLocaleString()}</MetaInfo>
+        <ContentText>{postDetails?.contents}</ContentText>
+        <ImageContainer>
+          {postDetails?.imgUrl.map((url, index) => (
+            <ImagePreview key={index} src={url} alt={`Post Image ${index}`} />
+          ))}
+        </ImageContainer>
+        <DataContainer>
+          <LikesText>Likes: {postDetails?.likesCount}</LikesText>
+          <Button title={postDetails?.liked ? "Unlike" : "Like"} onClick={handleLike} />
+          Comments: {postDetails?.commentsCount}
+        </DataContainer>
+      </PostContainer>
+
+      <CommentLabel>Comments</CommentLabel>
+      <TextInput value={comment} onChange={handleCommentChange} placeholder="Add a comment" />
+      <Button title="Submit Comment" onClick={handleCommentSubmit} />
+
+      {processedComments.map(comment => (
+        <div key={comment.id}>
+          <CommentList
+            comments={[comment]} // Pass the current comment as an array to CommentList
+            onDeleteComment={() => handleDeleteComment(comment.id)}
+            currentUser={viewerId}
+          />
+          {/* Render replies */}
+          {comment.replies.map(reply => (
+            <div key={reply.id}>
+              <ReplyList
+                replies={[reply]} // Pass the current reply as an array to ReplyList
+                currentUser={viewerId}
+                onDeleteReply={handleDeleteReply} // Assuming you have a function to handle reply deletion
+              />
+            </div>
+          ))}
+          {/* Render reply input for the current comment */}
+          <TextInput
+            value={replyContents[comment.id] || ""}
+            onChange={event => handleReplyChange(event, comment.id)}
+            placeholder="Add a reply"
+          />
+          <Button title="Submit Reply" onClick={() => handleReplySubmit(comment.id)} />
+          {/* Conditionally render the expanded replies */}
+          {showReplies[comment.id] && comment.replies.length > 3 && (
+            <div>
+              {comment.replies.slice(3).map(reply => (
+                <div key={reply.id}>
+                  <ReplyList
+                    replies={[reply]} // Pass the current reply as an array to ReplyList
+                    currentUser={viewerId}
+                    onDeleteReply={handleDeleteReply} // Assuming you have a function to handle reply deletion
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        ))}
-      </Container>
-    </Wrapper>
-  );
+      ))}
+    </Container>
+  </Wrapper>
+);
 };
 
 export default PostViewPage;

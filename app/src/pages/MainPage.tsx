@@ -18,11 +18,15 @@ interface Partner {
 }
 
 const ContentContainer = styled.div`
-  margin-top: 400px; /* Adjust as needed */
+  position: sticky;
+  top: 0;
+  margin-top: 20vh;
+  padding: 20px;
+  overflow-y: auto;
 `;
 
 const StyledHorizontalScroll = styled(HorizontalScroll)`
-  margin-top: 10px;
+  margin-top: 15px;
   height: 90px;
   margin: 0px;
 `;
@@ -33,7 +37,7 @@ const StyledContainer = styled.div`
 
 const LetterStyle = styled.div`
   font-weight: 650;
-  font-size: 15px;
+  font-size: 17px;
   font-style: Noto Sans Arabic;
   color: #5c5c5c;
 `;

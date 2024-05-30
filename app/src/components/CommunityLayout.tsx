@@ -21,6 +21,7 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: start;
   align-items: center;
   padding-bottom: 80px; // Add padding bottom for NavBar
 `;
@@ -29,18 +30,22 @@ const StyleWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: start;
   width: 100%;
-  padding-top: 25vh;
+  margin-top:50vh;
+  position: sticky; /* 페이지가 화면의 상단에 고정되도록 설정 */
+  top: 0; /* 화면의 상단에 고정 */
 `;
 
-const ContentWrapper = styled.div<{ marginTop: number }>`
+const ContentWrapper = styled.div<{ marginTop: number; maxHeight: number }>`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: ${(props) => props.marginTop}px; // Dynamically adjust margin-top
+  top:0;
+  margin-top: ${({ marginTop }) => `${marginTop}px`}; // Dynamically adjust margin-top
   overflow-y: auto; // Add this to enable vertical scrolling if needed
+
 `;
 
 const WriteButton = styled.img`
@@ -61,8 +66,15 @@ function ComLayout(props: LayoutProps): JSX.Element {
   const numPosts = totalElements > 0 ? totalElements : 10; // Default to 10 if totalElements is not available
 
   // Calculate the margin-top based on the number of posts
-  const baseMarginTop = 120;
-  const marginTop = baseMarginTop + (numPosts * 80);
+  let marginTop = 0;
+  if (numPosts < 5) {
+    marginTop = 5 * window.innerHeight; // Set marginTop to 200vh if less than 5 elements
+  } else {
+    marginTop = numPosts * 80; // Adjust based on your post item height
+  }
+
+  // Set a maximum height for the content area
+  const maxContentHeight = 3000; // Adjust as needed
 
   return (
     <Container>
@@ -70,7 +82,7 @@ function ComLayout(props: LayoutProps): JSX.Element {
       <MainPgTab />
       <CommunityTab />
       <StyleWrap id="wrap">
-        <ContentWrapper marginTop={marginTop}>
+        <ContentWrapper marginTop={marginTop} maxHeight={maxContentHeight}>
           <main>{props.children}</main>
         </ContentWrapper>
       </StyleWrap>
@@ -93,4 +105,3 @@ function ComLayout(props: LayoutProps): JSX.Element {
 }
 
 export default ComLayout;
-

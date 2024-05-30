@@ -3,16 +3,16 @@ import styled from "styled-components";
 import Button from "../ui/Button";
 
 interface Reply {
-  parentId: number; // Assuming parentId is the ID of the parent comment
+  parentId: string; // Assuming parentId is the ID of the parent comment
   content: string;
   username: string; // Add the username property if it exists
-  id: number;
+  id: string;
 }
 
 interface ReplyListItemProps {
   reply: Reply;
   currentUser: string;
-  onDeleteReply: (id: number) => void; // Use number instead of string for commentId
+  onDeleteReply: (id: string) => void; // Use number instead of string for commentId
 }
 
 const Wrapper = styled.div`
@@ -41,15 +41,22 @@ const ContentText = styled.p`
   font-size: 14px;
 `;
 
+const DataText = styled.p`
+    font-size: 10px;
+    color: #a9a9a9;
+
+`
+
 const ReplyListItem: React.FC<ReplyListItemProps> = ({ reply, currentUser, onDeleteReply }) => {
-  const { parentId, content, username } = reply; // Destructure the properties
+  const { id, content, username } = reply; // Destructure the properties
   return (
     <Wrapper>
+        <DataText>{`${reply.username}`}</DataText>
       <ContentText>{content}</ContentText>
       {currentUser === username && (
         <Button
           title="Delete"
-          onClick={() => onDeleteReply(parentId)} // Pass the ID to onDeleteReply
+          onClick={() => onDeleteReply(id)} // Pass the ID to onDeleteReply
           // Add any styling or icons for the delete button
         />
       )}
@@ -58,3 +65,4 @@ const ReplyListItem: React.FC<ReplyListItemProps> = ({ reply, currentUser, onDel
 };
 
 export default ReplyListItem;
+

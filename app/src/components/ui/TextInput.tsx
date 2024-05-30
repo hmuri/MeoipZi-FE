@@ -6,6 +6,7 @@ interface TextInputProps {
     value: string;
     onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     multiline?: boolean;
+    placeholder?: string;
   }
 
 const Input = styled.input<{ height: number }>`
@@ -27,11 +28,11 @@ const TextArea = styled.textarea<{ height: number }>`
   resize: none;
 `;
 
-const TextInput: React.FC<TextInputProps> = ({ height = 40, value, onChange, multiline = false }) => {
+const TextInput: React.FC<TextInputProps> = ({ height = 40, value, onChange, multiline = false, placeholder  }) => {
     if (multiline) {
-      return <TextArea height={height} value={value} onChange={onChange} />;
+      return <TextArea height={height} value={value} onChange={onChange} placeholder={placeholder}/>;
     }
-    return <Input height={height} value={value} onChange={onChange} />;
+    return <Input height={height} value={value} onChange={onChange} placeholder={placeholder}/>;
   };
   
   export default TextInput;

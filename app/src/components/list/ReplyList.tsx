@@ -3,16 +3,16 @@ import styled from "styled-components";
 import ReplyListItem from "./ReplyListItems";
 
 interface Reply {
-    parentId: number; // Assuming parentId is the ID of the parent comment
+    parentId: string; // Assuming parentId is the ID of the parent comment
     content: string;
     username: string; // Add the username property if it exists
-    id: number; // Add the id property if it exists
+    id: string; // Add the id property if it exists
   }
 
 interface ReplyListProps {
   replies: Reply[]; // Define the prop for the list of replies
   currentUser: string;
-  onDeleteReply: (id: number) => void; // Use number instead of string for replyId
+  onDeleteReply: (id: string) => void; // Use number instead of string for replyId
 }
 
 const Wrapper = styled.div`

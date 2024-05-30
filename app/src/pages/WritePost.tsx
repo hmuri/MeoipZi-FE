@@ -90,6 +90,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [category, setCategory] = useState<Category | string>(Category.Brand);
+  const [deletedImages, setDeletedImages] = useState<number[]>([]);
 
   const isEditing = location.state && location.state.postDetails;
 
@@ -129,10 +130,10 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   };
 
   const handleDeleteImage = (index: number) => {
-    const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setImages(updatedImages);
+    // Add the index of the deleted image to deletedImages state
+    setDeletedImages((prevDeletedImages) => [...prevDeletedImages, index]);
 
+    // Remove the image preview from imagePreviews
     const updatedPreviews = [...imagePreviews];
     updatedPreviews.splice(index, 1);
     setImagePreviews(updatedPreviews);
@@ -144,13 +145,12 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       formData.append("title", title);
       formData.append("contents", content);
       formData.append("category", category);
-      if (images.length > 0) {
+      if(images){
         images.forEach((image) => {
-          formData.append("imgUrl", image); // Append each image with the key "imgUrl[]"
+        formData.append("imgUrl", image); // Append each image with the key "imgUrl[]"
         });
-      } else {
-        formData.append("imgUrl", "null");
       }
+      
 
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities`,
@@ -176,15 +176,14 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       formData.append("title", title);
       formData.append("contents", content);
       formData.append("category", category);
-      if (images.length > 0) {
-        images.forEach((image) => {
-          formData.append("imgUrl", image); // Append each image with the key "imgUrl[]"
-        });
-      } else {
-        formData.append("imgUrl", "null");
-      }
-      
-
+  
+      // Append non-deleted images to the formData
+      images.forEach((image, index) => {
+        if (!deletedImages.includes(index)) {
+          formData.append("imgUrl", image);
+        }
+      });
+  
       const { postDetails } = location.state!;
       const response = await axiosInstance.patch(
         `${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails.communityId}`,
@@ -195,13 +194,15 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
           },
         }
       );
-
+  
       console.log("Post updated successfully", response.data);
       navigate(`/post/${postDetails.communityId}`);
     } catch (error) {
       console.error("Error updating post:", error);
     }
   };
+  
+  
 
   return (
     <Wrapper>

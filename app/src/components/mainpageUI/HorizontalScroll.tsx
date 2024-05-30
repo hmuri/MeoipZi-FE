@@ -110,11 +110,17 @@ interface CardProps {
 }
 
 const CardImage = styled.img`
-  width: 54px;
-  height: 54px;
-  margin-top: 8px;
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+  
   cursor: pointer;
   border-radius: 10px;
+`;
+
+const CardWrapper = styled.div`
+  display: inline-block;
+  margin-right: 20px; /* 사진 사이의 간격을 조정합니다. */
 `;
 
 function Card({ data, onClick }: CardProps) {
@@ -123,12 +129,12 @@ function Card({ data, onClick }: CardProps) {
   };
 
   return (
-    <div style={{ width: "70px", display: "inline-block" }}>
+    <CardWrapper>
       <div className="card" onClick={handleClick}>
         <CardImage src={data.imgUrl} alt={`Banner`} />
       </div>
       <div style={{ height: "20px" }} />
-    </div>
+    </CardWrapper>
   );
 }
 

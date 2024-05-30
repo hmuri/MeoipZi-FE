@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import axiosInstance from "../api/axios";
 
 const ImageContainer = styled.div`
   display: flex;
@@ -17,16 +18,32 @@ const LargeImage = styled.img`
 
 const VintageNewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [imageUrl, setImageUrl] = useState<string>("");
 
-  // Assuming you have a way to fetch the image URL based on the ID
-  const imageUrl = `https://meoipzi.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20240514_232536546_${id}.jpg`;
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      try {
+        const response = await axiosInstance.get(`/meoipzi/${id}`);
+        const data = response.data;
+        // Assuming the response data contains the image URL
+        setImageUrl(data.imageUrl);
+      } catch (error) {
+        console.error("Error fetching image:", error);
+      }
+    };
+
+    fetchImageUrl();
+  }, [id]);
 
   return (
     <ImageContainer>
-      <LargeImage src={imageUrl} alt={`Vintage News ${id}`} />
+      {imageUrl ? (
+        <LargeImage src={imageUrl} alt={`Vintage News ${id}`} />
+      ) : (
+        <p>Loading...</p>
+      )}
     </ImageContainer>
   );
 };
 
 export default VintageNewsDetail;
-

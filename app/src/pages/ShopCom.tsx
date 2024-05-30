@@ -33,9 +33,20 @@ const SWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  margin-top: 15vh;
+  overflow-y: auto; /* Allow scrolling */
+  min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
 `;
+
+const PostListContainer = styled.div`
+  flex-grow: 1;
+  width: 100%;
+  min-height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 
 const ToggleButton = styled.button`
   background: #9e9e9e;
@@ -46,7 +57,7 @@ const ToggleButton = styled.button`
   margin: 3px;
   position: fixed;
   top: 140px;
-  left: 20px;
+  left: 100px;
   z-index: 999; /* Ensure the button is on top of other elements */
 
 `;
@@ -54,6 +65,8 @@ const ToggleButton = styled.button`
 const ShopCom: FC<MainPageProps> = ({ currentPath }) => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1); // State to track current page
+  const [totalPages, setTotalPages] = useState<number>(1); // State to track total pages
   const [totalElements, setTotalElements] = useState<number>(0);
   const [showLatest, setShowLatest] = useState<boolean>(true); // State to toggle between latest and popular posts
 
@@ -71,7 +84,7 @@ const ShopCom: FC<MainPageProps> = ({ currentPath }) => {
       const postData = response.data.content;
       const transformedPosts = postData.map(transformPostData);
       setPosts(transformedPosts);
-      setTotalElements(response.data.totalElements); // Set totalElements from the response
+      setTotalPages(Math.ceil(response.data.totalElements / 20)); // Calculate total pages
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -97,11 +110,31 @@ const ShopCom: FC<MainPageProps> = ({ currentPath }) => {
     setShowLatest(prevState => !prevState); // Toggle between latest and popular posts
   };
 
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
   return (
     <ComLayout currentPath={currentPath} totalElements={totalElements}>
       <SWrapper>
       <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
-        <PostList posts={posts} onClickItem={handleItemClick} />
+      <PostListContainer>
+      <PostList posts={posts} onClickItem={handleItemClick} />
+      </PostListContainer>
+        
+        <div>
+          <button onClick={handlePrevPage}>Previous</button>
+          <span>{`Page ${currentPage} of ${totalPages}`}</span>
+          <button onClick={handleNextPage}>Next</button>
+        </div>
       </SWrapper>
     </ComLayout>
   );
