@@ -22,12 +22,12 @@ interface PostDetails {
   createdAt: string;
   title: string;
   contents: string;
-  imgUrl: string;
+  imgUrl: string[];
   likesCount: number;
   commentsCount: number;
   comments: Comment[];
   category: string;
-  likedByUser: boolean; // This field indicates if the current user has liked the post
+  likedByUser: boolean;
 }
 
 const Wrapper = styled.div`
@@ -52,11 +52,26 @@ const Container = styled.div`
   }
 `;
 
+const ImagePreviewContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
 const ImagePreview = styled.img`
-  width: 100%;
-  max-height: 200px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  margin-bottom: 16px;
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
 `;
 
 const Dropdown = styled.select`
@@ -72,9 +87,10 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const location = useLocation();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [category, setCategory] = useState<Category>(Category.Brand);
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [category, setCategory] = useState<Category | string>(Category.Brand);
+
   const isEditing = location.state && location.state.postDetails;
 
   useEffect(() => {
@@ -82,11 +98,9 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       const { postDetails } = location.state as { postDetails: PostDetails };
       setTitle(postDetails.title);
       setContent(postDetails.contents);
-      if (Object.values(Category).includes(postDetails.category as Category)) {
-        setCategory(postDetails.category as Category);
-      }
+      setCategory(postDetails.category);
       if (postDetails.imgUrl) {
-        setImagePreview(postDetails.imgUrl);
+        setImagePreviews(postDetails.imgUrl);
       }
     }
   }, [isEditing, location.state]);
@@ -100,21 +114,28 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   };
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedImage = event.target.files?.[0];
-    if (selectedImage) {
-      setImage(selectedImage);
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setImagePreview(reader.result.toString());
-        }
-      };
-      reader.readAsDataURL(selectedImage);
+    const selectedImages = event.target.files;
+    if (selectedImages) {
+      const newImages = Array.from(selectedImages);
+      setImages((prevImages) => [...prevImages, ...newImages]);
+
+      const newImagePreviews = newImages.map((image) => URL.createObjectURL(image));
+      setImagePreviews((prevPreviews) => [...prevPreviews, ...newImagePreviews]);
     }
   };
 
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setCategory(event.target.value as Category);
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const updatedImages = [...images];
+    updatedImages.splice(index, 1);
+    setImages(updatedImages);
+
+    const updatedPreviews = [...imagePreviews];
+    updatedPreviews.splice(index, 1);
+    setImagePreviews(updatedPreviews);
   };
 
   const handlePostSubmit = async () => {
@@ -123,14 +144,13 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       formData.append("title", title);
       formData.append("contents", content);
       formData.append("category", category);
-      if (image) {
-        formData.append("imgUrl", image); // Ensure the key here matches what your backend expects
+      if (images.length > 0) {
+        images.forEach((image) => {
+          formData.append("imgUrl", image); // Append each image with the key "imgUrl[]"
+        });
+      } else {
+        formData.append("imgUrl", "null");
       }
-
-      // Alternative method to log formData entries
-      formData.forEach((value, key) => {
-        console.log(key + ': ' + value);
-      });
 
       const response = await axiosInstance.post(
         `${process.env.REACT_APP_API_BASE_URL}/communities`,
@@ -156,9 +176,14 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
       formData.append("title", title);
       formData.append("contents", content);
       formData.append("category", category);
-      if (image) {
-        formData.append("imgUrl", image); // Ensure the key here matches what your backend expects
+      if (images.length > 0) {
+        images.forEach((image) => {
+          formData.append("imgUrl", image); // Append each image with the key "imgUrl[]"
+        });
+      } else {
+        formData.append("imgUrl", "null");
       }
+      
 
       const { postDetails } = location.state!;
       const response = await axiosInstance.patch(
@@ -178,7 +203,6 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
     }
   };
 
-
   return (
     <Wrapper>
       <Container>
@@ -192,11 +216,17 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
         <TextInput height={20} value={title} onChange={handleTitleChange} />
         <div>글</div>
         <TextInput height={480} value={content} onChange={handleContentChange} multiline />
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        {imagePreview && <ImagePreview src={imagePreview} alt="Image Preview" />}
+        <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+        <ImagePreviewContainer>
+          {imagePreviews.map((preview, index) => (
+            <div key={index} style={{ position: "relative" }}>
+              <ImagePreview src={preview} alt={`Image Preview ${index}`} />
+              <DeleteButton onClick={() => handleDeleteImage(index)}>Delete</DeleteButton>
+            </div>
+          ))}
+        </ImagePreviewContainer>
         {!isEditing && <Button title="글 작성하기" onClick={handlePostSubmit} />}
         {isEditing && <Button title="수정하기" onClick={handlePostUpdate} />}
-        
       </Container>
     </Wrapper>
   );

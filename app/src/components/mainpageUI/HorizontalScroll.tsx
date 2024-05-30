@@ -96,15 +96,17 @@ import React from "react";
 import styled from "styled-components";
 import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { useNavigate } from "react-router-dom";
+import "react-horizontal-scrolling-menu/dist/styles.css";
 
 const ScrollContainer = styled.div`
-  width: 400px;
+  width: 800px;
   overflow-x: auto;
+  white-space: nowrap;
 `;
 
 interface CardProps {
   data: { imgUrl: string; shopUrl: string };
-  onClick: (shopUrl: string) => void; // Define onClick as a prop
+  onClick: (shopUrl: string) => void;
 }
 
 const CardImage = styled.img`
@@ -112,6 +114,7 @@ const CardImage = styled.img`
   height: 54px;
   margin-top: 8px;
   cursor: pointer;
+  border-radius: 10px;
 `;
 
 function Card({ data, onClick }: CardProps) {
@@ -120,7 +123,7 @@ function Card({ data, onClick }: CardProps) {
   };
 
   return (
-    <div style={{ width: "70px" }}>
+    <div style={{ width: "70px", display: "inline-block" }}>
       <div className="card" onClick={handleClick}>
         <CardImage src={data.imgUrl} alt={`Banner`} />
       </div>
@@ -139,7 +142,7 @@ const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ dataList }) => {
   const handleImageClick = (shopUrl: string) => {
     window.location.href = shopUrl;
   };
-  
+
   return (
     <ScrollContainer>
       <ScrollMenu>

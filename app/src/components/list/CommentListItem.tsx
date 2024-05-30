@@ -33,12 +33,17 @@ const Wrapper = styled.div`
 const ContentText = styled.p`
     font-size: 14px;
 `;
+const DataText = styled.p`
+    font-size: 10px;
+    color: #a9a9a9;
+
+`
 
 const CommentListItem: React.FC<CommentListItemProps> = ({ comment, currentUser, onDeleteComment }) => {
     const { id, content, username } = comment;
     return (
         <Wrapper>
-            {/*{`Comment ${comment.id}`}*/}
+            <DataText>{`${comment.username}`}</DataText>
             <ContentText>{content}</ContentText>
             {currentUser === username && (
         <Button
