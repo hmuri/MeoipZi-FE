@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import axiosInstance from "../api/axios";
 import imageFile from "../images/image-file.png";
@@ -11,7 +11,30 @@ const Profile = () => {
   const [weight, setWeight] = useState("");
   const [weightSecret, setWeightSecret] = useState(false);
   const [imagePreview, setImagePreview] = useState(""); // 이미지 미리보기 URL 상태 추가
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch existing data from /profiles/info when the component mounts
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("/profiles/info");
+        const data = response.data;
+        setNickname(data.nickname);
+        setHeight(data.height);
+        setHeightSecret(data.heightSecret);
+        setWeight(data.weight);
+        setWeightSecret(data.weightSecret);
+        setImagePreview(data.imgUrl); // Assuming the response contains an image URL
+        setIsDataFetched(true);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -20,7 +43,6 @@ const Profile = () => {
       setImagePreview(imageUrl); // 이미지 미리보기 URL 설정
     }
   };
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -45,8 +67,31 @@ const Profile = () => {
     }
   };
 
+  const handleUpdate = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    formData.append("height", height);
+    formData.append("heightSecret", heightSecret.toString());
+    formData.append("weight", weight);
+    formData.append("weightSecret", weightSecret.toString());
+
+    if (fileInputRef.current?.files && fileInputRef.current.files[0]) {
+      formData.append("imgUrl", fileInputRef.current.files[0]);
+    }
+
+    try {
+      const response = await axiosInstance.patch("/profiles/settings", formData);
+      console.log("Success:", response.data);
+      navigate("/home");
+    } catch (error) {
+      console.error("Error updating the form:", error);
+    }
+  };
+
   return (
-    <Container onSubmit={handleSubmit}>
+    <Container>
       <Title>프로필 설정</Title>
       <ProfileImage src={imagePreview || imageFile} alt="Profile" />
       <input
@@ -104,7 +149,11 @@ const Profile = () => {
           </InfoInputBox>
         </LabelBox>
       </InfoBox>
-      <Button type="submit">완료</Button>
+      {!isDataFetched ? (
+        <Button type="submit" onClick={handleSubmit}>완료</Button>
+      ) : (
+        <Button type="button" onClick={handleUpdate}>수정하기</Button>
+      )}
     </Container>
   );
 };
@@ -189,6 +238,7 @@ const Button = styled.button`
   font-family: "Noto Sans Arabic";
   font-size: 14px;
   font-weight: 700;
+  cursor: pointer;
 `;
 
 const SubText = styled.div`
