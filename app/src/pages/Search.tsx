@@ -12,7 +12,17 @@ import NavBar from "../components/NavBar";
 const Search = () => {
   const categories = ["상의", "하의", "모자", "액세서리"];
   const brands = ["나이키", "반스", "아디다스", "컨버스"];
-  const genres = ["락시크", "아메카지", "Y2K", "캐주얼"];
+  const genres = [
+    { id: 1, name: "Y2K" },
+    { id: 2, name: "클래식" },
+    { id: 3, name: "캐주얼" },
+    { id: 4, name: "스포티" },
+    { id: 5, name: "스트릿" },
+    { id: 6, name: "페미닌" },
+    { id: 7, name: "아메카지" },
+    { id: 8, name: "비즈니스" },
+    { id: 9, name: "빈티지" },
+  ];
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -21,7 +31,9 @@ const Search = () => {
       .fetchQuery(["categoryItems", category], () => getCategoryItems(category))
       .then((data) => {
         console.log("data" + data);
-        navigate(`/category/${category}`, { state: { items: data } });
+        navigate(`/category/${category}`, {
+          state: { items: data, category: "category" },
+        });
       })
       .catch((error) => {
         console.error("Failed to fetch category items:", error);
@@ -31,17 +43,21 @@ const Search = () => {
     queryClient
       .fetchQuery(["brandItems", category], () => getBrandItems(category))
       .then((data) => {
-        navigate(`/category/${category}`, { state: { items: data } });
+        navigate(`/category/${category}`, {
+          state: { items: data, category: "brand" },
+        });
       })
       .catch((error) => {
         console.error("Failed to fetch category items:", error);
       });
   };
-  const handleGenreClick = (category: string) => {
+  const handleGenreClick = (genre: any) => {
     queryClient
-      .fetchQuery(["genreItems", category], () => getGenreItems(category))
+      .fetchQuery(["genreItems", genre.id], () => getGenreItems(genre.id))
       .then((data) => {
-        navigate(`/category/${category}`, { state: { items: data } });
+        navigate(`/category/${genre.name}`, {
+          state: { items: data, category: "genre" },
+        });
       })
       .catch((error) => {
         console.error("Failed to fetch category items:", error);
@@ -76,13 +92,11 @@ const Search = () => {
         </Slider>
         <Label>장르별 검색</Label>
         <Slider>
-          <Slider>
-            {genres.map((genre) => (
-              <CategoryBox key={genre} onClick={() => handleGenreClick(genre)}>
-                <CategoryTitle>{genre}</CategoryTitle>
-              </CategoryBox>
-            ))}
-          </Slider>
+          {genres.map((genre) => (
+            <CategoryBox key={genre.id} onClick={() => handleGenreClick(genre)}>
+              <CategoryTitle>{genre.name}</CategoryTitle>
+            </CategoryBox>
+          ))}
         </Slider>
       </BodyContainer>
       <NavBar />
@@ -154,8 +168,8 @@ const Label = styled.div`
   margin-top: 30px;
 `;
 const Slider = styled.div`
-  overflow-x: auto;
-  display: flex;
+  overflow: auto;
+  width: 365px;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; // Hide scrollbar for Firefox
@@ -166,12 +180,13 @@ const Slider = styled.div`
 
 const CategoryBox = styled.div`
   display: inline-block;
+  gap: 20px;
   width: 72px;
   height: 72px;
   background-color: #8b8b8b;
-  border-radius: 100%;
-  margin-right: 20px;
+  border-radius: 50%;
   cursor: pointer;
+  margin-right: 20px;
 `;
 
 const CategoryTitle = styled.div`

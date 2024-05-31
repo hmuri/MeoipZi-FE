@@ -12,7 +12,9 @@ export const getProductItem = async (itemId: number) => {
 };
 
 export const getShort = async () => {
-  const response = await axiosInstance.get(`/shortforms/latest`);
+  const response = await axiosInstance.get(
+    `/shortforms/popular?page=0&size=20`
+  );
   return response.data;
 };
 

@@ -23,7 +23,7 @@ const Outfit = () => {
   const [comments, setComments] = useState<Comment[]>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(item.likeOrNot);
   const [content, setContent] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -254,7 +254,6 @@ const Outfit = () => {
           )
         )}
       </BodyContainer>
-      <NavBar />
     </Container>
   );
 };
