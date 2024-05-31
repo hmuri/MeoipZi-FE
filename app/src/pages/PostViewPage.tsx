@@ -50,6 +50,7 @@ const Wrapper = styled.div`
   /* 페이지가 화면의 윗쪽을 넘어가지 않도록 스크롤이 되면 숨김 */
   position: sticky;
   top: 0;
+  margin-top: 10vh;
   height: 100vh;
   z-index: 1;
 `;
@@ -204,14 +205,39 @@ const PostViewPage: FC = () => {
     }
   };
 
-  const handleDeleteComment = async (parentId: string) => {
+  const handleDeleteComment = async (commentId: string) => {
     try {
-      await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments/${parentId}`);
-      fetchPostDetails(); // Re-fetch post details to update comments
+      // Recursively delete comment and its replies
+      const deleteCommentsRecursive = async (commentId: string) => {
+        // Find the comment to delete from the postDetails
+        const commentToDelete = postDetails?.comments.find(comment => comment.id === commentId);
+    
+        // If the comment to delete is found
+        if (commentToDelete) {
+          // Delete the comment
+          await axiosInstance.delete(`${process.env.REACT_APP_API_BASE_URL}/communities/${postDetails?.communityId}/comments/${commentId}`);
+    
+          // Check if the comment has replies
+          if (commentToDelete.replies) {
+            // Recursively delete replies of the comment being deleted
+            for (const reply of commentToDelete.replies) {
+              await deleteCommentsRecursive(reply.id);
+            }
+          }
+        }
+      };
+    
+      // Call the recursive function to delete the comment and its replies
+      await deleteCommentsRecursive(commentId);
+    
+      // After deletion, refetch the post details to update comments
+      fetchPostDetails();
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
   };
+  
+  
 
   const handleReplyChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, commentId: string) => {
     const { value } = event.target;

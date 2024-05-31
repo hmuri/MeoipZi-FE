@@ -132,7 +132,7 @@ const WritePost: React.FC<WritePostProps> = ({ currentPath }) => {
   const handleDeleteImage = (index: number) => {
     // Add the index of the deleted image to deletedImages state
     setDeletedImages((prevDeletedImages) => [...prevDeletedImages, index]);
-
+  
     // Remove the image preview from imagePreviews
     const updatedPreviews = [...imagePreviews];
     updatedPreviews.splice(index, 1);

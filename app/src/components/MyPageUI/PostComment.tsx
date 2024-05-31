@@ -44,6 +44,24 @@ const Container = styled.div`
   }
   flex: 1;
 `;
+
+const NavigateButton = styled.button`
+  width: 40px;
+  height: 25px;
+  background-color: transparent;
+  color: #8B8B8B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px; /* Adjust font size as needed */
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 5px;
+`;
+
 {/*
 const PostComment: FC = () => {
   const [shortForms, setShortForms] = useState<Comment[]>([]);
@@ -127,6 +145,10 @@ const PostComment: FC = () => {
     navigate(`/post/${comments.id}`);
   };
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <>
       <SWrapper>
@@ -134,14 +156,17 @@ const PostComment: FC = () => {
           <div>
             <h2>Outfits Comments</h2>
             <MyPageCommentList comments={cmtOutfits} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/outfit-comments')}>. . .</NavigateButton>
           </div>
           <div>
             <h2>Short Forms Comments</h2>
             <MyPageCommentList comments={cmtShortforms} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/shorts-comments')}>. . .</NavigateButton>
           </div>
           <div>
             <h2>Community Comments</h2>
             <MyPageCommentList comments={cmtComms} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/community-comments')}>. . .</NavigateButton>
           </div>
         </Container>
       </SWrapper>

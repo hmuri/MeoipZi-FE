@@ -70,11 +70,11 @@ function ComLayout(props: LayoutProps): JSX.Element {
   if (numPosts < 5) {
     marginTop = 5 * window.innerHeight; // Set marginTop to 200vh if less than 5 elements
   } else {
-    marginTop = numPosts * 80; // Adjust based on your post item height
+    marginTop = numPosts * 50; // Adjust based on your post item height
   }
 
   // Set a maximum height for the content area
-  const maxContentHeight = 3000; // Adjust as needed
+  const maxContentHeight = 1000; // Adjust as needed
 
   return (
     <Container>

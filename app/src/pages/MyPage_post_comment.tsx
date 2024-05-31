@@ -44,7 +44,7 @@ const ScrollableContainer = styled.div`
   top: 110px; /* Adjust this value to set the distance from the top */
   left: 50%;
   transform: translateX(-50%);
-  width: 90%; /* Adjust the width as needed */
+  width: 100%; /* Adjust the width as needed */
   max-width: 375px; /* Set a maximum width */
   bottom: 0;
   overflow-y: auto; /* Enable vertical scrolling */
@@ -55,12 +55,16 @@ const Style = styled.div`
   flex-direction: column;
   margin-top: 130px;
   margin-left: 20px;
+  overflow-y: auto;
+  width: 100%;
+
 `;
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 
 const MyPage_post_comment: FC<{ component?: React.ReactNode }> = ({ component }) => {
   const navigate = useNavigate();
@@ -86,6 +90,8 @@ const MyPage_post_comment: FC<{ component?: React.ReactNode }> = ({ component })
     fetchData();
   }, []);
 
+  
+
   return (
     <PageStyle>
       <ProfileLayout>
@@ -102,6 +108,7 @@ const MyPage_post_comment: FC<{ component?: React.ReactNode }> = ({ component })
             내가 업로드한 숏폼
           </div>
           <PostShort />
+          {/*<NavigateButton onClick={() => handleNavigate('/post-shorts')}>. . .</NavigateButton>*/}
         </Style>
       </ScrollableContainer>
         

@@ -46,7 +46,7 @@ const ScrollableContainer = styled.div`
   top: 110px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
+  width: 100%;
   max-width: 375px;
   bottom: 0;
   overflow-y: auto;
@@ -57,11 +57,35 @@ const Style = styled.div`
   flex-direction: column;
   margin-top: 130px;
   margin-left: 20px;
+  overflow-y: auto;
+  width: 100%;
 `;
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const NavigateButton = styled.button`
+  width: 40px;
+  height: 25px;
+  background-color: transparent;
+  color: #8B8B8B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px; /* Adjust font size as needed */
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 15px;
+  margin-top: -4vh;
+`;
+
+const PushRight = styled.div`
+  margin-left: 5vh;
 `;
 
 // Define the MyPage_post_feed functional component
@@ -85,6 +109,10 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
     fetchData();
   }, []);
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <PageStyle>
       <ProfileLayout>
@@ -93,13 +121,18 @@ const MyPage_post_feed: FC<{ component?: React.ReactNode }> = ({ component }) =>
             <Box>
               <MyPageTab />
               {/* Pass uploadedComms and uploadedSFs as props to PostFeed */}
-              <PostFeed uploadedCommList={uploadedComms} uploadedSFList={uploadedSFs} />
+              <PushRight>
+                <PostFeed uploadedCommList={uploadedComms} uploadedSFList={uploadedSFs} />
+              </PushRight>
+              
+              <NavigateButton onClick={() => handleNavigate('/post-feed')}>. . .</NavigateButton>
               <BottomRectangle />
             </Box>
             <div style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>
               내가 업로드한 숏폼
             </div>
             <PostShort />
+            {/*<NavigateButton onClick={() => handleNavigate('/post-shorts')}>. . .</NavigateButton>*/}
           </Style>
         </ScrollableContainer>
       </ProfileLayout>

@@ -23,6 +23,14 @@ import FreeCom from "./pages/FreeCom";
 import WritePost from "./pages/WritePost";
 import PostViewPage from "./pages/PostViewPage";
 import VintageNewsDetail from "./pages/VintageNews";
+import LikeShortssSeeAll from "./pages/likes_shortforms";
+import LikeOutfitsSeeAll from "./pages/likes_outfits";
+import ScrapOutfitsSeeAll from "./pages/post_scrap_outfits";
+import ScrapPruductsSeeAll from "./pages/post_scrap_products";
+import PostFeedSeeAll from "./pages/post_feed_community";
+import CommentsCommunitySeeAll from "./pages/post_comments_comm";
+import CommentsShortsSeeAll from "./pages/post_comments_shorts";
+import CommentsOutfitSeeAll from "./pages/post_comments_outfits";
 
 
 function App() {
@@ -63,6 +71,15 @@ function App() {
               <Route path="/BrandCommunity/WritePost" element={<WritePost currentPath="/BrandCommunity" />}/>
               <Route path="/ShopCommunity/WritePost" element={<WritePost currentPath="/ShopCommunity" />}/>
               <Route path="/FreeCommunity/WritePost" element={<WritePost currentPath="/FreeCommunity" />}/>
+
+              <Route path="/liked-shortforms" element={<LikeShortssSeeAll />} />
+              <Route path="/liked-outfits" element={<LikeOutfitsSeeAll/>} />
+              <Route path="/scrap-outfits" element={<ScrapOutfitsSeeAll />} />
+              <Route path="/scrap-products" element={<ScrapPruductsSeeAll/>} />
+              <Route path="/post-feed" element={<PostFeedSeeAll />} />
+              <Route path="/shorts-comments" element={<CommentsShortsSeeAll />} />
+              <Route path="/outfit-comments" element={<CommentsOutfitSeeAll />} />
+              <Route path ="/community-comments" element={<CommentsCommunitySeeAll />} />
 
               <Route path="/post/:id" element={<PostViewPage />} />
               <Route path = "/WritePost/:id" element={<WritePost currentPath="/post/:id"/>}/>

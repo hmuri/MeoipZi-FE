@@ -62,6 +62,7 @@ const Box = styled.div`
   flex-direction: column;
 `;
 
+
 const MyPage_post_scrap: FC<{ component?: React.ReactNode }> = ({ component }) => {
   const navigate = useNavigate();
   const [scrapData, setScrapData] = useState<any[]>([]);
@@ -82,6 +83,10 @@ const MyPage_post_scrap: FC<{ component?: React.ReactNode }> = ({ component }) =
     fetchData();
   }, []);
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <PageStyle>
       <ProfileLayout>
@@ -90,13 +95,15 @@ const MyPage_post_scrap: FC<{ component?: React.ReactNode }> = ({ component }) =
           <Box>
           <MyPageTab/>
           <PostScrap scrapData={scrapData} />
-            <BottomRectangle />
+          
+          <BottomRectangle />
           </Box>
 
           <div style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>
             내가 업로드한 숏폼
           </div>
           <PostShort />
+          {/*<NavigateButton onClick={() => handleNavigate('/post-shorts')}>. . .</NavigateButton>*/}
         </Style>
       </ScrollableContainer>
         

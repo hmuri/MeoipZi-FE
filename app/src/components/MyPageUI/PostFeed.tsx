@@ -26,12 +26,20 @@ interface Comment {
 
 const SWrapper = styled.div`
   padding: 16px;
-  width: 50vh;
+  width: 50vh; /* Set initial width */
+  max-width: 90%; /* Set maximum width to prevent overflow */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 3vh;
+  margin-left: auto;
+  margin-right: auto; /* Center horizontally */
+  
+  /* Media query for responsiveness */
+  @media screen and (max-width: 768px) {
+    width: 90%; /* Adjust width for smaller screens */
+  }
 `;
 
 const Container = styled.div`

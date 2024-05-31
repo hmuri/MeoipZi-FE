@@ -18,30 +18,30 @@ interface CommentListItemProps {
 
 // Define a styled component to render a single comment
 const CommentWrapper = styled.div`
-    padding: 16px;
+    padding: 8px; /* Decrease padding */
     border: 1px solid #ccc;
     border-radius: 8px;
-    margin-bottom: 16px;
-    width: 250px;
-    height: 150px;
+    margin-bottom: 8px; /* Decrease margin */
+    width: 280px;
+    height: 120px; /* Decrease height */
 `;
 
 const CommentTitle = styled.h3`
-    margin-bottom: 6px;
+    margin-bottom: 4px; /* Decrease margin */
 `;
 
 const CommentDetails = styled.div`
     color: #666;
     font-size: 12px;
-    margin:0;
-    padding:0;
+    margin: -10px 0; /* Adjust margin to pack the details more tightly */
+    padding: 0;
 `;
 
 const Styledp = styled.p`
-    line-height:1;
-    margin:0;
-    padding:0;
-`
+    line-height: 1;
+    margin: -10px 0; /* Adjust margin to pack the details more tightly */
+    padding: 0;
+`;
 
 const MyPageComment: React.FC<CommentListItemProps> = ({ comment, onClick }) => {
     return (

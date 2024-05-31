@@ -28,13 +28,16 @@ interface Post {
 }
 
 const FWrapper = styled.div`
-  padding: 16px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto; /* Allow scrolling */
-  min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
+padding: 16px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+top: 0;
+/* Remove position: sticky */
+overflow-y: auto; /* Allow scrolling */
+/* Add min-height to prevent the container from collapsing when there are few items */
+min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
 `;
 
 const PostListContainer = styled.div`

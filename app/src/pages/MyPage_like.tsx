@@ -52,6 +52,23 @@ const Style = styled.div`
   margin-left: 20px;
 `;
 
+const NavigateButton = styled.button`
+  width: 40px;
+  height: 25px;
+  background-color: transparent;
+  color: #8B8B8B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px; /* Adjust font size as needed */
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 5px;
+`;
+
 interface MainPageProps {
   comments: any[];
   likedOutfits: { id: number; imgUrl: string; createdAt: string }[];
@@ -82,6 +99,10 @@ const MyPage_like: FC = () => {
     fetchData();
   }, []);
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <PageStyle>
       <ProfileLayout>
@@ -89,10 +110,12 @@ const MyPage_like: FC = () => {
           <Style>
             <h3>코디</h3>
             <LikeImage likedOutfits={likedOutfits.map(outfit => outfit.imgUrl)} />
+            <NavigateButton onClick={() => handleNavigate('/liked-outfits')}>. . .</NavigateButton>
             <h3>숏폼</h3>
             {/* Wrap LikeShort inside a styled component and apply styles */}
             <StyledLikeShort>
               <LikeShort sfs={likedShortForms.map(sf => sf.imgUrl)} />
+              <NavigateButton onClick={() => handleNavigate('/liked-shortforms')}>. . .</NavigateButton>
             </StyledLikeShort>
             {/*
             <h3>Comments</h3>
