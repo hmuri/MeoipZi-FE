@@ -33,18 +33,18 @@ const SWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto; /* Allow scrolling */
-  min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
+  overflow-y: auto; // Allow scrolling
+  min-height: calc(100vh - 50px); // Adjust based on header height
 `;
 
 const PostListContainer = styled.div`
   flex-grow: 1;
   width: 100%;
-  min-height: 50%;
+  min-height: 50%; // Ensure it has some height even with few items
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start; // Align content to the top
 `;
 
 

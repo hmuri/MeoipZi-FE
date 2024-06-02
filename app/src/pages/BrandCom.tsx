@@ -28,27 +28,25 @@ interface Post {
 }
 
 const BWrapper = styled.div`
-padding: 16px;
-width: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
-top: 0;
-/* Remove position: sticky */
-overflow-y: auto; /* Allow scrolling */
-/* Add min-height to prevent the container from collapsing when there are few items */
-min-height: calc(100vh - 50px); /* Adjust 50px according to your header height */
+  padding: 16px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto; // Allow scrolling
+  min-height: calc(100vh - 50px); // Adjust based on header height
 `;
 
 const PostListContainer = styled.div`
   flex-grow: 1;
   width: 100%;
-  min-height: 50%; /* Adjust the percentage value as needed */
+  min-height: 50%; // Ensure it has some height even with few items
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Align content to the top */
+  justify-content: flex-start; // Align content to the top
 `;
+
 
 
 const ToggleButton = styled.button`

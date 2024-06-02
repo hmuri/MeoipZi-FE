@@ -21,8 +21,9 @@ const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
+  padding-top: 120px;
   padding-bottom: 80px; // Add padding bottom for NavBar
 `;
 
@@ -30,22 +31,19 @@ const StyleWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
   width: 100%;
-  margin-top:50vh;
-  position: sticky; /* 페이지가 화면의 상단에 고정되도록 설정 */
-  top: 0; /* 화면의 상단에 고정 */
+  position: relative; // Use relative instead of sticky
+  top: 0;
 `;
 
-const ContentWrapper = styled.div<{ marginTop: number; maxHeight: number }>`
+const ContentWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  top:0;
-  margin-top: ${({ marginTop }) => `${marginTop}px`}; // Dynamically adjust margin-top
+  margin-top: 0; // No margin needed to ensure it starts at the top
   overflow-y: auto; // Add this to enable vertical scrolling if needed
-
+  max-height: calc(100vh - 200px); // Adjust based on header and other components height
 `;
 
 const WriteButton = styled.img`
@@ -62,27 +60,13 @@ function ComLayout(props: LayoutProps): JSX.Element {
   const { currentPath, totalElements } = props;
   const location = useLocation();
 
-  // Calculate the number of posts based on totalElements
-  const numPosts = totalElements > 0 ? totalElements : 10; // Default to 10 if totalElements is not available
-
-  // Calculate the margin-top based on the number of posts
-  let marginTop = 0;
-  if (numPosts < 5) {
-    marginTop = 5 * window.innerHeight; // Set marginTop to 200vh if less than 5 elements
-  } else {
-    marginTop = numPosts * 50; // Adjust based on your post item height
-  }
-
-  // Set a maximum height for the content area
-  const maxContentHeight = 1000; // Adjust as needed
-
   return (
     <Container>
       <MainHeader />
       <MainPgTab />
       <CommunityTab />
       <StyleWrap id="wrap">
-        <ContentWrapper marginTop={marginTop} maxHeight={maxContentHeight}>
+        <ContentWrapper>
           <main>{props.children}</main>
         </ContentWrapper>
       </StyleWrap>
