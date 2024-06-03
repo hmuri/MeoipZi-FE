@@ -43,16 +43,23 @@ const ContentWrapper = styled.div`
   align-items: center;
   margin-top: 0; // No margin needed to ensure it starts at the top
   overflow-y: auto; // Add this to enable vertical scrolling if needed
-  max-height: calc(100vh - 200px); // Adjust based on header and other components height
+  max-height: calc(
+    100vh - 200px
+  ); // Adjust based on header and other components height
 `;
 
-const WriteButton = styled.img`
-  width: 80px;
-  position: fixed;
-  left: 70%;
-  transform: translateX(-50%);
-  top: 70%;
+const WriteButton = styled.div`
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+  background-color: #9e9e9e;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
   z-index: 1000; // Ensure button is on top
 `;
 
@@ -74,7 +81,23 @@ function ComLayout(props: LayoutProps): JSX.Element {
         <WritePost currentPath={currentPath} />
       ) : (
         <Link to={`${currentPath}/WritePost`}>
-          <WriteButton src={writeButton} alt="Write Post" />
+          <WriteButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="17"
+              viewBox="0 0 18 17"
+              fill="none"
+            >
+              <path
+                d="M13.2749 7.08333L15.4875 4.95833L12.5373 2.125L10.3247 4.25M13.2749 7.08333L5.89941 14.1667H2.94922V11.3333L10.3247 4.25M13.2749 7.08333L10.3247 4.25"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </WriteButton>
         </Link>
       )}
       <Routes>

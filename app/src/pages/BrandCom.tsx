@@ -31,6 +31,7 @@ const BWrapper = styled.div`
   padding: 16px;
   width: 100%;
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   overflow-y: auto; // Allow scrolling
@@ -47,8 +48,6 @@ const PostListContainer = styled.div`
   justify-content: flex-start; // Align content to the top
 `;
 
-
-
 const ToggleButton = styled.button`
   background: #9e9e9e;
   border-radius: 2px;
@@ -57,11 +56,9 @@ const ToggleButton = styled.button`
   font-weight: bold;
   color: white;
   margin: 3px;
-  position: fixed;
-  top: 140px;
-  left: 100px;
+  position: absolute;
+  left: 12px;
   z-index: 999; /* Ensure the button is on top of other elements */
-
 `;
 
 const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
@@ -78,8 +75,11 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
-        showLatest 
+      const response = await axiosInstance.get<{
+        content: PostData[];
+        totalElements: number;
+      }>(
+        showLatest
           ? `${process.env.REACT_APP_API_BASE_URL}/communities/latest?category=brand&page=0&size=20`
           : `${process.env.REACT_APP_API_BASE_URL}/communities/popular?category=brand&page=0&size=20`
       );
@@ -108,29 +108,31 @@ const BrandCom: FC<MainPageProps> = ({ currentPath }) => {
   };
 
   const handleToggle = () => {
-    setShowLatest(prevState => !prevState); // Toggle between latest and popular posts
+    setShowLatest((prevState) => !prevState); // Toggle between latest and popular posts
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1);
     }
   };
 
   return (
     <ComLayout currentPath={currentPath} totalElements={totalElements}>
       <BWrapper>
-        <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
+        <ToggleButton onClick={handleToggle}>
+          {showLatest ? " Show Popular " : " Show Latest "}
+        </ToggleButton>
         <PostListContainer>
-         <PostList posts={posts} onClickItem={handleItemClick} />
+          <PostList posts={posts} onClickItem={handleItemClick} />
         </PostListContainer>
-        
+
         <div>
           <button onClick={handlePrevPage}>Previous</button>
           <span>{`Page ${currentPage} of ${totalPages}`}</span>

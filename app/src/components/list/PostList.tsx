@@ -21,6 +21,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 16px;
   margin-top: 20px;
+  width: 100%;
 `;
 
 const PostList: React.FC<PostListProps> = ({ posts, onClickItem }) => {
@@ -38,4 +39,3 @@ const PostList: React.FC<PostListProps> = ({ posts, onClickItem }) => {
 };
 
 export default PostList;
-

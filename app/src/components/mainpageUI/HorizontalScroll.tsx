@@ -102,6 +102,12 @@ const ScrollContainer = styled.div`
   width: 800px;
   overflow-x: auto;
   white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
 `;
 
 interface CardProps {
@@ -113,7 +119,7 @@ const CardImage = styled.img`
   width: 80px;
   height: 80px;
   margin-top: 10px;
-  
+
   cursor: pointer;
   border-radius: 10px;
 `;

@@ -33,11 +33,7 @@ import CommentsCommunitySeeAll from "./pages/post_comments_comm";
 import CommentsShortsSeeAll from "./pages/post_comments_shorts";
 import CommentsOutfitSeeAll from "./pages/post_comments_outfits";
 
-
 function App() {
-
-  
-
   function setScreenSize() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -56,7 +52,7 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
-              <Route path="/MainPage" element={<MainPage />} />
+              <Route path="/home" element={<MainPage />} />
               <Route path="/shortform/post" element={<PostShortForm />} />
               <Route path="/mypage/likes" element={<MyPage_like />} />
               <Route path="/shortform" element={<Shortform />} />
@@ -64,28 +60,66 @@ function App() {
               <Route path="/product/:product" element={<Product />} />
               <Route path="/outfit/:outfit" element={<Outfit />} />
               <Route path="/VintageNews/:id" element={<VintageNewsDetail />} />
-              <Route path="/mypage/posts/feeds" element={<MyPage_post_feed />}/>
-              <Route path="/mypage/posts/scraps" element={<MyPage_post_scrap />}/>
-              <Route path="/mypage/posts/comments" element={<MyPage_post_comment />}/>
-              <Route path = "/BrandCommunity/*" element ={<BrandCom currentPath="/BrandCommunity" />} />
-              <Route path = "/ShopCommunity/*" element ={<ShopCom currentPath="/ShopCommunity" />} />
-              <Route path = "/FreeCommunity/*" element ={<FreeCom currentPath="/FreeCommunity" />} />
-              <Route path="/BrandCommunity/WritePost" element={<WritePost currentPath="/BrandCommunity" />}/>
-              <Route path="/ShopCommunity/WritePost" element={<WritePost currentPath="/ShopCommunity" />}/>
-              <Route path="/FreeCommunity/WritePost" element={<WritePost currentPath="/FreeCommunity" />}/>
+              <Route
+                path="/mypage/posts/feeds"
+                element={<MyPage_post_feed />}
+              />
+              <Route
+                path="/mypage/posts/scraps"
+                element={<MyPage_post_scrap />}
+              />
+              <Route
+                path="/mypage/posts/comments"
+                element={<MyPage_post_comment />}
+              />
+              <Route
+                path="/BrandCommunity/*"
+                element={<BrandCom currentPath="/BrandCommunity" />}
+              />
+              <Route
+                path="/ShopCommunity/*"
+                element={<ShopCom currentPath="/ShopCommunity" />}
+              />
+              <Route
+                path="/FreeCommunity/*"
+                element={<FreeCom currentPath="/FreeCommunity" />}
+              />
+              <Route
+                path="/BrandCommunity/WritePost"
+                element={<WritePost currentPath="/BrandCommunity" />}
+              />
+              <Route
+                path="/ShopCommunity/WritePost"
+                element={<WritePost currentPath="/ShopCommunity" />}
+              />
+              <Route
+                path="/FreeCommunity/WritePost"
+                element={<WritePost currentPath="/FreeCommunity" />}
+              />
 
               <Route path="/liked-shortforms" element={<LikeShortssSeeAll />} />
-              <Route path="/liked-outfits" element={<LikeOutfitsSeeAll/>} />
+              <Route path="/liked-outfits" element={<LikeOutfitsSeeAll />} />
               <Route path="/scrap-outfits" element={<ScrapOutfitsSeeAll />} />
-              <Route path="/scrap-products" element={<ScrapPruductsSeeAll/>} />
+              <Route path="/scrap-products" element={<ScrapPruductsSeeAll />} />
               <Route path="/post-feed" element={<PostFeedSeeAll />} />
-              <Route path="/shorts-comments" element={<CommentsShortsSeeAll />} />
-              <Route path="/outfit-comments" element={<CommentsOutfitSeeAll />} />
-              <Route path ="/community-comments" element={<CommentsCommunitySeeAll />} />
+              <Route
+                path="/shorts-comments"
+                element={<CommentsShortsSeeAll />}
+              />
+              <Route
+                path="/outfit-comments"
+                element={<CommentsOutfitSeeAll />}
+              />
+              <Route
+                path="/community-comments"
+                element={<CommentsCommunitySeeAll />}
+              />
 
               <Route path="/post/:id" element={<PostViewPage />} />
-              <Route path = "/WritePost/:id" element={<WritePost currentPath="/post/:id"/>}/>
-
+              <Route
+                path="/WritePost/:id"
+                element={<WritePost currentPath="/post/:id" />}
+              />
             </Routes>
           </Router>
         </Container>
@@ -100,7 +134,6 @@ const Container = styled.div`
   max-width: 800px;
   justify-content: center;
   margin: auto;
-  align-items: center;
   background-color: white;
 `;
 

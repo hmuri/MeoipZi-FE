@@ -1,5 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
+import NavBar from "../components/NavBar";
 
 // 이미지 객체를 위한 타입 정의
 interface ImageType {
@@ -71,6 +72,7 @@ const Category = () => {
         </ProductInfo>
         <LinkBox href={item.shopUrl}>Go to Webpage</LinkBox>
       </BodyContainer>
+      <NavBar />
     </Container>
   );
 };

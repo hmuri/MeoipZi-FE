@@ -10,6 +10,12 @@ interface VintageCompProps {
 const VintageContainer = styled.div`
   display: flex;
   overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
 `;
 
 const VintageImage = styled.img`
@@ -29,7 +35,9 @@ const VintageComp: React.FC<VintageCompProps> = ({ imageUrls }) => {
         const response = await axiosInstance.get("/meoipzi");
         const data = response.data;
         if (data.vintageNewsList) {
-          const ids = data.vintageNewsList.map((item: { vintageId: number }) => item.vintageId);
+          const ids = data.vintageNewsList.map(
+            (item: { vintageId: number }) => item.vintageId
+          );
           setVintageIds(ids);
         }
       } catch (error) {
@@ -39,11 +47,13 @@ const VintageComp: React.FC<VintageCompProps> = ({ imageUrls }) => {
 
     fetchVintageIds();
   }, []);
-{/*
+  {
+    /*
   const handleClick = (id: number) => {
     navigate(`/VintageNews/${id}`);
   };
-*/}
+*/
+  }
   return (
     <VintageContainer>
       {imageUrls.map((imageUrl: string, index: number) => (

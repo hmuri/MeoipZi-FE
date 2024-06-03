@@ -15,6 +15,7 @@ const NavBar = () => {
         position: "fixed",
         bottom: "0",
         padding: "20px 50px",
+        left: "0",
         backgroundColor: "#ECECEC",
       }}
     >
@@ -28,7 +29,7 @@ const NavBar = () => {
       >
         <path
           d="M14 5L19 3V13L14 11M2 1.5H13C13.5523 1.5 14 1.94772 14 2.5V13.5C14 14.0523 13.5523 14.5 13 14.5H2C1.44772 14.5 1 14.0523 1 13.5V2.5C1 1.94772 1.44772 1.5 2 1.5Z"
-          stroke={getStrokeColor("/shotform")}
+          stroke={getStrokeColor("/shortform")}
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -42,7 +43,7 @@ const NavBar = () => {
         fill="none"
         onClick={() => navigate("/search")}
         style={{
-          stroke: getStrokeColor("/search") || getStrokeColor("/category"),
+          stroke: getStrokeColor("search") || getStrokeColor("/category"),
         }}
       >
         <path
@@ -59,8 +60,8 @@ const NavBar = () => {
         height="22"
         viewBox="0 0 23 22"
         fill="none"
-        onClick={() => navigate("/MainPage")}
-        style={{ stroke: getStrokeColor("/MainPage") }}
+        onClick={() => navigate("/home")}
+        style={{ stroke: getStrokeColor("/home") }}
       >
         <path
           d="M3.83398 9.16667L11.5007 2.75L19.1673 9.16667L19.1673 18.3333H14.3757V14.6667C14.3757 13.9373 14.0728 13.2378 13.5336 12.7221C12.9944 12.2064 12.2632 11.9167 11.5007 11.9167C10.7382 11.9167 10.0069 12.2064 9.46772 12.7221C8.92856 13.2378 8.62565 13.9373 8.62565 14.6667V18.3333H3.83399L3.83398 9.16667Z"

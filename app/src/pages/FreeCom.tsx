@@ -50,13 +50,13 @@ const PostListContainer = styled.div`
 const ToggleButton = styled.button`
   background: #9e9e9e;
   border-radius: 2px;
+
   font-size: 12px;
   font-weight: bold;
   color: white;
   margin: 3px;
-  position: fixed;
-  top: 140px;
-  left: 100px;
+  position: absolute;
+  left: 20px;
   z-index: 999; /* Ensure the button is on top of other elements */
 `;
 
@@ -73,7 +73,10 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axiosInstance.get<{ content: PostData[], totalElements: number }>(
+      const response = await axiosInstance.get<{
+        content: PostData[];
+        totalElements: number;
+      }>(
         `${process.env.REACT_APP_API_BASE_URL}/communities/${showLatest ? "latest" : "popular"}?category=play&page=${currentPage - 1}&size=20`
       );
       const postData = response.data.content;
@@ -101,26 +104,28 @@ const FreeCom: FC<MainPageProps> = ({ currentPath }) => {
   };
 
   const handleToggle = () => {
-    setShowLatest(prevState => !prevState); // Toggle between latest and popular posts
+    setShowLatest((prevState) => !prevState); // Toggle between latest and popular posts
     setCurrentPage(1); // Reset current page when toggling between latest and popular
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1);
     }
   };
 
   return (
     <ComLayout currentPath={currentPath} totalElements={totalPages}>
       <FWrapper>
-        <ToggleButton onClick={handleToggle}>{showLatest ? " Show Popular " : " Show Latest "}</ToggleButton>
+        <ToggleButton onClick={handleToggle}>
+          {showLatest ? " Show Popular " : " Show Latest "}
+        </ToggleButton>
         <PostListContainer>
           <PostList posts={posts} onClickItem={handleItemClick} />
         </PostListContainer>

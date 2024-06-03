@@ -16,12 +16,12 @@ interface PostListItemProps {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
-  
+  width: 90vw;
+
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   border: 1px solid #ddd;
   padding: 16px;
   cursor: pointer;
@@ -34,11 +34,9 @@ const Wrapper = styled.div`
 `;
 
 const TextWrapper = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-right: 16px;
 `;
 
 const TitleText = styled.p`
@@ -58,6 +56,7 @@ const MetaText = styled.p`
 
 const Image = styled.img`
   width: 100px;
+  display: flex;
   height: auto;
   border-radius: 8px;
 `;

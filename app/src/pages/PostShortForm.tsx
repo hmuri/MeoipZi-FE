@@ -66,7 +66,7 @@ const PostShortForm = () => {
     <Container>
       <form onSubmit={handleSubmit}>
         <Header>
-          <img src={LeftArrow} />
+          <img src={LeftArrow} onClick={() => navigate("/shortform")} />
           <span style={{ fontSize: "20px" }}>숏폼 업로드</span>
           <SubmitButton type="submit">등록</SubmitButton>
         </Header>
