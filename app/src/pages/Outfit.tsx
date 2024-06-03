@@ -232,7 +232,7 @@ const Outfit = () => {
                   borderRadius: "5px",
                   display: "flex",
                   justifyContent: "space-between",
-                  position: "fixed",
+                  position: "absolute",
                   bottom: 20,
                   width: "calc(100% - 40px)",
                   left: 20,
