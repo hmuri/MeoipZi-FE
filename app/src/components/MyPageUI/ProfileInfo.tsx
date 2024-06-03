@@ -123,11 +123,13 @@ const ProfileInfo: React.FC = () => {
             )}
           </UserInfoContainer>
         </NameStyle>
+        {/*
         <img src={profileEdit}
              alt="프로필 편집"
              style={{ height: '17px', marginLeft: '80px', marginTop: '60px' }}
              onClick={goToProfilePage} />
         <ProfileButton> </ProfileButton>
+          */}
       </InfoStyle>
       <BottomRectangle />
       <Back />
