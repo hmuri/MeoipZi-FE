@@ -10,8 +10,27 @@ import {
 import NavBar from "../components/NavBar";
 
 const Search = () => {
-  const categories = ["상의", "하의", "모자", "액세서리"];
-  const brands = ["나이키", "반스", "아디다스", "컨버스"];
+  const categories = ["상의", "하의", "원피스", "아우터"];
+  const brands = [
+    "나이키",
+    "타미진스",
+    "구찌",
+    "플로랄프로렌",
+    "챔피온",
+    "칼하트",
+    "A.P.C",
+    "입생로랑",
+    "라코스테",
+    "폴로랄프로렌",
+    "타미힐피거",
+    "지고트",
+    "M'S GRACY",
+    "엠포리오",
+    "VTZ",
+    "어널로이드",
+    "비바스튜디오",
+    "자라",
+  ];
   const genres = [
     { id: 1, name: "Y2K" },
     { id: 2, name: "클래식" },
