@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Footer from "../Footer";
 import ProfileInfo from "./ProfileInfo";
 import PButton from "./PButton";
-import likeClicked from "../../images/likeClicked.png"
+import likeClicked from "../../images/likeClicked.png";
 import likeNoClicked from "../../images/likeNoClicked.png";
 import postClicked from "../../images/postClicked.png";
 import postNoClicked from "../../images/postNoClicked.png";
@@ -42,7 +42,7 @@ const Box = styled.div`
 const Banner = styled.div`
   background-color: #fff;
   color: #333;
-  padding: '20px 0';
+  padding: "20px 0";
   margin-top: 30px;
   left: 50%;
   width: 400px;
@@ -73,7 +73,6 @@ const ButtonLocation = styled.div`
 `;
 
 function ProfileLayout({ children }: LayoutProps): JSX.Element {
-
   const navigate = useNavigate();
 
   const handleLikeClick = (route: string) => {
@@ -89,27 +88,25 @@ function ProfileLayout({ children }: LayoutProps): JSX.Element {
         </Banner>
         <ProfileInfo />
         <ButtonLocation>
-        <PButton
+          <PButton
             src={likeClicked}
             alt="like clicked"
             width={160}
             onClick={() => handleLikeClick("/mypage/likes")}
             route="/mypage/likes" // Specify the route prop here
-        />
-        <PButton
+          />
+          <PButton
             src={postNoClicked}
             alt="post not clicked"
             width={160}
             onClick={() => handleLikeClick("/mypage/posts/feeds")}
             route="/mypage/posts/feeds" // Specify the route prop here
-        />
-      </ButtonLocation>
+          />
+        </ButtonLocation>
       </Box>
       <ContentWrapper>
         <main>{children}</main>
       </ContentWrapper>
-     
-      <NavBar />
     </StyleWrap>
   );
 }

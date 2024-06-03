@@ -16,7 +16,7 @@ interface PostListItemProps {
 }
 
 const Wrapper = styled.div`
-  width: 90vw;
+  width: 100%;
 
   display: flex;
   justify-content: space-between;

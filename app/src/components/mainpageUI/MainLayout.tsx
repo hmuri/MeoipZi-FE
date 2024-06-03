@@ -40,7 +40,6 @@ function MainLayout(props: LayoutProps): JSX.Element {
           <main>{props.children}</main>
         </ContentWrapper>
       </StyleWrap>
-      <NavBar />
     </Container>
   );
 }

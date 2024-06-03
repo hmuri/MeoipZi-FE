@@ -13,6 +13,7 @@ import postClicked from "../images/postClicked.png";
 import postNoClicked from "../images/postNoClicked.png";
 import LikeComments from "../components/MyPageUI/LikeComment";
 import axiosInstance from "../api/axios";
+import NavBar from "../components/NavBar";
 
 const PageStyle = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ const NavigateButton = styled.button`
   width: 40px;
   height: 25px;
   background-color: transparent;
-  color: #8B8B8B;
+  color: #8b8b8b;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -73,19 +74,39 @@ interface MainPageProps {
   comments: any[];
   likedOutfits: { id: number; imgUrl: string; createdAt: string }[];
   likedSFs: { id: number; imgUrl: string; createdAt: string }[];
-  likedComms: { id: number; title: string; createdAt: string; likesCount: number; cmtCount: number }[];
+  likedComms: {
+    id: number;
+    title: string;
+    createdAt: string;
+    likesCount: number;
+    cmtCount: number;
+  }[];
 }
 
 const MyPage_like: FC = () => {
   const navigate = useNavigate();
-  const [likedOutfits, setLikedOutfits] = useState<{ id: number; imgUrl: string; createdAt: string }[]>([]);
-  const [likedShortForms, setLikedShortForms] = useState<{ id: number; imgUrl: string; createdAt: string }[]>([]);
-  const [likedComms, setLikedComms] = useState<{ id: number; title: string; createdAt: string; likesCount: number; cmtCount: number }[]>([]);
+  const [likedOutfits, setLikedOutfits] = useState<
+    { id: number; imgUrl: string; createdAt: string }[]
+  >([]);
+  const [likedShortForms, setLikedShortForms] = useState<
+    { id: number; imgUrl: string; createdAt: string }[]
+  >([]);
+  const [likedComms, setLikedComms] = useState<
+    {
+      id: number;
+      title: string;
+      createdAt: string;
+      likesCount: number;
+      cmtCount: number;
+    }[]
+  >([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
+        const response = await axiosInstance.get(
+          `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
+        );
         const data = response.data;
         setLikedOutfits(data.likedOutfits);
         setLikedShortForms(data.likedShortForms); // Update property name here
@@ -104,27 +125,37 @@ const MyPage_like: FC = () => {
   };
 
   return (
-    <PageStyle>
-      <ProfileLayout>
-        <ScrollableContainer>
-          <Style>
-            <h3>코디</h3>
-            <LikeImage likedOutfits={likedOutfits.map(outfit => outfit.imgUrl)} />
-            <NavigateButton onClick={() => handleNavigate('/liked-outfits')}>. . .</NavigateButton>
-            <h3>숏폼</h3>
-            {/* Wrap LikeShort inside a styled component and apply styles */}
-            <StyledLikeShort>
-              <LikeShort sfs={likedShortForms.map(sf => sf.imgUrl)} />
-              <NavigateButton onClick={() => handleNavigate('/liked-shortforms')}>. . .</NavigateButton>
-            </StyledLikeShort>
-            {/*
+    <div style={{ position: "relative", width: "100%" }}>
+      <PageStyle>
+        <ProfileLayout>
+          <ScrollableContainer>
+            <Style>
+              <h3>코디</h3>
+              <LikeImage
+                likedOutfits={likedOutfits.map((outfit) => outfit.imgUrl)}
+              />
+              <NavigateButton onClick={() => handleNavigate("/liked-outfits")}>
+                . . .
+              </NavigateButton>
+              <h3>숏폼</h3>
+              {/* Wrap LikeShort inside a styled component and apply styles */}
+              <StyledLikeShort>
+                <LikeShort sfs={likedShortForms.map((sf) => sf.imgUrl)} />
+                <NavigateButton
+                  onClick={() => handleNavigate("/liked-shortforms")}
+                >
+                  . . .
+                </NavigateButton>
+              </StyledLikeShort>
+              {/*
             <h3>Comments</h3>
             <LikeComments comments={likedComms} />
             */}
-          </Style>
-        </ScrollableContainer>
-      </ProfileLayout>
-    </PageStyle>
+            </Style>
+          </ScrollableContainer>
+        </ProfileLayout>
+      </PageStyle>
+    </div>
   );
 };
 

@@ -254,7 +254,6 @@ const Outfit = () => {
           )
         )}
       </BodyContainer>
-      <NavBar />
     </Container>
   );
 };

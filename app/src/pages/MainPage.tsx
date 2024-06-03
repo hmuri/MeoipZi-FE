@@ -6,6 +6,9 @@ import VerticalImageGrid from "../components/mainpageUI/VerticalImageGrid";
 import MainLayout from "../components/mainpageUI/MainLayout";
 import VintageComp from "../components/mainpageUI/VintageComp";
 import NavBar from "../components/NavBar";
+import { getGenreItems } from "../api/category";
+import { useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 interface MainPageProps {}
 
@@ -59,9 +62,7 @@ const MainPage: React.FC<MainPageProps> = () => {
 
         setVintageNewsList(data.vintageNewsList);
         setPartnersList(data.partnersList);
-        setStyleList(
-          data.styleList.content.map((item: { imgUrl: string }) => item.imgUrl)
-        );
+        setStyleList(data.styleList.content);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

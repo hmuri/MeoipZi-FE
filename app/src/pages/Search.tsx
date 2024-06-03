@@ -118,7 +118,6 @@ const Search = () => {
           ))}
         </Slider>
       </BodyContainer>
-      <NavBar />
     </Container>
   );
 };
@@ -127,7 +126,6 @@ export default Search;
 
 const Container = styled.div`
   width: 100%;
-  height: 812px;
   position: relative;
   display: flex;
   justify-content: center;

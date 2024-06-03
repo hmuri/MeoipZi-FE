@@ -9,7 +9,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 `;
 
 const Container = styled.div`
@@ -43,24 +42,26 @@ const ImageGrid = styled.div`
 const ScrapOutfitsSeeAll: FC = () => {
   const [scrapData, setScrapData] = useState<any[]>([]);
   const [pageNum, setPageNum] = useState(1);
-      
+
   const fetchData = async (page: number) => {
     try {
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/scraps/outfits?page=${page}`);
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_BASE_URL}/mypage/posts/scraps/outfits?page=${page}`
+      );
       setScrapData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-      
+
   useEffect(() => {
     fetchData(pageNum);
   }, [pageNum]);
-      
+
   const handleNextPage = () => {
     setPageNum((prevPage) => prevPage + 1);
   };
-      
+
   const handlePreviousPage = () => {
     setPageNum((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
   };
@@ -68,26 +69,29 @@ const ScrapOutfitsSeeAll: FC = () => {
   return (
     <Container>
       <Wrapper>
-      <h2>스크랩한 Outfits</h2>
-      <ScrollableContainer>
-        <ImageGrid>
-          {scrapData.map((outfit: any) => (
-            <img key={outfit.id} src={outfit.imgUrl} alt={`Outfit ${outfit.id}`} />
-          ))}
-        </ImageGrid>
-        <div>
-          <PaginationButton onClick={handlePreviousPage} disabled={pageNum === 1}>
-            Previous
-          </PaginationButton>
-          <PaginationButton onClick={handleNextPage}>
-            Next
-          </PaginationButton>
-        </div>
-      </ScrollableContainer>
-        <NavBar/>
-    </Wrapper>  
+        <h2>스크랩한 Outfits</h2>
+        <ScrollableContainer>
+          <ImageGrid>
+            {scrapData.map((outfit: any) => (
+              <img
+                key={outfit.id}
+                src={outfit.imgUrl}
+                alt={`Outfit ${outfit.id}`}
+              />
+            ))}
+          </ImageGrid>
+          <div>
+            <PaginationButton
+              onClick={handlePreviousPage}
+              disabled={pageNum === 1}
+            >
+              Previous
+            </PaginationButton>
+            <PaginationButton onClick={handleNextPage}>Next</PaginationButton>
+          </div>
+        </ScrollableContainer>
+      </Wrapper>
     </Container>
-    
   );
 };
 
