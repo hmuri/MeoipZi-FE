@@ -4,13 +4,17 @@ import CommentListItem from "./CommentListItem";
 
 // Define the Comment type
 interface Comment {
-    id: number;
-    content: string;
+    id: string;
+    content: string; // Add the content property
+    username: string;
+    parentId: string | null;
 }
 
 // Define the props interface for CommentList component
 interface CommentListProps {
-    comments: Comment[]; // Use the Comment type here
+  comments: Comment[];
+  currentUser: string; // Add currentUser property
+  onDeleteComment: (commentId: string) => void; // Callback for deleting a comment
 }
 
 const Wrapper = styled.div`
@@ -26,15 +30,15 @@ const Wrapper = styled.div`
     }
 `;
 
-const CommentList: React.FC<CommentListProps> = ({ comments }) => {
+const CommentList: React.FC<CommentListProps> = ({ comments, currentUser, onDeleteComment }) => {
     return (
-        <Wrapper>
-            {comments.map((comment) => (
-                <CommentListItem key={comment.id} comment={comment} /> // Pass comment as prop
-            ))}
-        </Wrapper>
+      <Wrapper>
+        {comments.map((comment) => (
+          <CommentListItem key={comment.id} comment={comment} currentUser={currentUser} onDeleteComment={onDeleteComment} />
+        ))}
+      </Wrapper>
     );
-}
-
-export default CommentList;
+  };
+  
+  export default CommentList;
 

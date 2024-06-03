@@ -15,6 +15,7 @@ const NavBar = () => {
         position: "fixed",
         bottom: "0",
         padding: "20px 50px",
+        left: "0",
         backgroundColor: "#ECECEC",
       }}
     >
@@ -28,7 +29,7 @@ const NavBar = () => {
       >
         <path
           d="M14 5L19 3V13L14 11M2 1.5H13C13.5523 1.5 14 1.94772 14 2.5V13.5C14 14.0523 13.5523 14.5 13 14.5H2C1.44772 14.5 1 14.0523 1 13.5V2.5C1 1.94772 1.44772 1.5 2 1.5Z"
-          stroke={getStrokeColor("/shotform")}
+          stroke={getStrokeColor("/shortform")}
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -42,7 +43,7 @@ const NavBar = () => {
         fill="none"
         onClick={() => navigate("/search")}
         style={{
-          stroke: getStrokeColor("/search") || getStrokeColor("/category"),
+          stroke: getStrokeColor("search") || getStrokeColor("/category"),
         }}
       >
         <path
@@ -76,8 +77,8 @@ const NavBar = () => {
         height="23"
         viewBox="0 0 25 23"
         fill="none"
-        onClick={() => navigate("/community")}
-        style={{ stroke: getStrokeColor("/community") }}
+        onClick={() => navigate("/BrandCommunity")}
+        style={{ stroke: getStrokeColor("/BrandCommunity") }}
       >
         <path
           d="M16.666 9.58331H16.6764M12.4993 9.58331H12.5098M8.33268 9.58331H8.3431M7.29102 15.3333V20.125L12.4993 15.3333H20.8327V3.83331H4.16602V15.3333H7.29102Z"
@@ -93,8 +94,8 @@ const NavBar = () => {
         height="23"
         viewBox="0 0 23 23"
         fill="none"
-        onClick={() => navigate("/mypage")}
-        style={{ stroke: getStrokeColor("/mypage") }}
+        onClick={() => navigate("/mypage/likes")}
+        style={{ stroke: getStrokeColor("/mypage/likes") }}
       >
         <path
           d="M17.25 17.9288C17.25 16.3765 16.1271 14.375 14.375 14.375H8.625C6.8729 14.375 5.75 16.3765 5.75 17.9288M2.875 11.5C2.875 6.73654 6.73654 2.875 11.5 2.875C16.2635 2.875 20.125 6.73654 20.125 11.5C20.125 16.2635 16.2635 20.125 11.5 20.125C6.73654 20.125 2.875 16.2635 2.875 11.5ZM14.375 8.625C14.375 10.2128 13.0878 11.5 11.5 11.5C9.91218 11.5 8.625 10.2128 8.625 8.625C8.625 7.03718 9.91218 5.75 11.5 5.75C13.0878 5.75 14.375 7.03718 14.375 8.625Z"

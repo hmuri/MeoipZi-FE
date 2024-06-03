@@ -101,6 +101,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom"; // Import useHistory from React Router
 
+
 const SliderContainer = styled.div`
   position: relative;
   width: 100%;
@@ -139,7 +140,11 @@ const NextButton = styled(SlideButton)`
   right: 0;
 `;
 
-const Slider: React.FC = () => {
+interface SliderProps {
+  newsUrl: string[];
+}
+
+const Slider: React.FC<SliderProps> = ({newsUrl}) => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [images, setImages] = useState<string[]>([]);
   const navigate = useNavigate(); // Get history object from React Router

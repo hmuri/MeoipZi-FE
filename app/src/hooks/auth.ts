@@ -25,7 +25,7 @@ export const useLogin = () => {
             sameSite: "Strict",
           });
           alert("Logged in successfully");
-          navigate("/search");
+          navigate("/profile");
         }
       },
     }

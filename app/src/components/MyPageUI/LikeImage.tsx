@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { fetchLikedOutfits } from "../../api/like";
 import axiosInstance from "../../api/axios";
 
 // Styled components for the image grid and individual images
@@ -23,25 +22,13 @@ const Container = styled.div`
   float: left; /* Float left to align side by side */
 `;
 
-const LikeImage: React.FC = () => {
+interface LikeImageProps {
+  likedOutfits: string[]; // Define the images prop
+}
+
+const LikeImage: React.FC<LikeImageProps> = ({ likedOutfits }) => {
   const [images, setImages] = useState<string[]>([]); // State to hold the fetched image URLs
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Simulated fetch call to API endpoint (replace with your actual fetch call)
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `${process.env.REACT_APP_API_BASE_URL}/mypage/likes`
-        );
-        setImages(response.data.likedOutfits); // Update state with fetched image data
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // Function to handle image click event
   const handleClick = (index: number) => {
@@ -55,7 +42,7 @@ const LikeImage: React.FC = () => {
     <Container>
       <ImageGrid>
         {/* Render the fetched images */}
-        {images.map((imageUrl, index) => (
+        {likedOutfits.map((imageUrl, index) => (
           <Image
             key={index}
             src={imageUrl}

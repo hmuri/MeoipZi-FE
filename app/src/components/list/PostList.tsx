@@ -1,13 +1,14 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import styled from "styled-components";
 import PostListItem from "./PostListItem";
 
 interface Post {
   id: number;
   title: string;
+  imgUrl: string;
   heartCnt: number;
   commentCnt: number;
-  postDate: string;
+  createdAt: string;
 }
 
 interface PostListProps {
@@ -18,34 +19,23 @@ interface PostListProps {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;  // Fixed typo in 'align-items'
-  justify-content: center;
-
-  & > * {
-    :not(:last-child) {
-      margin-bottom: 16px;  // Fixed typo in 'margin-bottom'
-    }
-  }
+  gap: 16px;
+  margin-top: 20px;
+  width: 100%;
 `;
 
-function PostList(props: PostListProps) {
-  const { posts, onClickItem } = props;
-
+const PostList: React.FC<PostListProps> = ({ posts, onClickItem }) => {
   return (
     <Wrapper>
-      {posts.map((post, index) => {
-        return (
-          <PostListItem
-            key={post.id}
-            post={post}
-            onClick={() => {
-              onClickItem(post);
-            }}
-          />
-        );
-      })}
+      {posts.map((post) => (
+        <PostListItem
+          key={post.id}
+          post={post}
+          onClick={() => onClickItem(post)}
+        />
+      ))}
     </Wrapper>
   );
-}
+};
 
 export default PostList;

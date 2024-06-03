@@ -15,31 +15,22 @@ const Video = styled.video`
   height: 170px; /* Video preview height */
 `;
 
+interface LikeShortProps {
+  sfs: string[]; // Define the images prop
+}
+
 // Component definition
-const LikeShort: React.FC = () => {
+const LikeShort: React.FC<LikeShortProps> = ({ sfs }) => {
   const [images, setImages] = useState<any[]>([]);
 
-  useEffect(() => {
-    // Function to fetch data from API
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes`);
-        setImages(response.data.likedSFs); // Update state with fetched image data
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <VideoGrid>
       {/* Render only the first two videos */}
-      {images.slice(0, 2).map((image: any, index: number) => (
-        <Video key={index} src={image.imgUrl} />
-        ))}
-      </VideoGrid>
+      {sfs.slice(0, 2).map((image: any, index: number) => (
+        <Video key={index} src={image} />
+      ))}
+    </VideoGrid>
   );
 };
 

@@ -103,7 +103,7 @@ const Category = () => {
       )}
       <Circle
         onClick={() => {
-          navigate("shortform/post");
+          navigate("/shortform/post");
         }}
       >
         <svg
@@ -133,7 +133,7 @@ interface ModalType {
 }
 
 const Modal = ({ video, videoInfo, setIsModal }: ModalType) => {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(videoInfo.likeOrNot);
   const [isShowProduct, setIsShowProduct] = useState(true);
   const [comments, setComments] = useState<any>();
   const [content, setContent] = useState("");

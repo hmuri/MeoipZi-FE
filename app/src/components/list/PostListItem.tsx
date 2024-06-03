@@ -4,10 +4,10 @@ import styled from "styled-components";
 interface Post {
   id: number;
   title: string;
-  // Additional properties such as heartCount, commentCount, postDate
+  imgUrl?: string;
   heartCnt: number;
   commentCnt: number;
-  postDate: string;
+  createdAt: string;
 }
 
 interface PostListItemProps {
@@ -16,56 +16,62 @@ interface PostListItemProps {
 }
 
 const Wrapper = styled.div`
-  width: 339px;
+  width: 90vw;
+
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  border: 1px solid white;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 16px;
   cursor: pointer;
   background: white;
+  transition: background-color 0.3s;
 
   :hover {
     background: lightgrey;
   }
 `;
 
+const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 const TitleText = styled.p`
-overflow: hidden;
-color: #464646;
-margin: 1vh 1vh 1vh;
-
-text-overflow: ellipsis;
-font-family: Noto Sans Arabic;
-font-size: 14px;
-font-style: normal;
-font-weight: 600;
-line-height: 100%; /* 14px */
-letter-spacing: -0.14px;
+  color: #464646;
+  margin: 0 0 8px;
+  font-family: Noto Sans Arabic;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
-const CountText = styled.p`
-//width: 21px;
-color: #A9A9A9;
-font-family: Roboto;
-font-size: 12px;
-font-style: normal;
-font-weight: 400;
-line-height: 100%; /* 12px */
-margin: 0px 1vh 1vh;
+const MetaText = styled.p`
+  color: #a9a9a9;
+  margin: 4px 0;
+  font-family: Roboto;
+  font-size: 12px;
 `;
 
-function PostListItem(props: PostListItemProps) {
-  const { post, onClick } = props;
+const Image = styled.img`
+  width: 100px;
+  display: flex;
+  height: auto;
+  border-radius: 8px;
+`;
 
+const PostListItem: React.FC<PostListItemProps> = ({ post, onClick }) => {
   return (
     <Wrapper onClick={onClick}>
-      <TitleText>{post.title}</TitleText>
-      <CountText>{`${post.postDate}`}</CountText>
-      <CountText>{`Hearts: ${post.heartCnt} | Comments: ${post.commentCnt}`}</CountText>
-      
+      <TextWrapper>
+        <TitleText>{post.title}</TitleText>
+        <MetaText>{post.createdAt}</MetaText>
+        <MetaText>{`Hearts: ${post.heartCnt} | Comments: ${post.commentCnt}`}</MetaText>
+      </TextWrapper>
+      {post.imgUrl && <Image src={post.imgUrl} alt={post.title} />}
     </Wrapper>
   );
-}
+};
 
 export default PostListItem;

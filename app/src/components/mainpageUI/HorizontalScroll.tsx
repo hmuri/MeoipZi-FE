@@ -92,112 +92,78 @@ function HorizontalScroll() {
 export default HorizontalScroll;
 */
 
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import styled from "styled-components";
-import axiosInstance from "../../api/axios";
-import {
-  ScrollMenu,
-  VisibilityContext,
-} from "react-horizontal-scrolling-menu";
+import { ScrollMenu } from "react-horizontal-scrolling-menu";
 import { useNavigate } from "react-router-dom";
 import "react-horizontal-scrolling-menu/dist/styles.css";
 
 const ScrollContainer = styled.div`
-  width: 400px; /* Set the desired height */
-  overflow-x: auto; /* or scroll */
+  width: 800px;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
 `;
 
-interface Item {
-  id: string;
-  imageUrl: string; // Add imageUrl to the Item interface
-}
-
 interface CardProps {
-  onClick: (id: string) => void;
-  selected: boolean;
-  itemId: string;
-  imageUrl: string; // Add imageUrl to the CardProps interface
+  data: { imgUrl: string; shopUrl: string };
+  onClick: (shopUrl: string) => void;
 }
 
 const CardImage = styled.img`
-  width: 54px;
-  height: 54px;
-  margin-top: 8px;
+  width: 80px;
+  height: 80px;
+  margin-top: 10px;
+
+  cursor: pointer;
+  border-radius: 10px;
 `;
 
-function Card({ onClick, selected, itemId, imageUrl }: CardProps) {
-  const visibility = useContext(VisibilityContext);
+const CardWrapper = styled.div`
+  display: inline-block;
+  margin-right: 20px; /* 사진 사이의 간격을 조정합니다. */
+`;
 
-  return (
-    
-    <div
-      onClick={() => onClick(itemId)}
-      style={{
-        width: "70px",
-      }}
-      tabIndex={0}
-    >
-      <div className="card">
-        <CardImage src={imageUrl} alt={`Banner ${itemId}`} />
-        
-      </div>
-      <div
-        style={{
-          height: "20px",
-        }}
-      />
-    </div>
-  );
-}
-
-function HorizontalScroll() {
-  const [items, setItems] = useState<Item[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const navigate = useNavigate();
-
-  const isItemSelected = (id: string): boolean => selected.includes(id);
-
-  const handleClick = (id: string) => () => {
-    setSelected((currentSelected) =>
-      isItemSelected(id)
-        ? currentSelected.filter((el) => el !== id)
-        : [...currentSelected, id]
-    );
+function Card({ data, onClick }: CardProps) {
+  const handleClick = () => {
+    onClick(data.shopUrl);
   };
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/meoipzi/partners`);
-        const itemsFromEndpoint: Item[] = response.data.map((item: any) => ({
-          id: item.partnersId.toString(),
-          imageUrl: item.imageUrl,
-        }));
-        setItems(itemsFromEndpoint);
-      } catch (error) {
-        console.error("Error fetching items:", error);
-      }
-    };
-
-    fetchItems();
-  }, []); // Empty dependency array to fetch data only once on component mount
-
   return (
-    
-    <ScrollContainer>
-    <ScrollMenu>
-      {items.map(({ id, imageUrl }) => (
-        <Card
-          itemId={id}
-          key={id}
-          onClick={handleClick(id)}
-          selected={isItemSelected(id)}
-          imageUrl={imageUrl} // Pass imageUrl to the Card component
-        />
-      ))}
-    </ScrollMenu>
-    </ScrollContainer>
+    <CardWrapper>
+      <div className="card" onClick={handleClick}>
+        <CardImage src={data.imgUrl} alt={`Banner`} />
+      </div>
+      <div style={{ height: "20px" }} />
+    </CardWrapper>
   );
 }
+
+interface HorizontalScrollProps {
+  dataList: { imgUrl: string; shopUrl: string }[];
+}
+
+const HorizontalScroll: React.FC<HorizontalScrollProps> = ({ dataList }) => {
+  const navigate = useNavigate();
+
+  const handleImageClick = (shopUrl: string) => {
+    window.location.href = shopUrl;
+  };
+
+  return (
+    <ScrollContainer>
+      <ScrollMenu>
+        {dataList.map((data, index) => (
+          <Card key={index} data={data} onClick={handleImageClick} />
+        ))}
+      </ScrollMenu>
+    </ScrollContainer>
+  );
+};
 
 export default HorizontalScroll;

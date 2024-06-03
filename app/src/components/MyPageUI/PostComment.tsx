@@ -1,47 +1,42 @@
 import React, { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios"; // Import Axios
-
-import PostList from "../../components/list/PostList";
-import Button from "../ui/Button_clicked";
-
-import CommunityTab from "../../components/CommunityTab";
 import axiosInstance from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
-interface Post {
-  id: number;
-  outfitId?: number;
-  commId?: number;
-  userId: string;
-  nickname: string;
-  createdAt: string;
-  contents: string;
-  title: string;      // Add missing properties
-  heartCnt: number;   // Add missing properties
-  commentCnt: number; // Add missing properties
-  postDate: string;   // Add missing properties
+import MyPageCommentList from "../list/MyPageComList";
+import PostList from "../list/PostList";
+
+interface Comment {
+  id: string;
+  title: string;
+  likesCount: number;
+  cmtCount: number;
+  imgUrl?: string;
+  createAt: string; // Add the content property
 }
-
-
-interface MainPageProps {}
 
 const SWrapper = styled.div`
   padding: 16px;
-  width: 50vh;
+  width: 50vh; /* Set initial width */
+  max-width: 90%; /* Set maximum width to prevent overflow */
   display: flex;
   flex-direction: column;
-  align-items: center; // Fixed typo in 'align-items'
+  align-items: center;
   justify-content: center;
-
   margin-bottom: 3vh;
+  margin-left: auto;
+  margin-right: auto; /* Center horizontally */
+  
+  /* Media query for responsiveness */
+  @media screen and (max-width: 768px) {
+    width: 90%; /* Adjust width for smaller screens */
+  }
 `;
 
 const Container = styled.div`
   width: 100%;
   max-width: 355px;
   height: 100%;
-
   & > * {
     :not(:last-child) {
       margin-bottom: 16px;
@@ -50,44 +45,129 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const PostComment: FC<MainPageProps> = () => {
-  const navigate = useNavigate();
-  const [posts, setPosts] = useState<Post[]>([]);
+const NavigateButton = styled.button`
+  width: 40px;
+  height: 25px;
+  background-color: transparent;
+  color: #8B8B8B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px; /* Adjust font size as needed */
+  font-weight: bold;
+  padding: 0;
+  margin-bottom: 5px;
+`;
+
+{/*
+const PostComment: FC = () => {
+  const [shortForms, setShortForms] = useState<Comment[]>([]);
+  const [outfits, setOutfits] = useState<Comment[]>([]);
+  const [communities, setCommunities] = useState<Comment[]>([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchComments = async () => {
       try {
-        const [shortFormResponse, outfitResponse, communityResponse] = await Promise.all([
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-shortform`),
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-outfit`),
-          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/feeds/comments-community`)
+        const [
+          shortFormsResponse,
+          outfitsResponse,
+          communitiesResponse
+        ] = await Promise.all([
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/shortforms`),
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/outfits`),
+          axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/communities`)
         ]);
 
-        const shortFormPosts: Post[] = shortFormResponse.data.cmtsCommList;
-        const outfitPosts: Post[] = outfitResponse.data.cmtsCommList;
-        const communityPosts: Post[] = communityResponse.data.cmtsCommList;
-
-        // Concatenate posts from all responses
-        const allPosts: Post[] = [...shortFormPosts, ...outfitPosts, ...communityPosts];
-        setPosts(allPosts);
+        setShortForms(shortFormsResponse.data.cmtShortforms);
+        setOutfits(outfitsResponse.data.cmtOutfits);
+        setCommunities(communitiesResponse.data.cmtComms);
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching comments:", error);
       }
     };
 
-    fetchPosts();
-  }, []);// Empty dependency array to fetch data only once on component mount
+    fetchComments();
+  }, []);
 
   return (
     <>
       <SWrapper>
         <Container>
-          <PostList
-            posts={posts} // Pass fetched posts to PostList component
-            onClickItem={(item) => {
-              navigate(`/post/${item.id}`);
-            }}
-          />
+          <div>
+            <h2>Short Forms Comments</h2>
+            <CommentList comments={shortForms} />
+          </div>
+          <div>
+            <h2>Outfits Comments</h2>
+            <CommentList comments={outfits} />
+          </div>
+          <div>
+            <h2>Communities Comments</h2>
+            <CommentList comments={communities} />
+          </div>
+        </Container>
+      </SWrapper>
+    </>
+  );
+};
+
+export default PostComment;
+*/}
+
+const PostComment: FC = () => {
+  const navigate = useNavigate();
+  const [cmtOutfits, setCmtOutfits] = useState<Comment[]>([]);
+  const [cmtShortforms, setCmtShortforms] = useState<Comment[]>([]);
+  const [cmtComms, setCmtComms] = useState<Comment[]>([]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments`);
+
+        const { cmtOutfits, cmtShortforms, cmtComms } = response.data;
+
+        setCmtOutfits(cmtOutfits);
+        setCmtShortforms(cmtShortforms);
+        setCmtComms(cmtComms);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, []);
+
+  const handleItemClick = (comments: Comment) => {
+    navigate(`/post/${comments.id}`);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
+  return (
+    <>
+      <SWrapper>
+        <Container>
+          <div>
+            <h2>Outfits Comments</h2>
+            <MyPageCommentList comments={cmtOutfits} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/outfit-comments')}>. . .</NavigateButton>
+          </div>
+          <div>
+            <h2>Short Forms Comments</h2>
+            <MyPageCommentList comments={cmtShortforms} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/shorts-comments')}>. . .</NavigateButton>
+          </div>
+          <div>
+            <h2>Community Comments</h2>
+            <MyPageCommentList comments={cmtComms} onClickItem={handleItemClick}/>
+            <NavigateButton onClick={() => handleNavigate('/community-comments')}>. . .</NavigateButton>
+          </div>
         </Container>
       </SWrapper>
     </>
