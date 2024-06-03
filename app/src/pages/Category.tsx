@@ -74,7 +74,6 @@ const Category = () => {
           />
         ))}
       </BodyContainer>
-      <NavBar />
     </Container>
   );
 };

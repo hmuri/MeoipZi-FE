@@ -45,7 +45,9 @@ const ScrapPruductsSeeAll: FC = () => {
 
   const fetchData = async (page: number) => {
     try {
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/scraps/products?page=${page}`);
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_BASE_URL}/mypage/posts/scraps/products?page=${page}`
+      );
       setScrapedProducts(response.data); // Fix typo here
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -67,26 +69,29 @@ const ScrapPruductsSeeAll: FC = () => {
   return (
     <Container>
       <Wrapper>
-      <h2>스크랩한 Products</h2> {/* Corrected typo in the title */}
-      <ScrollableContainer>
-        <ImageGrid>
-          {scrapedProducts.map((product: any) => (
-            <img key={product.id} src={product.imgUrl} alt={`Product ${product.id}`} />
-          ))}
-        </ImageGrid>
-        <div>
-          <PaginationButton onClick={handlePreviousPage} disabled={pageNum === 1}>
-            Previous
-          </PaginationButton>
-          <PaginationButton onClick={handleNextPage}>
-            Next
-          </PaginationButton>
-        </div>
-      </ScrollableContainer>
-      <NavBar />
-    </Wrapper>  
+        <h2>스크랩한 Products</h2> {/* Corrected typo in the title */}
+        <ScrollableContainer>
+          <ImageGrid>
+            {scrapedProducts.map((product: any) => (
+              <img
+                key={product.id}
+                src={product.imgUrl}
+                alt={`Product ${product.id}`}
+              />
+            ))}
+          </ImageGrid>
+          <div>
+            <PaginationButton
+              onClick={handlePreviousPage}
+              disabled={pageNum === 1}
+            >
+              Previous
+            </PaginationButton>
+            <PaginationButton onClick={handleNextPage}>Next</PaginationButton>
+          </div>
+        </ScrollableContainer>
+      </Wrapper>
     </Container>
-    
   );
 };
 

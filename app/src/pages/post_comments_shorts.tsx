@@ -27,7 +27,7 @@ const Container = styled.div`
   margin: 20px;
   width: 100%;
   overflow-y: auto; /* Add overflow-y: auto; */
-   /* Set max-height to fill remaining viewport height */
+  /* Set max-height to fill remaining viewport height */
 `;
 
 interface Comment {
@@ -47,7 +47,9 @@ const CommentsShortsSeeAll: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/shortforms`);
+        const response = await axiosInstance.get(
+          `${process.env.REACT_APP_API_BASE_URL}/mypage/posts/comments/shortforms`
+        );
         const data = response.data;
         if (Array.isArray(data)) {
           setComments(data);
@@ -77,12 +79,14 @@ const CommentsShortsSeeAll: FC = () => {
         ) : error ? (
           <p>{error}</p>
         ) : comments.length > 0 ? (
-          <MyPageCommentList comments={comments} onClickItem={handleItemClick} />
+          <MyPageCommentList
+            comments={comments}
+            onClickItem={handleItemClick}
+          />
         ) : (
           <p>No posts found.</p>
         )}
       </Wrapper>
-      <NavBar />
     </Container>
   );
 };

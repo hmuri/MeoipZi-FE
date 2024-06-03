@@ -82,7 +82,10 @@ const Profile = () => {
     }
 
     try {
-      const response = await axiosInstance.patch("/profiles/settings", formData);
+      const response = await axiosInstance.patch(
+        "/profiles/settings",
+        formData
+      );
       console.log("Success:", response.data);
       navigate("/home");
     } catch (error) {
@@ -150,9 +153,13 @@ const Profile = () => {
         </LabelBox>
       </InfoBox>
       {!isDataFetched ? (
-        <Button type="submit" onClick={handleSubmit}>완료</Button>
+        <Button type="submit" onClick={handleSubmit}>
+          완료
+        </Button>
       ) : (
-        <Button type="button" onClick={handleUpdate}>수정하기</Button>
+        <Button type="button" onClick={handleUpdate}>
+          수정하기
+        </Button>
       )}
     </Container>
   );

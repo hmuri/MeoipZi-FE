@@ -32,26 +32,22 @@ const StyleWrap = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  
   flex: 1;
   overflow-y: scroll;
 `;
 
 function Layout(props: LayoutProps): JSX.Element {
-    return (
-      <div>
-        <MainHeader />
-        <CommunityTab/>
-        <StyleWrap id="wrap">
-         
-          <ContentWrapper>
-            <main>{props.children}</main>
-          </ContentWrapper>
-        </StyleWrap>
-        <NavBar />
-      </div>
-    );
-  }
-  
-  export default Layout;
-  
+  return (
+    <div>
+      <MainHeader />
+      <CommunityTab />
+      <StyleWrap id="wrap">
+        <ContentWrapper>
+          <main>{props.children}</main>
+        </ContentWrapper>
+      </StyleWrap>
+    </div>
+  );
+}
+
+export default Layout;

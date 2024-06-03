@@ -91,8 +91,6 @@ const Category = () => {
             />
           ))}
         </BodyContainer>
-
-        <NavBar />
       </Container>
       {isModal && selectedVideo && selectedVideoInfo && (
         <Modal

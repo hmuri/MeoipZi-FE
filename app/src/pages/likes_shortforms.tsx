@@ -39,12 +39,16 @@ const Container = styled.div`
 `;
 
 const LikeShortssSeeAll: FC = () => {
-  const [likedShortForms, setLikedShortForms] = useState<{ id: number; imgUrl: string; createdAt: string }[]>([]);
+  const [likedShortForms, setLikedShortForms] = useState<
+    { id: number; imgUrl: string; createdAt: string }[]
+  >([]);
   const [pageNum, setPageNum] = useState(1);
 
   const fetchLikedShortForms = async (page: number) => {
     try {
-      const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes/shortforms?page=${page}`);
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_API_BASE_URL}/mypage/likes/shortforms?page=${page}`
+      );
       const data = response.data;
       if (data && data.likedShortForms) {
         setLikedShortForms(data.likedShortForms);
@@ -80,15 +84,15 @@ const LikeShortssSeeAll: FC = () => {
           )}
         </Wrapper>
         <div>
-          <PaginationButton onClick={handlePreviousPage} disabled={pageNum === 1}>
+          <PaginationButton
+            onClick={handlePreviousPage}
+            disabled={pageNum === 1}
+          >
             Previous
           </PaginationButton>
-          <PaginationButton onClick={handleNextPage}>
-            Next
-          </PaginationButton>
+          <PaginationButton onClick={handleNextPage}>Next</PaginationButton>
         </div>
       </ScrollableContainer>
-      <NavBar />
     </Container>
   );
 };

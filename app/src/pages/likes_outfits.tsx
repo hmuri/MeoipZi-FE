@@ -27,12 +27,16 @@ const Container = styled.div`
 
 const LikeOutfitsSeeAll: FC = () => {
   const navigate = useNavigate();
-  const [likedOutfits, setLikedOutfits] = useState<{ id: number; imgUrl: string; createdAt: string }[]>([]);
+  const [likedOutfits, setLikedOutfits] = useState<
+    { id: number; imgUrl: string; createdAt: string }[]
+  >([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`${process.env.REACT_APP_API_BASE_URL}/mypage/likes/outfits`);
+        const response = await axiosInstance.get(
+          `${process.env.REACT_APP_API_BASE_URL}/mypage/likes/outfits`
+        );
         const data = response.data;
         if (data && data.likedOutfits) {
           setLikedOutfits(data.likedOutfits);
@@ -52,12 +56,13 @@ const LikeOutfitsSeeAll: FC = () => {
       <Wrapper>
         <h2>Liked Outfits</h2>
         {likedOutfits.length > 0 ? (
-          <LikeImage likedOutfits={likedOutfits.map(outfit => outfit.imgUrl)} />
+          <LikeImage
+            likedOutfits={likedOutfits.map((outfit) => outfit.imgUrl)}
+          />
         ) : (
           <p>No liked outfits found.</p>
         )}
       </Wrapper>
-      <NavBar />
     </Container>
   );
 };

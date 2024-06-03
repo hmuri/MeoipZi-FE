@@ -32,6 +32,7 @@ import PostFeedSeeAll from "./pages/post_feed_community";
 import CommentsCommunitySeeAll from "./pages/post_comments_comm";
 import CommentsShortsSeeAll from "./pages/post_comments_shorts";
 import CommentsOutfitSeeAll from "./pages/post_comments_outfits";
+import NavBar from "./components/NavBar";
 
 function App() {
   function setScreenSize() {
@@ -121,6 +122,7 @@ function App() {
                 element={<WritePost currentPath="/post/:id" />}
               />
             </Routes>
+            <NavBar />
           </Router>
         </Container>
       </QueryClientProvider>
@@ -134,6 +136,7 @@ const Container = styled.div`
   max-width: 800px;
   justify-content: center;
   margin: auto;
+  position: relative;
   background-color: white;
 `;
 

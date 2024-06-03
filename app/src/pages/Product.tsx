@@ -72,7 +72,6 @@ const Category = () => {
         </ProductInfo>
         <LinkBox href={item.shopUrl}>Go to Webpage</LinkBox>
       </BodyContainer>
-      <NavBar />
     </Container>
   );
 };
