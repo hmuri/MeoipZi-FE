@@ -34,6 +34,17 @@ import CommentsShortsSeeAll from "./pages/post_comments_shorts";
 import CommentsOutfitSeeAll from "./pages/post_comments_outfits";
 import NavBar from "./components/NavBar";
 
+function Navigation() {
+  const location = useLocation();
+
+  // 기본 경로('/')에서만 NavBar를 숨기기
+  if (location.pathname === "/") {
+    return null;
+  }
+
+  return <NavBar />;
+}
+
 function App() {
   function setScreenSize() {
     let vh = window.innerHeight * 0.01;
@@ -122,7 +133,7 @@ function App() {
                 element={<WritePost currentPath="/post/:id" />}
               />
             </Routes>
-            <NavBar />
+            <Navigation />
           </Router>
         </Container>
       </QueryClientProvider>
