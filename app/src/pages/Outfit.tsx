@@ -185,6 +185,7 @@ const Outfit = () => {
             </svg>
           </RightIcons>
         </ControlBar>
+        <div style={{ marginBottom: "10px" }}>{item?.content}</div>
         {isShowProduct ? (
           <div style={{ width: "100%" }}>
             {products.map((product: any) => (

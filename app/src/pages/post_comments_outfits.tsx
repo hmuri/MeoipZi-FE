@@ -30,18 +30,28 @@ const Container = styled.div`
   /* Set max-height to fill remaining viewport height */
 `;
 
-interface Comment {
+const ImageGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 100px); /* 3 columns with 100px width */
+  gap: 15px; /* Gap between grid items */
+  margin: 8px; /* Margin on top and bottom */
+`;
+
+const Image = styled.img`
+  width: 100%; /* Image width */
+  height: 100%; /* Image height */
+`;
+
+interface Outfit {
   id: string;
-  title: string;
-  likesCount: number;
-  cmtCount: number;
-  createAt: string;
+  imgUrl: string;
+  createdAt: string;
 }
 
 const CommentsOutfitSeeAll: FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<Outfit[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,8 +76,8 @@ const CommentsOutfitSeeAll: FC = () => {
     fetchData();
   }, []);
 
-  const handleItemClick = (comments: Comment) => {
-    navigate(`/post/${comments.id}`);
+  const handleItemClick = (comments: Outfit) => {
+    navigate(`/outfit/${comments.id}`);
   };
 
   return (
@@ -79,10 +89,16 @@ const CommentsOutfitSeeAll: FC = () => {
         ) : error ? (
           <p>{error}</p>
         ) : comments.length > 0 ? (
-          <MyPageCommentList
-            comments={comments}
-            onClickItem={handleItemClick}
-          />
+          <ImageGrid>
+            {comments.map((outfit: any) => (
+              <Image
+                key={outfit.id}
+                src={outfit.imgUrl}
+                alt={`Outfit ${outfit.id}`}
+                onClick={() => handleItemClick(outfit)}
+              />
+            ))}
+          </ImageGrid>
         ) : (
           <p>No outfit posts found.</p>
         )}

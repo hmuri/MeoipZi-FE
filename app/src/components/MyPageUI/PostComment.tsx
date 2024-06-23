@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 import MyPageCommentList from "../list/MyPageComList";
 import PostList from "../list/PostList";
+import PostShortList from "./PostShortList";
+import VerticalImageGrid from "../mainpageUI/VerticalImageGrid";
 
 interface Comment {
   id: string;
@@ -117,6 +119,37 @@ const PostComment: FC = () => {
 export default PostComment;
 */}
 
+const ShortFormGrid = styled.div`
+display: grid;
+grid-template-columns: repeat(2, 1fr); /* 3 columns with equal width */
+gap: 15px; /* Gap between grid items */
+margin: 10px; /* Margin on top and bottom */
+`;
+
+const ShortFormItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 18px;
+`;
+
+const Video = styled.video`
+  width: 100%;
+  max-width: 300px;
+`;
+
+const ImageGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 100px); /* 3 columns with 100px width */
+  gap: 15px; /* Gap between grid items */
+  margin: 8px; /* Margin on top and bottom */
+`;
+
+const Image = styled.img`
+  width: 100%; /* Image width */
+  height: 100%; /* Image height */
+`;
+
 const PostComment: FC = () => {
   const navigate = useNavigate();
   const [cmtOutfits, setCmtOutfits] = useState<Comment[]>([]);
@@ -145,6 +178,10 @@ const PostComment: FC = () => {
     navigate(`/post/${comments.id}`);
   };
 
+  const handleOutfitClick = (comments: Comment) => {
+    navigate(`/outfit/${comments.id}`);
+  };
+
   const handleNavigate = (path: string) => {
     navigate(path);
   };
@@ -155,12 +192,26 @@ const PostComment: FC = () => {
         <Container>
           <div>
             <h2>Outfits Comments</h2>
-            <MyPageCommentList comments={cmtOutfits} onClickItem={handleItemClick}/>
+            <ImageGrid>
+              {cmtOutfits.map((outfit: any) => (
+                <Image key={outfit.id} src={outfit.imgUrl} alt={`Outfit ${outfit.id}`} onClick={() => handleOutfitClick(outfit)}/>
+              ))}
+            </ImageGrid>
             <NavigateButton onClick={() => handleNavigate('/outfit-comments')}>. . .</NavigateButton>
           </div>
           <div>
             <h2>Short Forms Comments</h2>
-            <MyPageCommentList comments={cmtShortforms} onClickItem={handleItemClick}/>
+            <ShortFormGrid>
+        {cmtShortforms.map((shortForm) => (
+          <ShortFormItem key={shortForm.id}>
+            <Video controls>
+              <source src={shortForm.imgUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </Video>
+            <p>{new Date(shortForm.createAt).toLocaleDateString()}</p>
+          </ShortFormItem>
+        ))}
+      </ShortFormGrid>
             <NavigateButton onClick={() => handleNavigate('/shorts-comments')}>. . .</NavigateButton>
           </div>
           <div>
