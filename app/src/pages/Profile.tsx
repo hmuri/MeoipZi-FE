@@ -12,6 +12,7 @@ const Profile = () => {
   const [weightSecret, setWeightSecret] = useState(false);
   const [imagePreview, setImagePreview] = useState(""); // 이미지 미리보기 URL 상태 추가
   const [isDataFetched, setIsDataFetched] = useState(false);
+  const [profileId, setProfileId] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ const Profile = () => {
         setWeight(data.weight);
         setWeightSecret(data.weightSecret);
         setImagePreview(data.imgUrl); // Assuming the response contains an image URL
+        setProfileId(data.profileId); // Assuming the response contains an ID as profileId
         setIsDataFetched(true);
       } catch (error) {
         console.error("Error fetching profile data:", error);
@@ -35,7 +37,7 @@ const Profile = () => {
 
     fetchData();
   }, []);
-
+  
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -82,7 +84,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await axiosInstance.patch("/profiles/settings", formData);
+      const response = await axiosInstance.patch(`/profiles/${profileId}`, formData);
       console.log("Success:", response.data);
       navigate("/home");
     } catch (error) {
