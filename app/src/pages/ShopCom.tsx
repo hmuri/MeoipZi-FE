@@ -31,6 +31,7 @@ const SWrapper = styled.div`
   padding: 16px;
   width: 100%;
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   overflow-y: auto; // Allow scrolling
@@ -56,7 +57,7 @@ const ToggleButton = styled.button`
   color: white;
   margin: 3px;
   position: absolute;
-  left: 20px;
+  left: 12px;
   z-index: 999; /* Ensure the button is on top of other elements */
 `;
 

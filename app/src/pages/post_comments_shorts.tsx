@@ -30,18 +30,35 @@ const Container = styled.div`
   /* Set max-height to fill remaining viewport height */
 `;
 
-interface Comment {
-  id: string;
-  title: string;
-  likesCount: number;
-  cmtCount: number;
+const ShortFormGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 columns with equal width */
+  gap: 15px; /* Gap between grid items */
+  margin: 10px; /* Margin on top and bottom */
+`;
+
+const ShortFormItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 18px;
+`;
+
+const Video = styled.video`
+  width: 100%;
+  max-width: 200px;
+`;
+
+interface ShortForm {
+  id: number;
+  imgUrl: string;
   createAt: string;
 }
 
 const CommentsShortsSeeAll: FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<ShortForm[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,8 +83,9 @@ const CommentsShortsSeeAll: FC = () => {
     fetchData();
   }, []);
 
-  const handleItemClick = (comments: Comment) => {
-    navigate(`/post/${comments.id}`);
+  const handleItemClick = (shortForm: ShortForm) => {
+    // Adjust parameter type
+    navigate(`/post/${shortForm.id}`);
   };
 
   return (
@@ -79,10 +97,17 @@ const CommentsShortsSeeAll: FC = () => {
         ) : error ? (
           <p>{error}</p>
         ) : comments.length > 0 ? (
-          <MyPageCommentList
-            comments={comments}
-            onClickItem={handleItemClick}
-          />
+          <ShortFormGrid>
+            {comments.map((shortForm) => (
+              <ShortFormItem key={shortForm.id}>
+                <Video controls>
+                  <source src={shortForm.imgUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </Video>
+                <p>{new Date(shortForm.createAt).toLocaleDateString()}</p>
+              </ShortFormItem>
+            ))}
+          </ShortFormGrid>
         ) : (
           <p>No posts found.</p>
         )}
