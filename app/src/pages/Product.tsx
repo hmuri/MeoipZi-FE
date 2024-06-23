@@ -1,6 +1,8 @@
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
+import axiosInstance from "../api/axios";
+import { useState } from "react";
 
 // 이미지 객체를 위한 타입 정의
 interface ImageType {
@@ -10,12 +12,28 @@ interface ImageType {
 
 const Category = () => {
   const location = useLocation();
+  const { product } = useParams();
   console.log("location" + JSON.stringify(location));
   const item = location.state?.items;
+
+  const [isScraped, setScraped] = useState(item.likeOrNot);
 
   const handleClick = (shopUrl: string) => {
     navigator.clipboard.writeText(shopUrl);
     alert("copied");
+  };
+
+  const handleScrap = async () => {
+    try {
+      const response = await axiosInstance.post(`/products/${product}/scrap`, {
+        contentType: "product",
+      });
+      if (response.status === 200) {
+        setScraped(!isScraped); // 요청 성공 시 좋아요 상태 변경
+      }
+    } catch (error) {
+      console.error("Like request failed:", error);
+    }
   };
 
   return (
@@ -51,7 +69,8 @@ const Category = () => {
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill="none"
+              onClick={handleScrap}
+              style={{ cursor: "pointer", fill: isScraped ? "green" : "none" }}
             >
               <path
                 d="M6 6C6 4.89543 6.89543 4 8 4H16C17.1046 4 18 4.89543 18 6V21L12 15L6 21V6Z"

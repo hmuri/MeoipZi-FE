@@ -24,6 +24,7 @@ const Outfit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [liked, setLiked] = useState(item.likeOrNot);
+  const [isScraped, setScraped] = useState(item.likeOrNot);
   const [content, setContent] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +86,19 @@ const Outfit = () => {
       });
       if (response.status === 200) {
         setLiked(!liked); // 요청 성공 시 좋아요 상태 변경
+      }
+    } catch (error) {
+      console.error("Like request failed:", error);
+    }
+  };
+
+  const handleScrap = async () => {
+    try {
+      const response = await axiosInstance.post(`/outfits/${outfit}/scrap`, {
+        contentType: "outfit",
+      });
+      if (response.status === 200) {
+        setScraped(!isScraped); // 요청 성공 시 좋아요 상태 변경
       }
     } catch (error) {
       console.error("Like request failed:", error);
@@ -173,7 +187,8 @@ const Outfit = () => {
               width="24"
               height="24"
               viewBox="0 0 24 24"
-              fill="none"
+              onClick={handleScrap}
+              style={{ cursor: "pointer", fill: isScraped ? "green" : "none" }}
             >
               <path
                 d="M6 6C6 4.89543 6.89543 4 8 4H16C17.1046 4 18 4.89543 18 6V21L12 15L6 21V6Z"
