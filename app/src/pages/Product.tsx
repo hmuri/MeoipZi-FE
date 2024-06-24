@@ -16,7 +16,7 @@ const Category = () => {
   console.log("location" + JSON.stringify(location));
   const item = location.state?.items;
 
-  const [isScraped, setScraped] = useState(item.likeOrNot);
+  const [isScraped, setScraped] = useState(item.scrapOrNot);
 
   const handleClick = (shopUrl: string) => {
     navigator.clipboard.writeText(shopUrl);
