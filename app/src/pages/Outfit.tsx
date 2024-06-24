@@ -24,7 +24,7 @@ const Outfit = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [liked, setLiked] = useState(item.likeOrNot);
-  const [isScraped, setScraped] = useState(item.likeOrNot);
+  const [isScraped, setScraped] = useState(item.scrapOrNot);
   const [content, setContent] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
